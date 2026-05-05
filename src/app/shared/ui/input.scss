@@ -1,0 +1,122 @@
+/* input-group with floating label */
+.input-ui {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* the wrapper that looks like the input */
+.input-ui__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  box-shadow: var(--shadow-sm);
+
+  padding: 0.95rem 0.9rem 0.55rem; /* top space for label */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+.input-ui__control {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+
+  color: var(--text-dark);
+  font-weight: var(--fw-md);
+  font-size: 1rem;
+
+  padding: var(--padding-sm);
+  margin: 0;
+
+  /* important: to make :placeholder-shown work reliably */
+  &::placeholder {
+    color: transparent;
+  }
+}
+
+.input-ui__label {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.92rem;
+
+  color: var(--text-muted);
+  font-weight: var(--fw-md);
+  font-size: 0.95rem;
+
+  pointer-events: none;
+  transition: transform 0.15s ease, top 0.15s ease, color 0.15s ease, font-size 0.15s ease;
+  background: var(--bg-white);
+  padding: 0 0.25rem;
+}
+
+/* focus ring on the container */
+.input-ui__field:focus-within {
+  border-color: var(--bg-green);
+  box-shadow: 0 0 0 3px rgba(0, 108, 112, 0.12);
+}
+
+/* floating behavior:
+   - focus
+   - OR when input has value (not placeholder-shown) */
+.input-ui__control:focus + .input-ui__label,
+.input-ui__control:not(:placeholder-shown) + .input-ui__label {
+  top: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--bg-green);
+}
+
+/* optional left icon */
+.input-ui__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+/* error state */
+.input-ui--error .input-ui__field {
+  border-color: rgba(220, 53, 69, 0.55);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.10);
+}
+
+.input-ui--error .input-ui__label {
+  color: rgba(220, 53, 69, 0.9);
+}
+
+/* helper text */
+.input-ui__hint {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.input-ui__hint--error {
+  color: rgba(220, 53, 69, 0.9);
+}
+
+/* sizes */
+.input-ui--sm .input-ui__field { padding: 0.85rem 0.8rem 0.45rem; }
+.input-ui--lg .input-ui__field { padding: 1.1rem 1rem 0.7rem; }
+
+/* textarea */
+textarea.input-ui__control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* disabled */
+.input-ui__control:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.input-ui__control:disabled ~ .input-ui__label {
+  opacity: 0.75;
+}

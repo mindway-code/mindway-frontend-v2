@@ -1,0 +1,123 @@
+.btn-ui {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  min-height: 42px;
+  padding: var(--padding-sm) var(--padding-lg);
+  border: 1px solid transparent;
+  border-radius: var(--border-md);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: var(--fw-lg);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bg-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+}
+
+.btn--group {
+  position: relative;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: var(--padding-sm) var(--padding-md);
+
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ui--sm {
+  min-height: 34px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+}
+
+.btn-ui--light {
+  background: var(--bg-white);
+  color: var(--text-dark);
+  border-color: var(--border-light);
+
+  &:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    border-color: var(--border-medium);
+  }
+}
+
+.btn-ui--dark {
+  background: var(--text-dark);
+  color: var(--text-light);
+  border-color: var(--text-dark);
+
+  &:hover {
+    background: #111418;
+    color: var(--text-light);
+    border-color: #111418;
+  }
+}
+
+.btn-ui--green {
+  background: var(--bg-green);
+  color: var(--text-light);
+  border-color: var(--bg-green);
+
+  &:hover {
+    background: #00585b;
+    color: var(--text-light);
+    border-color: #00585b;
+  }
+}
+
+.btn-ui--accent {
+  background: var(--bg-accent);
+  color: var(--text-dark);
+  border-color: var(--bg-accent);
+
+  &:hover {
+    background: #d99f11;
+    color: var(--text-dark);
+    border-color: #d99f11;
+  }
+}
+
+.btn-ui--accent-tr {
+  background: transparent;
+  color: var(--text-accent);
+  border-color: none;
+
+  &:hover {
+    background: #d99f11;
+    color: var(--text-light);
+    border-color: #d99f11;
+  }
+}

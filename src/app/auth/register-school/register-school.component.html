@@ -1,0 +1,73 @@
+<div class="register-container">
+  <div class="register">
+    <div class="img-container">
+      <div class="overlay flex-column">
+        <h3>Junte-se ao MindWay!</h3>
+        <h5>Cadastro de Escola</h5>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <div class="card-ui card-body">
+        <h3 class="mb-3">Crie sua conta</h3>
+
+        <form class="d-flex flex-column gap-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="Escola Exemplo" type="text" autocomplete="organization" formControlName="name" />
+              <label class="input-ui__label">Nome da escola</label>
+            </div>
+          </div>
+
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="00.000.000/0001-00" type="text" autocomplete="off" />
+              <label class="input-ui__label">CNPJ</label>
+            </div>
+          </div>
+
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="Responsável" type="text" autocomplete="name" />
+              <label class="input-ui__label">Responsável</label>
+            </div>
+          </div>
+
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="nome@dominio.com" type="email" autocomplete="email" formControlName="email" />
+              <label class="input-ui__label">Email</label>
+            </div>
+          </div>
+
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="****" type="password" autocomplete="new-password" formControlName="password" />
+              <label class="input-ui__label">Senha</label>
+            </div>
+          </div>
+
+          <div class="input-ui">
+            <div class="input-ui__field">
+              <input class="input-ui__control" placeholder="****" type="password" autocomplete="new-password" formControlName="confirmPassword" />
+              <label class="input-ui__label">Confirmar Senha</label>
+            </div>
+          </div>
+
+          <div *ngIf="error$ | async as error" class="text-danger small text-center">
+            {{ error }}
+          </div>
+
+          <button class="btn-ui btn-ui--green w-100" type="submit" [disabled]="form.invalid || (loading$ | async)">
+            Criar Conta
+          </button>
+        </form>
+
+        <div class="d-flex justify-content-center mt-3 text-center gap-3">
+          <a routerLink="/register-options">Voltar</a>
+          <a routerLink="/login">Já tenho conta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

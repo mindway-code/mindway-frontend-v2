@@ -1,0 +1,45 @@
+<div class="login-container">
+  <div class="login">
+    <div class="img-container">
+      <div class="overlay flex-column">
+        <h3>Bem vindos ao MindWay!</h3>
+        <h5>Acesse a melhor plataforma de acompanhamento terapêutico.</h5>
+      </div>
+    </div>
+    <div class="form-container">
+          <div class="card-ui card-body">
+            <h3 class=" mb-3">Entrar no MindWay</h3>
+            <form class="d-flex flex-column gap-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+              <div class="input-ui">
+                <div class="input-ui__field">
+                  <input class="input-ui__control" placeholder="nome@dominio.com " type="email" autocomplete="email" formControlName="email" />
+                  <label class="input-ui__label">Seu email</label>
+                </div>
+                <small class="input-ui__hint">Ex: nome%46%dominio.com</small>
+              </div>
+
+              <div class="input-ui">
+                <div class="input-ui__field">
+                  <input class="input-ui__control" placeholder="****" type="password" autocomplete="current-password" formControlName="password" />
+                  <label class="input-ui__label">Senha</label>
+                </div>
+              </div>
+
+              <div *ngIf="error$ | async as error" class="text-danger small text-center">
+                {{ error }}
+              </div>
+
+              <button class="btn-ui btn-ui--green w-100" type="submit" [disabled]="form.invalid || (loading$ | async)">
+                Entrar
+              </button>
+            </form>
+
+            <div class="d-flex justify-content-center mt-3 text-center gap-3">
+              <a href="" class="me-1">Esqueceu a senha?</a>
+              <a routerLink="/register-options">Criar conta</a>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>

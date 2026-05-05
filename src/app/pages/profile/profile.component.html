@@ -1,0 +1,13 @@
+<div class="p-4 bg-white rounded-3 border">
+  <h2 class="h5 mb-3">Profile</h2>
+
+  <ng-container *ngIf="user$ | async as user; else loading">
+    <div class="mb-2"><strong>Name:</strong> {{ user.name }}</div>
+    <div class="mb-2"><strong>Email:</strong> {{ user.email }}</div>
+    <div class="mb-0"><strong>Role:</strong> {{ user.role }}</div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="text-muted">Loading...</div>
+  </ng-template>
+</div>

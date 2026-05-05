@@ -1,0 +1,14 @@
+<div class="layout">
+    <aside class="sidebar" aria-label="Sidebar">
+        
+    </aside>
+    <div class="router">
+        <div class="p-3">
+            <ng-container *ngIf="currentUser$ | async as user">
+                <div class="fw-semibold">Hello, {{ user.name || user.email }}</div>
+            </ng-container>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

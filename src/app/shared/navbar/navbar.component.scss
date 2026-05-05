@@ -1,0 +1,12 @@
+.navbar {
+  background-color: var(--bg-green);
+}
+
+.navbar-brand {
+  letter-spacing: 0.2px;
+  color: var(--text-light);
+}
+
+.navbar-nav {
+  .nav-link { color: var(--text-light); }
+}

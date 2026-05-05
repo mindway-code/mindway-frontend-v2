@@ -1,0 +1,121 @@
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
+import { environment } from "../../environments/environment";
+import type { PaginationMeta, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
+import type {
+  CreateSocialNetworkUserDTO,
+  SocialNetworkUserRecord,
+  UpdateSocialNetworkUserDTO,
+} from "../api/interfaces/social-network-user.interface";
+
+export interface ListSocialNetworkUsersQuery {
+  page?: number;
+  pageSize?: number;
+  socialNetworkId?: string;
+  userId?: string;
+}
+
+@Injectable({ providedIn: "root" })
+export class SocialNetworkUserService {
+  private readonly apiUrl = environment.apiUrl;
+
+  private readonly itemsSubject = new BehaviorSubject<SocialNetworkUserRecord[]>([]);
+  private readonly selectedItemSubject = new BehaviorSubject<SocialNetworkUserRecord | null>(null);
+  private readonly loadingSubject = new BehaviorSubject<boolean>(false);
+  private readonly errorSubject = new BehaviorSubject<string | null>(null);
+  private readonly paginationSubject = new BehaviorSubject<PaginationMeta | null>(null);
+
+  readonly items$ = this.itemsSubject.asObservable();
+  readonly selectedItem$ = this.selectedItemSubject.asObservable();
+  readonly loading$ = this.loadingSubject.asObservable();
+  readonly error$ = this.errorSubject.asObservable();
+  readonly pagination$ = this.paginationSubject.asObservable();
+
+  constructor(private readonly http: HttpClient) {}
+
+  list(query: ListSocialNetworkUsersQuery = {}): Observable<SocialNetworkUserRecord[]> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    let params = new HttpParams();
+    if (query.page !== undefined) params = params.set("page", String(query.page));
+    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.socialNetworkId) params = params.set("socialNetworkId", query.socialNetworkId);
+    if (query.userId) params = params.set("userId", query.userId);
+
+    return this.http.get<SuccessResponse<SocialNetworkUserRecord[]>>(`${this.apiUrl}/social-network-users`, { params }).pipe(
+      tap((res) => {
+        this.itemsSubject.next(res.data);
+        const meta = (res as any).meta?.pagination as PaginationMeta | undefined;
+        this.paginationSubject.next(meta ?? null);
+      }),
+      map((res) => res.data),
+      catchError((err) => {
+        this.errorSubject.next("Could not load social network users.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
+
+  getById(id: string): Observable<SocialNetworkUserRecord> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.get<SuccessResponse<SocialNetworkUserRecord>>(`${this.apiUrl}/social-network-users/${id}`).pipe(
+      map((res) => res.data),
+      tap((item) => this.selectedItemSubject.next(item)),
+      catchError((err) => {
+        this.errorSubject.next("Could not load social network user.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
+
+  create(dto: CreateSocialNetworkUserDTO): Observable<SocialNetworkUserRecord> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.post<SuccessResponse<SocialNetworkUserRecord>>(`${this.apiUrl}/social-network-users`, dto).pipe(
+      map((res) => res.data),
+      tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
+      catchError((err) => {
+        this.errorSubject.next("Could not create social network user.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
+
+  update(id: string, dto: UpdateSocialNetworkUserDTO): Observable<SocialNetworkUserRecord> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.put<SuccessResponse<SocialNetworkUserRecord>>(`${this.apiUrl}/social-network-users/${id}`, dto).pipe(
+      map((res) => res.data),
+      tap((updated) => this.selectedItemSubject.next(updated)),
+      catchError((err) => {
+        this.errorSubject.next("Could not update social network user.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
+
+  delete(id: string): Observable<DeleteResult> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/social-network-users/${id}`).pipe(
+      map((res) => res.data),
+      tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
+      catchError((err) => {
+        this.errorSubject.next("Could not delete social network user.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
+}

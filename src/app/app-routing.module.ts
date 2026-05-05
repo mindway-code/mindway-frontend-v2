@@ -1,0 +1,53 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CommonLayoutComponent } from './layout/common-layout/common-layout.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AuthGuard } from './auth/guard/auth.guard';
+import { HomeComponent } from './pages/home/home.component';
+import { SocialNetworkComponent } from './pages/social-network/social-network.component';
+import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { RegisterOptionsComponent } from './auth/register-options/register-options.component';
+import { RegisterSchoolComponent } from './auth/register-school/register-school.component';
+import { RegisterTeacherComponent } from './auth/register-teacher/register-teacher.component';
+import { RegisterTherapistComponent } from './auth/register-therapist/register-therapist.component';
+import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+
+const routes: Routes = [
+  // Rotas com layout comum (navbar/footer)
+  {
+    path: '',
+    component: CommonLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'social-network', component: SocialNetworkComponent, canActivate: [AuthGuard] },
+    ],
+  },
+  {
+    path: 'profile',
+    component: DashboardLayoutComponent,
+     canActivate: [AuthGuard],
+    children: [
+      { path: '', component: ProfileComponent, pathMatch: 'full' },
+      { path: 'social-network', component: SocialNetworkComponent },
+    ],
+  },
+
+  // Rotas fora do layout comum
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'register-options', component: RegisterOptionsComponent },
+  { path: 'register-school', component: RegisterSchoolComponent },
+  { path: 'register-teacher', component: RegisterTeacherComponent },
+  { path: 'register-therapist', component: RegisterTherapistComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent },
+
+  { path: '**', redirectTo: '' },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

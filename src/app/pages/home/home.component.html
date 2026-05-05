@@ -1,0 +1,47 @@
+<div class="cta">
+  <h1>Bem-vindo ao <span>MindWay</span></h1>
+  <div>
+    <h6>Com a nossa plataforma, todos têm acesso fácil ao histórico, evolução e acompanhamento.</h6>
+  </div>
+  <div>
+    <button class="btn-ui btn-ui--accent">
+      <i class="bi bi-box-arrow-in-right"></i> 
+      Acessar Perfil 
+    </button>
+  </div>
+</div>
+
+<div class="home-cards">
+  @for (card of cards; track card.title) {
+    <div class="card-ui card-ui--md">
+      <div class="card-ui__body card-ui__body--center">
+      <div>
+        <img
+          [src]="card.img || placeholderImg"
+          [alt]="card.alt || 'Imagem ilustrativa'"
+        />
+      </div>
+        <h2 class="card-ui__title">{{ card.title }}</h2>
+        <p class="card-ui__subtitle">{{ card.description }}</p>
+        <a class="btn-ui btn-ui--green btn-ui--sm" [routerLink]="card.route">
+          {{ card.buttonText }}
+        </a>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="cta-end ">
+  <h3><span>Acompanhamento Personalizado !</span></h3>
+  <div>
+    <h6>No MindWay, cada detalhe importa. <br>
+        Trabalhe lado a lado com profissionais especializados e acompanhe a evolução com facilidade e apoio contínuo.
+    </h6>
+  </div>
+  <div>
+    <button class="btn-ui btn-ui--accent">
+      <i class="bi bi-box-arrow-in-right"></i> 
+      Acessar Perfil 
+    </button>
+  </div>
+</div>

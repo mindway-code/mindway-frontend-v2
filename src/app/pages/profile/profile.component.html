@@ -1,13 +1,78 @@
-<div class="p-4 bg-white rounded-3 border">
-  <h2 class="h5 mb-3">Profile</h2>
+<section class="profile-page">
+  <header class="profile-page__hero">
+    <div class="profile-page__hero-content">
+      <p class="profile-page__eyebrow">Account</p>
+      <h1 class="profile-page__title">My Profile</h1>
+      <p class="profile-page__subtitle">
+        Manage your personal information and children profiles in one place.
+      </p>
+    </div>
 
-  <ng-container *ngIf="user$ | async as user; else loading">
-    <div class="mb-2"><strong>Name:</strong> {{ user.name }}</div>
-    <div class="mb-2"><strong>Email:</strong> {{ user.email }}</div>
-    <div class="mb-0"><strong>Role:</strong> {{ user.role }}</div>
+    <div class="profile-page__hero-actions">
+      <button
+        *ngIf="!editMode; else editActions"
+        class="btn-ui btn-ui--green btn-ui--sm"
+        type="button"
+        (click)="startEdit()"
+      >
+        Edit profile
+      </button>
+
+      <ng-template #editActions>
+        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
+          Close
+        </button>
+      </ng-template>
+    </div>
+  </header>
+
+  <div *ngIf="flashMessage" class="profile-page__flash" role="status">
+    {{ flashMessage }}
+  </div>
+
+  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">Loading your profile...</div>
+  <div *ngIf="userError$ | async as userError" class="profile-page__state profile-page__state--error" role="alert">
+    {{ userError }}
+  </div>
+
+  <ng-container *ngIf="user$ | async as user">
+    <div class="profile-page__grid">
+      <app-profile-summary-card [user]="user"></app-profile-summary-card>
+
+      <app-profile-edit-form
+        *ngIf="editMode"
+        [user]="user"
+        [saving]="(profileSaving$ | async) ?? false"
+        [error]="(profileError$ | async) ?? null"
+        (save)="saveProfile($event)"
+        (cancel)="cancelEdit()"
+      ></app-profile-edit-form>
+
+      <section *ngIf="!editMode" class="profile-page__tip card-ui card-ui--md">
+        <div class="card-ui__body">
+          <h2 class="card-ui__title">Quick tips</h2>
+          <p class="card-ui__subtitle">
+            Keep your information up to date and create children profiles to unlock anamnesis features.
+          </p>
+        </div>
+      </section>
+    </div>
   </ng-container>
 
-  <ng-template #loading>
-    <div class="text-muted">Loading...</div>
-  </ng-template>
-</div>
+  <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="user.role === 'common'">
+      <ng-container *ngIf="children$ | async as children">
+        <app-children-section
+          [children]="children"
+          [loading]="(childrenLoading$ | async) ?? false"
+          [saving]="(childrenSaving$ | async) ?? false"
+          [error]="(childrenError$ | async) ?? null"
+          [showCreate]="showCreateChild"
+          (toggleCreate)="toggleCreateChild()"
+          (createChild)="createChild($event)"
+          (closeCreate)="closeCreateChild()"
+        ></app-children-section>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</section>

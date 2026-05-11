@@ -1,0 +1,156 @@
+/* select-group with floating label */
+.select-ui {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* the wrapper that looks like the input */
+.select-ui__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  box-shadow: var(--shadow-sm);
+
+  padding: 0.95rem 0.9rem 0.55rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.12s ease;
+}
+
+/* native select */
+.select-ui__control {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+
+  color: var(--text-dark);
+  font-weight: var(--fw-md);
+  font-size: 1rem;
+
+  padding: var(--padding-sm);
+  margin: 0;
+
+  appearance: none;
+  cursor: pointer;
+}
+
+/* placeholder option style */
+.select-ui__control:invalid {
+  color: var(--text-muted);
+}
+
+/* floating label */
+.select-ui__label {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.92rem;
+
+  color: var(--text-muted);
+  font-weight: var(--fw-md);
+  font-size: 0.95rem;
+
+  pointer-events: none;
+  transition:
+    top 0.15s ease,
+    color 0.15s ease,
+    font-size 0.15s ease;
+  background: var(--bg-white);
+  padding: 0 0.25rem;
+}
+
+/* focus ring on the container */
+.select-ui__field:focus-within {
+  border-color: var(--bg-green);
+  box-shadow: 0 0 0 3px rgba(0, 108, 112, 0.12);
+}
+
+/* floating behavior:
+   - focus
+   - OR when select has a valid selected value */
+.select-ui__control:focus + .select-ui__label,
+.select-ui__control:valid + .select-ui__label {
+  top: 0.25rem;
+  font-size: 0.78rem;
+  color: var(--bg-green);
+}
+
+/* optional left icon */
+.select-ui__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+/* right arrow */
+.select-ui__arrow {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* add space when arrow exists */
+.select-ui__control {
+  padding-right: 2rem;
+}
+
+/* error state */
+.select-ui--error .select-ui__field {
+  border-color: rgba(220, 53, 69, 0.55);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.select-ui--error .select-ui__label {
+  color: rgba(220, 53, 69, 0.9);
+}
+
+/* helper text */
+.select-ui__hint {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.select-ui__hint--error {
+  color: rgba(220, 53, 69, 0.9);
+}
+
+/* sizes */
+.select-ui--sm .select-ui__field {
+  padding: 0.85rem 0.8rem 0.45rem;
+}
+
+.select-ui--lg .select-ui__field {
+  padding: 1.1rem 1rem 0.7rem;
+}
+
+/* disabled */
+.select-ui__control:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.select-ui__control:disabled ~ .select-ui__label {
+  opacity: 0.75;
+}
+
+.select-ui__control:disabled ~ .select-ui__arrow {
+  opacity: 0.75;
+}

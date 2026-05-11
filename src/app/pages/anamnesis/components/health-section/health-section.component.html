@@ -1,0 +1,48 @@
+<app-anamnesis-section-shell
+  title="Health"
+  subtitle="Diagnosis, medication and allergies."
+  [exists]="!!data"
+  [editing]="editing"
+  [saving]="saving"
+  (edit)="onEdit()"
+  (cancel)="onCancel()"
+  (delete)="delete.emit()"
+>
+  <ng-container *ngIf="!editing">
+    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+
+    <div *ngIf="data" class="anamnesis-section__grid">
+      <div class="anamnesis-section__field"><strong>Diagnosis:</strong> {{ data.diagnosis ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Medication:</strong> {{ data.medication ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Allergies:</strong> {{ data.allergies ?? "-" }}</div>
+    </div>
+  </ng-container>
+
+  <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="anamnesis-section__form-grid">
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="diagnosis" placeholder=" " />
+          <label class="input-ui__label">Diagnosis</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="medication" placeholder=" " />
+          <label class="input-ui__label">Medication</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="allergies" placeholder=" " />
+          <label class="input-ui__label">Allergies</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="anamnesis-section__footer">
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+    </div>
+  </form>
+</app-anamnesis-section-shell>
+

@@ -1,0 +1,47 @@
+<section class="children-section">
+  <header class="children-section__header">
+    <div>
+      <p class="children-section__eyebrow">Family</p>
+      <h2 class="children-section__title">Children</h2>
+      <p class="children-section__subtitle">Create and manage your children profiles.</p>
+    </div>
+
+    <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="toggleCreate.emit()">
+      <ng-container *ngIf="!showCreate; else hideTpl">Add child</ng-container>
+      <ng-template #hideTpl>Hide form</ng-template>
+    </button>
+  </header>
+
+  <app-child-create-form
+    *ngIf="showCreate"
+    [saving]="saving"
+    [error]="error"
+    (create)="createChild.emit($event)"
+    (cancel)="closeCreate.emit()"
+  ></app-child-create-form>
+
+  <div *ngIf="loading" class="children-section__state text-muted">Loading children...</div>
+
+  <div *ngIf="!loading && error && !showCreate" class="children-section__state children-section__state--error" role="alert">
+    {{ error }}
+  </div>
+
+  <ng-container *ngIf="!loading && !error">
+    <div *ngIf="children.length === 0" class="children-section__empty card-ui card-ui--md">
+      <div class="card-ui__body card-ui__body--center">
+        <h3 class="children-section__empty-title">No children registered yet</h3>
+        <p class="children-section__empty-subtitle">
+          Create a child profile to start organizing anamnesis and development information.
+        </p>
+        <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="toggleCreate.emit()">
+          Add child
+        </button>
+      </div>
+    </div>
+
+    <div class="children-section__grid" *ngIf="children.length > 0">
+      <app-child-card *ngFor="let child of children" [child]="child"></app-child-card>
+    </div>
+  </ng-container>
+</section>
+

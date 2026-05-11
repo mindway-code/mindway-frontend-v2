@@ -1,0 +1,60 @@
+.child-profile-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.child-profile-page__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.child-profile-page__eyebrow {
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--text-muted, #7a7a7a);
+}
+
+.child-profile-page__title {
+  margin: 0.25rem 0 0;
+}
+
+.child-profile-page__subtitle {
+  margin: 0.5rem 0 0;
+  color: var(--text-muted, #7a7a7a);
+  max-width: 70ch;
+}
+
+.child-profile-page__state {
+  padding: 0.75rem 1rem;
+}
+
+.child-profile-page__state--error {
+  color: var(--danger, #b00020);
+}
+
+.child-profile-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 980px) {
+  .child-profile-page__grid {
+    grid-template-columns: 360px 1fr;
+    align-items: start;
+  }
+}
+
+.child-profile-page__associate-more {
+  margin-top: 0.5rem;
+}
+
+.child-profile-page__empty .card-ui__body {
+  display: grid;
+  gap: 1rem;
+}
+

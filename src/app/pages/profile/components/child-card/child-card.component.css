@@ -1,0 +1,99 @@
+.child-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.child-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.child-card__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  min-width: 0;
+}
+
+.child-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-pill);
+  display: grid;
+  place-items: center;
+  background: rgba(0, 108, 112, 0.12);
+  color: var(--bg-green);
+  font-weight: var(--fw-xlg);
+}
+
+.child-card__text {
+  min-width: 0;
+}
+
+.child-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: var(--fw-xlg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.child-card__subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.child-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.child-card__row {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.child-card__label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.child-card__value {
+  color: var(--text-dark);
+  font-weight: var(--fw-lg);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.child-card__value--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: var(--fw-md);
+}
+
+.child-card__value--wrap {
+  white-space: normal;
+  text-align: left;
+}
+
+.child-card__footer {
+  display: flex;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--gap-sm);
+}
+

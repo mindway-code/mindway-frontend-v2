@@ -1,0 +1,42 @@
+.anamnesis-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.anamnesis-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.anamnesis-page__eyebrow {
+  margin: 0;
+  color: var(--text-muted);
+  font-weight: var(--fw-md);
+}
+
+.anamnesis-page__title {
+  margin: 0;
+  color: var(--text-dark);
+  font-weight: var(--fw-xlg);
+}
+
+.anamnesis-page__subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  max-width: 70ch;
+}
+
+.anamnesis-page__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-lg);
+}
+
+@media (max-width: 900px) {
+  .anamnesis-page__grid {
+    grid-template-columns: 1fr;
+  }
+}

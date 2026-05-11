@@ -1,0 +1,15 @@
+.anamnesis-section-shell__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+
+.anamnesis-section-shell__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  align-items: center;
+}
+

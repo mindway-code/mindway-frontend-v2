@@ -27,6 +27,33 @@ import { RegisterSchoolComponent } from './auth/register-school/register-school.
 import { RegisterTeacherComponent } from './auth/register-teacher/register-teacher.component';
 import { RegisterTherapistComponent } from './auth/register-therapist/register-therapist.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileSummaryCardComponent } from './pages/profile/components/profile-summary-card/profile-summary-card.component';
+import { ProfileEditFormComponent } from './pages/profile/components/profile-edit-form/profile-edit-form.component';
+import { ChildrenSectionComponent } from './pages/profile/components/children-section/children-section.component';
+import { ChildCardComponent } from './pages/profile/components/child-card/child-card.component';
+import { ChildCreateFormComponent } from './pages/profile/components/child-create-form/child-create-form.component';
+import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
+import { ChildSelectorComponent } from './pages/anamnesis/components/child-selector/child-selector.component';
+import { AnamnesisEmptyStateComponent } from './pages/anamnesis/components/anamnesis-empty-state/anamnesis-empty-state.component';
+import { AnamnesisSectionShellComponent } from './pages/anamnesis/components/anamnesis-section-shell/anamnesis-section-shell.component';
+import { BirthSectionComponent } from './pages/anamnesis/components/birth-section/birth-section.component';
+import { MotorDevelopmentSectionComponent } from './pages/anamnesis/components/motor-development-section/motor-development-section.component';
+import { LanguageCommunicationSectionComponent } from './pages/anamnesis/components/language-communication-section/language-communication-section.component';
+import { HealthSectionComponent } from './pages/anamnesis/components/health-section/health-section.component';
+import { BehaviorSectionComponent } from './pages/anamnesis/components/behavior-section/behavior-section.component';
+import { RoutineSectionComponent } from './pages/anamnesis/components/routine-section/routine-section.component';
+import { GeneralNotesSectionComponent } from './pages/anamnesis/components/general-notes-section/general-notes-section.component';
+import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
+import { ChildAccessCodeFormComponent } from './pages/child-profile/components/child-access-code-form/child-access-code-form.component';
+import { ChildListComponent } from './pages/child-profile/components/child-list/child-list.component';
+import { ChildProfileCardComponent } from './pages/child-profile/components/child-card/child-card.component';
+import { ChildDetailsPanelComponent } from './pages/child-profile/components/child-details-panel/child-details-panel.component';
+import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
+import { ReportsChildSelectorComponent } from './pages/reports-child/components/reports-child-selector/reports-child-selector.component';
+import { ReportsChildListComponent } from './pages/reports-child/components/reports-child-list/reports-child-list.component';
+import { ReportsChildCardComponent } from './pages/reports-child/components/reports-child-card/reports-child-card.component';
+import { ReportsChildFormComponent } from './pages/reports-child/components/reports-child-form/reports-child-form.component';
+import { ReportsChildEmptyStateComponent } from './pages/reports-child/components/reports-child-empty-state/reports-child-empty-state.component';
 
 registerLocaleData(localePt);
 
@@ -44,11 +71,36 @@ registerLocaleData(localePt);
     RegisterTeacherComponent,
     RegisterTherapistComponent,
     ProfileComponent,
+    ProfileSummaryCardComponent,
+    ProfileEditFormComponent,
+    ChildrenSectionComponent,
+    ChildCardComponent,
+    ChildCreateFormComponent,
     HomeComponent,
+    AnamnesisComponent,
+    ChildSelectorComponent,
+    AnamnesisEmptyStateComponent,
+    AnamnesisSectionShellComponent,
+    BirthSectionComponent,
+    MotorDevelopmentSectionComponent,
+    LanguageCommunicationSectionComponent,
+    HealthSectionComponent,
+    BehaviorSectionComponent,
+    RoutineSectionComponent,
+    GeneralNotesSectionComponent,
     CommonLayoutComponent,
-    DashboardLayoutComponent
-
-
+    DashboardLayoutComponent,
+    ChildProfileComponent,
+    ChildAccessCodeFormComponent,
+    ChildListComponent,
+    ChildProfileCardComponent,
+    ChildDetailsPanelComponent,
+    ReportsChildComponent,
+    ReportsChildSelectorComponent,
+    ReportsChildListComponent,
+    ReportsChildCardComponent,
+    ReportsChildFormComponent,
+    ReportsChildEmptyStateComponent,
   ],
   imports: [
     BrowserModule,

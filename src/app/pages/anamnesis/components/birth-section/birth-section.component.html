@@ -1,0 +1,90 @@
+<app-anamnesis-section-shell
+  title="Birth"
+  subtitle="Birth and hospitalization information."
+  [exists]="!!data"
+  [editing]="editing"
+  [saving]="saving"
+  (edit)="onEdit()"
+  (cancel)="onCancel()"
+  (delete)="delete.emit()"
+>
+  <ng-container *ngIf="!editing">
+    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+
+    <div *ngIf="data" class="anamnesis-section__grid">
+      <div class="anamnesis-section__field"><strong>Gestational weeks:</strong> {{ data.gestationalWeeks ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Birth type:</strong> {{ data.birthType ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Birth weight:</strong> {{ data.birthWeightGrams ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Birth height:</strong> {{ data.birthHeightCentimeters ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Apgar 1 min:</strong> {{ data.apgarOneMinute ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Apgar 5 min:</strong> {{ data.apgarFiveMinutes ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Complication:</strong> {{ data.birthComplication ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Hospitalization days:</strong> {{ data.hospitalizationDays ?? "-" }}</div>
+    </div>
+  </ng-container>
+
+  <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="anamnesis-section__form-grid">
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="gestationalWeeks" placeholder=" " />
+          <label class="input-ui__label">Gestational weeks</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="birthType" placeholder=" " />
+          <label class="input-ui__label">Birth type</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="birthWeightGrams" placeholder=" " />
+          <label class="input-ui__label">Birth weight (grams)</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="birthHeightCentimeters" placeholder=" " />
+          <label class="input-ui__label">Birth height (cm)</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="apgarOneMinute" placeholder=" " />
+          <label class="input-ui__label">Apgar one minute</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="apgarFiveMinutes" placeholder=" " />
+          <label class="input-ui__label">Apgar five minutes</label>
+        </div>
+      </div>
+
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="birthComplication" placeholder=" " />
+          <label class="input-ui__label">Birth complication</label>
+        </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="hospitalizationDays" placeholder=" " />
+          <label class="input-ui__label">Hospitalization days</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="anamnesis-section__footer">
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+    </div>
+  </form>
+</app-anamnesis-section-shell>
+

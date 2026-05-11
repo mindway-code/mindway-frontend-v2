@@ -1,0 +1,18 @@
+.reports-child-form__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.reports-child-form__grid {
+  display: grid;
+  gap: 12px;
+}
+
+.reports-child-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+

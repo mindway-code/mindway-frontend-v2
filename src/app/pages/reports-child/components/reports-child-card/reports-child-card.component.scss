@@ -1,0 +1,32 @@
+.reports-child-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.reports-child-card__title {
+  margin: 0;
+}
+
+.reports-child-card__meta {
+  margin: 6px 0 0;
+  opacity: 0.8;
+}
+
+.reports-child-card__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reports-child-card__field {
+  margin: 0 0 8px;
+}
+
+.reports-child-card__muted {
+  margin: 0;
+  opacity: 0.75;
+}
+

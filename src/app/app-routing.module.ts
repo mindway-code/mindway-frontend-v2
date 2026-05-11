@@ -13,6 +13,9 @@ import { RegisterTeacherComponent } from './auth/register-teacher/register-teach
 import { RegisterTherapistComponent } from './auth/register-therapist/register-therapist.component';
 import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
+import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
+import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -33,6 +36,25 @@ const routes: Routes = [
       { path: 'social-network', component: SocialNetworkComponent },
     ],
   },
+  {
+    path: 'anamnesis',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: AnamnesisComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'child-profile',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: ChildProfileComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'reports-child',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: ReportsChildComponent, pathMatch: 'full' }],
+  },
+  { path: 'children/:childId/anamnesis', redirectTo: 'anamnesis', pathMatch: 'full' },
 
   // Rotas fora do layout comum
   { path: 'login', component: LoginComponent },

@@ -1,0 +1,62 @@
+<app-anamnesis-section-shell
+  title="Behavior"
+  subtitle="Interaction, anxiety and attention."
+  [exists]="!!data"
+  [editing]="editing"
+  [saving]="saving"
+  (edit)="onEdit()"
+  (cancel)="onCancel()"
+  (delete)="delete.emit()"
+>
+  <ng-container *ngIf="!editing">
+    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+
+    <div *ngIf="data" class="anamnesis-section__grid">
+      <div class="anamnesis-section__field"><strong>Concentration difficulty:</strong> {{ data.concentrationDifficulty ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Interaction:</strong> {{ data.interaction ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Activity preference:</strong> {{ data.activityPreference ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Anxiety:</strong> {{ data.anxiety ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Hyperactivity:</strong> {{ data.hyperactivity ?? "-" }}</div>
+    </div>
+  </ng-container>
+
+  <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="anamnesis-section__form-grid">
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="concentrationDifficulty" placeholder=" " />
+          <label class="input-ui__label">Concentration difficulty</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="interaction" placeholder=" " />
+          <label class="input-ui__label">Interaction</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="activityPreference" placeholder=" " />
+          <label class="input-ui__label">Activity preference</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="anxiety" placeholder=" " />
+          <label class="input-ui__label">Anxiety</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="hyperactivity" placeholder=" " />
+          <label class="input-ui__label">Hyperactivity</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="anamnesis-section__footer">
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+    </div>
+  </form>
+</app-anamnesis-section-shell>
+

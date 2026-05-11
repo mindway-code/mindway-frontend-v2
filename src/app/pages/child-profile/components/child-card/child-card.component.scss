@@ -1,0 +1,50 @@
+.child-card {
+  text-align: left;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.child-card--active .card-ui__body {
+  border-bottom: 4px solid var(--text-accent, #3b82f6);
+  border-radius: var(--border-sm);
+  outline-offset: 2px;
+}
+
+.child-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.child-card__title {
+  margin: 0;
+}
+
+.child-card__age {
+  color: var(--text-muted, #7a7a7a);
+  font-weight: 600;
+}
+
+.child-card__meta {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted, #7a7a7a);
+}
+
+.child-card__note {
+  margin: 0.5rem 0 0;
+  color: var(--text, #222);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.child-card__code {
+  margin: 0.75rem 0 0;
+  color: var(--text-muted, #7a7a7a);
+}
+

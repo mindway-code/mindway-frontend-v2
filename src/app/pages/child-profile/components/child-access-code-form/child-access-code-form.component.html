@@ -1,0 +1,30 @@
+<div class="child-access-code-form">
+  <div *ngIf="error" class="child-access-code-form__error" role="alert">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="child-access-code-form__form">
+    <div class="input-ui">
+      <div class="input-ui__field">
+        <input
+          class="input-ui__control"
+          formControlName="accessCode"
+          type="text"
+          placeholder="Enter the access code shared by the responsible user"
+          [disabled]="loading"
+        />
+        <label class="input-ui__label">Child access code</label>
+      </div>
+
+      <p class="child-access-code-form__hint">
+        Use the access code provided by the child's responsible user.
+      </p>
+    </div>
+
+    <button class="btn-ui btn-ui--green btn-ui--sm" type="submit" [disabled]="loading">
+      <ng-container *ngIf="!loading; else loadingTpl">Connect child</ng-container>
+      <ng-template #loadingTpl>Connecting...</ng-template>
+    </button>
+  </form>
+</div>
+

@@ -1,0 +1,12 @@
+.anamnesis-section__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.anamnesis-section__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-sm);
+}
+

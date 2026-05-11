@@ -509,6 +509,109 @@ SuccessResponse<{
 
 ---
 
+# Children
+
+Base module:
+
+```txt
+/api/src/api/v1/modules/children
+```
+
+## Child Types
+
+```ts
+export interface ChildRecord {
+  id: string;
+  responsibleId: string;
+  secondaryResponsibleId?: string | null;
+  name: string;
+  age: number;
+  birthDate: string;
+  observation?: string | null;
+  accessCode: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+```ts
+export interface CreateChildDTO {
+  // Admin-only (optional): when provided, creates the child for that responsible user.
+  // For normal profile flow, do not send this field (backend derives from auth user).
+  responsibleId?: string;
+  name: string;
+  age: number;
+  birthDate: string;
+  observation?: string | null;
+  secondaryResponsibleId?: string | null;
+}
+```
+
+## GET `/children`
+
+Lists children visible to the authenticated user.
+
+- For role `common`: returns children where the user is the responsible or secondary responsible.
+- For role `admin`: returns all children.
+
+Auth:
+
+```txt
+Authenticated
+```
+
+Query:
+
+```ts
+export interface ListChildrenQuery {
+  page?: number;
+  pageSize?: number;
+}
+```
+
+Response:
+
+```ts
+SuccessResponse<ChildRecord[]>
+```
+
+With:
+
+```ts
+meta.pagination
+```
+
+## POST `/children`
+
+Creates a child.
+
+Auth:
+
+```txt
+Authenticated
+```
+
+Body:
+
+```ts
+CreateChildDTO
+```
+
+Important:
+
+- Frontend must not ask the user to type `responsibleId` or `accessCode`.
+- Backend derives `responsibleId` from the authenticated user (`req.user.id`) for normal users.
+- Admins may optionally provide `responsibleId` to create for another user; if omitted, it defaults to the authenticated admin.
+- Backend generates `accessCode`.
+
+Response:
+
+```ts
+SuccessResponse<ChildRecord>
+```
+
+---
+
 # Families
 
 Base module:

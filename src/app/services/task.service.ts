@@ -49,8 +49,7 @@ export class TaskService {
     return this.http.get<SuccessResponse<TaskRecord[]>>(url, { params }).pipe(
       tap((res) => {
         this.itemsSubject.next(res.data);
-        const meta = (res as any).meta?.pagination as PaginationMeta | undefined;
-        this.paginationSubject.next(meta ?? null);
+        this.paginationSubject.next(res.meta?.pagination ?? null);
       }),
       map((res) => res.data),
       catchError((err) => {

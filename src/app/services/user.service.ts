@@ -10,18 +10,35 @@ export class UserService {
   private readonly apiUrl = environment.apiUrl;
 
   private readonly itemsSubject = new BehaviorSubject<UserRecord[]>([]);
-  private readonly selectedItemSubject = new BehaviorSubject<UserRecord | null>(null);
+  private readonly currentUserSubject = new BehaviorSubject<UserRecord | null>(null);
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
+  private readonly savingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly paginationSubject = new BehaviorSubject<PaginationMeta | null>(null);
 
   readonly items$ = this.itemsSubject.asObservable();
-  readonly selectedItem$ = this.selectedItemSubject.asObservable();
+  readonly currentUser$ = this.currentUserSubject.asObservable();
   readonly loading$ = this.loadingSubject.asObservable();
+  readonly saving$ = this.savingSubject.asObservable();
   readonly error$ = this.errorSubject.asObservable();
   readonly pagination$ = this.paginationSubject.asObservable();
 
   constructor(private readonly http: HttpClient) {}
+
+  loadMe(): Observable<UserRecord> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.get<SuccessResponse<UserRecord>>(`${this.apiUrl}/users/me`).pipe(
+      map((res) => res.data),
+      tap((me) => this.currentUserSubject.next(me)),
+      catchError((err) => {
+        this.errorSubject.next("Could not load profile.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false))
+    );
+  }
 
   listUsers(query: PaginationQuery = {}): Observable<UserRecord[]> {
     this.loadingSubject.next(true);
@@ -36,8 +53,7 @@ export class UserService {
       .pipe(
         tap((res) => {
           this.itemsSubject.next(res.data);
-          const meta = (res as any).meta?.pagination as PaginationMeta | undefined;
-          this.paginationSubject.next(meta ?? null);
+          this.paginationSubject.next(res.meta?.pagination ?? null);
         }),
         map((res) => res.data),
         catchError((err) => {
@@ -49,7 +65,7 @@ export class UserService {
   }
 
   createUser(dto: UserDTO): Observable<UserRecord> {
-    this.loadingSubject.next(true);
+    this.savingSubject.next(true);
     this.errorSubject.next(null);
 
     return this.http.post<SuccessResponse<UserRecord>>(`${this.apiUrl}/users`, dto).pipe(
@@ -61,39 +77,39 @@ export class UserService {
         this.errorSubject.next("Could not create user.");
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.savingSubject.next(false))
     );
   }
 
   updateMe(dto: UpdateUserDTO): Observable<UserRecord> {
-    this.loadingSubject.next(true);
+    this.savingSubject.next(true);
     this.errorSubject.next(null);
 
     return this.http.patch<SuccessResponse<UserRecord>>(`${this.apiUrl}/users/me`, dto).pipe(
       map((res) => res.data),
-      tap((updated) => this.selectedItemSubject.next(updated)),
+      tap((updated) => this.currentUserSubject.next(updated)),
       catchError((err) => {
         this.errorSubject.next("Could not update profile.");
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.savingSubject.next(false))
     );
   }
 
   deleteMe(): Observable<DeleteResult> {
-    this.loadingSubject.next(true);
+    this.savingSubject.next(true);
     this.errorSubject.next(null);
 
     return this.http.delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/users/me`).pipe(
       map((res) => res.data),
       tap(() => {
-        this.selectedItemSubject.next(null);
+        this.currentUserSubject.next(null);
       }),
       catchError((err) => {
         this.errorSubject.next("Could not delete user.");
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.savingSubject.next(false))
     );
   }
 }

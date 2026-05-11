@@ -2,6 +2,7 @@
 @import "./app/shared/ui/button";
 @import "./app/shared/ui/card";
 @import "./app/shared/ui/input";
+@import "./app/shared/ui/select";
 
 :root {
   margin: 0;
@@ -10,9 +11,11 @@
 
   /* backgrounds */
   --bg-green: #006c70;
+  --bg-green-light: #006c7032;
   --bg-accent: #f4b313;
   --bg-light: #f4f7f6;
   --bg-white: #ffffff;
+  
 
   /* text */
   --text-dark: #212529;

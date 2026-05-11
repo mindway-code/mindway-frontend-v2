@@ -41,7 +41,7 @@ export class HomeComponent {
       img: 'assets/webp/relate2.webp',
       alt: 'Ilustração da ficha de anamnese',
       buttonText: 'Abrir ficha',
-      route: '/anamnese'
+      route: '/anamnesis'
     }
   ];
 }

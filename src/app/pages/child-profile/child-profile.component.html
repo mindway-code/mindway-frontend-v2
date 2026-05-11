@@ -1,0 +1,75 @@
+<section class="child-profile-page">
+  <header class="child-profile-page__header">
+    <div>
+      <p class="child-profile-page__eyebrow">Children</p>
+      <h1 class="child-profile-page__title">Child Profile</h1>
+      <p class="child-profile-page__subtitle">
+        View children you are responsible for or connect using an access code shared by the responsible user.
+      </p>
+    </div>
+  </header>
+
+  <div *ngIf="childrenLoading$ | async" class="child-profile-page__state text-muted">Loading children...</div>
+  <div *ngIf="childrenError$ | async as error" class="child-profile-page__state child-profile-page__state--error" role="alert">
+    {{ error }}
+  </div>
+
+  <ng-container *ngIf="children$ | async as children">
+    <section *ngIf="children.length === 0" class="card-ui card-ui--md child-profile-page__empty">
+      <div class="card-ui__body">
+        <h2 class="card-ui__title">No child profile connected yet.</h2>
+        <p class="card-ui__subtitle">
+          If you are responsible for a child, your children will appear here. If another responsible user shared an access code with you,
+          connect the child using the code below.
+        </p>
+
+        <app-child-access-code-form
+          class="child-profile-page__form"
+          [loading]="(associationLoading$ | async) ?? false"
+          [error]="(associationError$ | async) ?? null"
+          (associate)="onAssociateByAccessCode($event)"
+        ></app-child-access-code-form>
+      </div>
+    </section>
+
+    <ng-container *ngIf="children.length > 0">
+      <div class="child-profile-page__grid">
+        <section class="card-ui card-ui--md child-profile-page__list">
+          <div class="card-ui__body">
+            <h2 class="card-ui__title">Your children</h2>
+            <p class="card-ui__subtitle">Select a child to see more details.</p>
+
+            <app-child-list
+              [children]="children"
+              [selectedChildId]="(selectedChildId$ | async) ?? null"
+              (selectChild)="onSelectChild($event)"
+            ></app-child-list>
+          </div>
+        </section>
+
+        <section class="card-ui card-ui--md child-profile-page__details">
+          <div class="card-ui__body">
+            <app-child-details-panel
+              [child]="(selectedChild$ | async) ?? null"
+              (openAnamnesis)="onOpenAnamnesis($event)"
+            ></app-child-details-panel>
+          </div>
+        </section>
+      </div>
+
+      <section class="card-ui card-ui--md child-profile-page__associate-more">
+        <div class="card-ui__body">
+          <h2 class="card-ui__title">Have another access code?</h2>
+          <p class="card-ui__subtitle">Connect another child to your account.</p>
+
+          <app-child-access-code-form
+            [loading]="(associationLoading$ | async) ?? false"
+            [error]="(associationError$ | async) ?? null"
+            (associate)="onAssociateByAccessCode($event)"
+          ></app-child-access-code-form>
+        </div>
+      </section>
+    </ng-container>
+  </ng-container>
+</section>
+

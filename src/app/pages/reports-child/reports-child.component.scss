@@ -1,0 +1,28 @@
+.reports-child {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reports-child__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reports-child__title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.reports-child__subtitle {
+  margin: 6px 0 0;
+  opacity: 0.8;
+}
+
+.reports-child__error {
+  margin: 0;
+  color: #b00020;
+}
+

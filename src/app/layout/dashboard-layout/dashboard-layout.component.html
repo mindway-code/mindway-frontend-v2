@@ -1,14 +1,81 @@
-<div class="layout">
-    <aside class="sidebar" aria-label="Sidebar">
-        
-    </aside>
-    <div class="router">
-        <div class="p-3">
-            <ng-container *ngIf="currentUser$ | async as user">
-                <div class="fw-semibold">Hello, {{ user.name || user.email }}</div>
-            </ng-container>
-        </div>
-        <router-outlet></router-outlet>
+<section class="dashboard-layout">
+  <aside class="dashboard-aside" aria-label="Sidebar">
+    <!-- <div class="dashboard-aside__brand">
+      <a routerLink="/" class="dashboard-aside__brand-link">home</a>
+    </div> -->
+
+    <div class="dashboard-aside__user">
+      <img
+        class="dashboard-aside__avatar"
+        src="assets/img/placeholder.PNG"
+        alt="User profile placeholder"
+      />
+
+      <div class="dashboard-aside__user-info">
+        <p class="dashboard-aside__welcome">Welcome</p>
+
+        <strong class="dashboard-aside__name">
+          <ng-container *ngIf="currentUser$ | async as user; else userFallback">
+            {{ user.name || user.email }}
+          </ng-container>
+
+          <ng-template #userFallback>User</ng-template>
+        </strong>
+      </div>
     </div>
 
-</div>
+    <nav class="dashboard-aside__nav" aria-label="Dashboard navigation">
+      <a
+        class="dashboard-aside__link"
+        routerLink="/profile"
+        routerLinkActive="dashboard-aside__link--active"
+      >
+        Profile
+      </a>
+
+      <a
+        class="dashboard-aside__link"
+        routerLink="/anamnesis"
+        routerLinkActive="dashboard-aside__link--active"
+      >
+        Anamnesis
+      </a>
+
+      <!-- TODO: create /child-profile route/page -->
+      <a
+        class="dashboard-aside__link"
+        routerLink="/child-profile"
+        routerLinkActive="dashboard-aside__link--active"
+      >
+        Child Profile
+      </a>
+
+      <a
+        class="dashboard-aside__link"
+        routerLink="/reports-child"
+        routerLinkActive="dashboard-aside__link--active"
+      >
+        Child Reports
+      </a>
+
+      <!-- TODO: create /social-network-user route/page -->
+      <a
+        class="dashboard-aside__link"
+        routerLink="/social-network-user"
+        routerLinkActive="dashboard-aside__link--active"
+      >
+        Social Network User
+      </a>
+    </nav>
+
+    <div class="dashboard-aside__footer">
+      <a class="dashboard-aside__home-link" routerLink="/">Back to Home</a>
+    </div>
+  </aside>
+
+  <main class="dashboard-layout__main">
+    <div class="dashboard-layout__panel">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</section>

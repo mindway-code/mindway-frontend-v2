@@ -1,0 +1,23 @@
+.child-access-code-form__form {
+  display: grid;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+@media (min-width: 720px) {
+  .child-access-code-form__form {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.child-access-code-form__hint {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted, #7a7a7a);
+  font-size: 0.9rem;
+}
+
+.child-access-code-form__error {
+  margin-bottom: 0.75rem;
+  color: var(--danger, #b00020);
+}
+

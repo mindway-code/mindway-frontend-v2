@@ -1,0 +1,55 @@
+<app-anamnesis-section-shell
+  title="Language & communication"
+  subtitle="Speech milestones and current communication."
+  [exists]="!!data"
+  [editing]="editing"
+  [saving]="saving"
+  (edit)="onEdit()"
+  (cancel)="onCancel()"
+  (delete)="delete.emit()"
+>
+  <ng-container *ngIf="!editing">
+    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+
+    <div *ngIf="data" class="anamnesis-section__grid">
+      <div class="anamnesis-section__field"><strong>First words age:</strong> {{ data.firstWordsAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Full sentences age:</strong> {{ data.fullSentencesAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Comprehension:</strong> {{ data.comprehension ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Current communication:</strong> {{ data.currentCommunication ?? "-" }}</div>
+    </div>
+  </ng-container>
+
+  <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="anamnesis-section__form-grid">
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="firstWordsAgeMonths" placeholder=" " />
+          <label class="input-ui__label">First words age (months)</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="fullSentencesAgeMonths" placeholder=" " />
+          <label class="input-ui__label">Full sentences age (months)</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="comprehension" placeholder=" " />
+          <label class="input-ui__label">Comprehension</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="currentCommunication" placeholder=" " />
+          <label class="input-ui__label">Current communication</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="anamnesis-section__footer">
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+    </div>
+  </form>
+</app-anamnesis-section-shell>
+

@@ -1,33 +1,33 @@
 <ng-container *ngIf="child; else emptyTpl">
   <header class="child-details__header">
     <div>
-      <h2 class="child-details__title">{{ child?.name }}</h2>
+      <h2 class="child-details__title">{{ child.name }}</h2>
       <p class="child-details__subtitle">
-        {{ child?.age }} years • Born {{ child?.birthDate | date: "mediumDate" }}
+        {{ child.age }} anos • Nascido em {{ child.birthDate | date: "mediumDate" }}
       </p>
     </div>
 
     <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="openAnamnesis.emit(child)">
-      Open anamnesis
+      Abrir anamnese
     </button>
   </header>
 
   <div class="child-details__grid">
     <!-- <div class="child-details__row">
-      <span class="child-details__label">Access code</span>
+      <span class="child-details__label">Código de acesso</span>
       <span class="child-details__value"><strong>{{ child?.accessCode }}</strong></span>
     </div> -->
 
     <div class="child-details__row">
-      <span class="child-details__label">Observation</span>
-      <span class="child-details__value">{{ child?.observation || "—" }}</span>
+      <span class="child-details__label">Observação</span>
+      <span class="child-details__value">{{ child.observation || "—" }}</span>
     </div>
   </div>
 </ng-container>
 
 <ng-template #emptyTpl>
   <div class="child-details__empty text-muted">
-    Select a child to see details.
+    Selecione uma criança para ver os detalhes.
   </div>
 </ng-template>
 

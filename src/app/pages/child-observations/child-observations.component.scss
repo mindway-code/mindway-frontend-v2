@@ -1,0 +1,24 @@
+.child-observations-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.child-observations-page__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.child-observations-page__title {
+  margin: 0;
+}
+
+.child-observations-page__subtitle,
+.child-observations-page__text {
+  margin: 0;
+  color: var(--gray-600);
+}
+
+.child-observations-page__content {
+  padding: 1.5rem;
+}

@@ -41,3 +41,4 @@ export class RegisterTherapistComponent {
       .subscribe({ next: () => this.router.navigate(["/profile"]) });
   }
 }
+

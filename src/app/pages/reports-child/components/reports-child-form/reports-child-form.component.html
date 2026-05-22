@@ -2,22 +2,22 @@
   <div class="card-ui__body">
     <div class="reports-child-form__header">
       <h2 class="card-ui__title">
-        {{ mode === "create" ? "Create report" : "Edit report" }}
+        {{ mode === "create" ? "Criar relatório" : "Editar relatório" }}
       </h2>
 
       <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" [disabled]="saving" (click)="cancel.emit()">
-        Cancel
+        Cancelar
       </button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="reports-child-form__grid">
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rTitle">Title</label>
+        <label class="input-group-ui__label" for="rTitle">Título</label>
         <input id="rTitle" class="input-group-ui__control" type="text" formControlName="title" [disabled]="saving" />
       </div>
 
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rBehavior">Behavior</label>
+        <label class="input-group-ui__label" for="rBehavior">Comportamento</label>
         <textarea
           id="rBehavior"
           class="input-group-ui__control"
@@ -28,7 +28,7 @@
       </div>
 
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rDifficulty">Difficulty</label>
+        <label class="input-group-ui__label" for="rDifficulty">Dificuldade</label>
         <textarea
           id="rDifficulty"
           class="input-group-ui__control"
@@ -39,7 +39,7 @@
       </div>
 
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rRecommendation">Recommendation</label>
+        <label class="input-group-ui__label" for="rRecommendation">Recomendação</label>
         <textarea
           id="rRecommendation"
           class="input-group-ui__control"
@@ -51,7 +51,7 @@
 
       <div class="reports-child-form__actions">
         <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">
-          {{ mode === "create" ? "Create" : "Save" }}
+          {{ mode === "create" ? "Criar" : "Salvar" }}
         </button>
       </div>
     </form>

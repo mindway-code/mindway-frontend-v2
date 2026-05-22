@@ -1,6 +1,6 @@
 <app-anamnesis-section-shell
-  title="General notes"
-  subtitle="Additional notes and observations."
+  title="Notas gerais"
+  subtitle="Notas e observações adicionais."
   [exists]="true"
   [editing]="editing"
   [saving]="saving"
@@ -9,19 +9,19 @@
   (cancel)="onCancel()"
 >
   <ng-container *ngIf="!editing">
-    <p class="mb-0">{{ generalNotes || "No notes yet." }}</p>
+    <p class="mb-0">{{ generalNotes || "Nenhuma nota ainda." }}</p>
   </ng-container>
 
   <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="input-ui">
       <div class="input-ui__field">
         <textarea class="input-ui__control" formControlName="generalNotes" placeholder=" "></textarea>
-        <label class="input-ui__label">General notes</label>
+        <label class="input-ui__label">Notas gerais</label>
       </div>
     </div>
 
     <div class="anamnesis-section__footer">
-      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Salvar</button>
     </div>
   </form>
 </app-anamnesis-section-shell>

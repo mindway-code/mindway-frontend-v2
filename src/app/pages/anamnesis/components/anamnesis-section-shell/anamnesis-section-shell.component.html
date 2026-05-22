@@ -13,7 +13,7 @@
           (click)="edit.emit()"
           [disabled]="editing || saving"
         >
-          {{ editing ? "Editing" : exists ? "Edit" : "Add" }}
+          {{ editing ? "Editando" : exists ? "Editar" : "Adicionar" }}
         </button>
 
         <button
@@ -23,7 +23,7 @@
           (click)="delete.emit()"
           [disabled]="saving"
         >
-          Delete
+          Excluir
         </button>
 
         <button
@@ -33,7 +33,7 @@
           (click)="cancel.emit()"
           [disabled]="saving"
         >
-          Cancel
+          Cancelar
         </button>
       </div>
     </div>

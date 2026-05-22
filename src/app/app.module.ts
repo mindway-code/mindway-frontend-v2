@@ -54,6 +54,7 @@ import { ReportsChildListComponent } from './pages/reports-child/components/repo
 import { ReportsChildCardComponent } from './pages/reports-child/components/reports-child-card/reports-child-card.component';
 import { ReportsChildFormComponent } from './pages/reports-child/components/reports-child-form/reports-child-form.component';
 import { ReportsChildEmptyStateComponent } from './pages/reports-child/components/reports-child-empty-state/reports-child-empty-state.component';
+import { ChildObservationsComponent } from './pages/child-observations/child-observations.component';
 
 registerLocaleData(localePt);
 
@@ -101,6 +102,7 @@ registerLocaleData(localePt);
     ReportsChildCardComponent,
     ReportsChildFormComponent,
     ReportsChildEmptyStateComponent,
+    ChildObservationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -124,3 +126,4 @@ registerLocaleData(localePt);
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+

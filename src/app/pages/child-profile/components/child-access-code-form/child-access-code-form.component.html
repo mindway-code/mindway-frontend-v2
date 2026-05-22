@@ -10,20 +10,20 @@
           class="input-ui__control"
           formControlName="accessCode"
           type="text"
-          placeholder="Enter the access code shared by the responsible user"
+          placeholder="Digite o código de acesso compartilhado pelo responsável"
           [disabled]="loading"
         />
-        <label class="input-ui__label">Child access code</label>
+        <label class="input-ui__label">Código de acesso da criança</label>
       </div>
 
       <p class="child-access-code-form__hint">
-        Use the access code provided by the child's responsible user.
+        Use o código de acesso fornecido pelo responsável da criança.
       </p>
     </div>
 
     <button class="btn-ui btn-ui--green btn-ui--sm" type="submit" [disabled]="loading">
-      <ng-container *ngIf="!loading; else loadingTpl">Connect child</ng-container>
-      <ng-template #loadingTpl>Connecting...</ng-template>
+      <ng-container *ngIf="!loading; else loadingTpl">Conectar criança</ng-container>
+      <ng-template #loadingTpl>Conectando...</ng-template>
     </button>
   </form>
 </div>

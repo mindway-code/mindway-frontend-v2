@@ -1,19 +1,19 @@
 <div class="card-ui card-ui--md reports-child-empty">
   <div class="card-ui__body">
     <ng-container *ngIf="variant === 'no-children'; else noReports">
-      <h3 class="card-ui__title">No child profile available</h3>
+      <h3 class="card-ui__title">Nenhum perfil de criança disponível</h3>
       <p class="card-ui__subtitle">
-        To create reports, you need to be responsible for a child or connect to a child using an access code.
+        Para criar relatórios, você precisa ser responsável por uma criança ou conectar-se a uma criança usando um código de acesso.
       </p>
-      <a class="btn-ui btn-ui--outline btn-ui--sm" routerLink="/child-profile">Connect a child</a>
+      <a class="btn-ui btn-ui--outline btn-ui--sm" routerLink="/child-profile">Conectar criança</a>
     </ng-container>
 
     <ng-template #noReports>
-      <h3 class="card-ui__title">No reports yet</h3>
+      <h3 class="card-ui__title">Ainda não há relatórios</h3>
       <p class="card-ui__subtitle">
-        No reports created for this child yet. Create the first report to track behavior, difficulty, and recommendations.
+        Nenhum relatório criado para esta criança ainda. Crie o primeiro relatório para acompanhar comportamento, dificuldade e recomendações.
       </p>
-      <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="create.emit()">Create report</button>
+      <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="create.emit()">Criar relatório</button>
     </ng-template>
   </div>
 </div>

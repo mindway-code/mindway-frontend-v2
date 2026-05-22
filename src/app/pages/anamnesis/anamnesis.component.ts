@@ -150,3 +150,4 @@ export class AnamnesisComponent implements OnInit {
     this.anamnesisService.updateGeneralNotes(this.selectedChildId, payload).subscribe();
   }
 }
+

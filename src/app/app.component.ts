@@ -18,3 +18,4 @@ export class AppComponent implements OnInit {
     this.authService.restoreSession().pipe(take(1)).subscribe();
   }
 }
+

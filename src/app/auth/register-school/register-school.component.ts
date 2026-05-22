@@ -41,3 +41,4 @@ export class RegisterSchoolComponent {
       .subscribe({ next: () => this.router.navigate(["/profile"]) });
   }
 }
+

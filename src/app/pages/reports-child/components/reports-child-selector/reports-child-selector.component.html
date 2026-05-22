@@ -1,7 +1,7 @@
 <div class="card-ui card-ui--md reports-child-selector">
   <div class="card-ui__body">
     <div class="select-ui">
-      <label class="select-ui__label" for="reportsChildSelect">Select child</label>
+      <label class="select-ui__label" for="reportsChildSelect">Selecionar criança</label>
 
       <select
         id="reportsChildSelect"
@@ -10,14 +10,14 @@
         [ngModel]="selectedChildId || ''"
         (ngModelChange)="onChange($event)"
       >
-        <option value="" disabled>Choose a child to manage reports</option>
+        <option value="" disabled>Escolha uma criança para gerenciar relatórios</option>
         <option *ngFor="let child of children; trackBy: trackById" [value]="child.id">
           {{ child.name }} ({{ child.age }}y)
         </option>
       </select>
     </div>
 
-    <p *ngIf="loading" class="reports-child-selector__hint">Loading children…</p>
+    <p *ngIf="loading" class="reports-child-selector__hint">Carregando crianças…</p>
   </div>
 </div>
 

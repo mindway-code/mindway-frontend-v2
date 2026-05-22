@@ -1,81 +1,171 @@
 <section class="dashboard-layout">
-  <aside class="dashboard-aside" aria-label="Sidebar">
-    <!-- <div class="dashboard-aside__brand">
-      <a routerLink="/" class="dashboard-aside__brand-link">home</a>
-    </div> -->
 
-    <div class="dashboard-aside__user">
-      <img
-        class="dashboard-aside__avatar"
-        src="assets/img/placeholder.PNG"
-        alt="User profile placeholder"
-      />
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
 
-      <div class="dashboard-aside__user-info">
-        <p class="dashboard-aside__welcome">Welcome</p>
+    <!-- LOGO -->
+    <div class="sidebar-top">
 
-        <strong class="dashboard-aside__name">
-          <ng-container *ngIf="currentUser$ | async as user; else userFallback">
-            {{ user.name || user.email }}
-          </ng-container>
+      <div class="logo-area">
 
-          <ng-template #userFallback>User</ng-template>
-        </strong>
+        <img
+          src="assets/imagem/logo.png"
+          alt="MindWay"
+          class="main-logo"
+        />
+
       </div>
+
+      <!-- CARD USUÁRIO -->
+      <div class="user-card">
+
+        <img
+          src="assets/imagem/PerfilPai.png"
+          alt="Usuário"
+          class="user-avatar"
+        />
+
+        <div class="user-info">
+
+          <strong>
+            <ng-container *ngIf="currentUser$ | async as user; else fallback">
+              {{ user.name || user.email }}
+            </ng-container>
+
+            <ng-template #fallback>
+              Usuário
+            </ng-template>
+          </strong>
+
+          <span>Responsável</span>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <nav class="dashboard-aside__nav" aria-label="Dashboard navigation">
+    <!-- MENU -->
+    <nav class="sidebar-menu">
+
       <a
-        class="dashboard-aside__link"
         routerLink="/profile"
-        routerLinkActive="dashboard-aside__link--active"
+        routerLinkActive="active"
+        class="menu-item"
       >
-        Profile
+        <span>👤</span>
+        Meu Perfil
       </a>
 
       <a
-        class="dashboard-aside__link"
         routerLink="/anamnesis"
-        routerLinkActive="dashboard-aside__link--active"
+        routerLinkActive="active"
+        class="menu-item"
       >
-        Anamnesis
+        <span>📝</span>
+        Anamnese
       </a>
 
-      <!-- TODO: create /child-profile route/page -->
       <a
-        class="dashboard-aside__link"
         routerLink="/child-profile"
-        routerLinkActive="dashboard-aside__link--active"
+        routerLinkActive="active"
+        class="menu-item"
       >
-        Child Profile
+        <span>🧒</span>
+        Perfil da Criança
       </a>
 
       <a
-        class="dashboard-aside__link"
+        routerLink="/child-profile/observations"
+        routerLinkActive="active"
+        class="menu-item"
+      >
+        <span>👁️</span>
+        Observações
+      </a>
+
+      <a
         routerLink="/reports-child"
-        routerLinkActive="dashboard-aside__link--active"
+        routerLinkActive="active"
+        class="menu-item"
       >
-        Child Reports
+        <span>📊</span>
+        Relatórios
       </a>
 
-      <!-- TODO: create /social-network-user route/page -->
       <a
-        class="dashboard-aside__link"
-        routerLink="/social-network-user"
-        routerLinkActive="dashboard-aside__link--active"
+        routerLink="/profile/social-network"
+        routerLinkActive="active"
+        class="menu-item"
       >
-        Social Network User
+        <span>🌐</span>
+        Rede de Apoio
       </a>
+
     </nav>
 
-    <div class="dashboard-aside__footer">
-      <a class="dashboard-aside__home-link" routerLink="/">Back to Home</a>
+    <!-- FOOTER -->
+    <div class="sidebar-footer">
+
+      <a
+        routerLink="/"
+        class="logout-btn"
+      >
+        🚪 Sair
+      </a>
+
     </div>
+
   </aside>
 
-  <main class="dashboard-layout__main">
-    <div class="dashboard-layout__panel">
+  <!-- CONTEÚDO -->
+  <main class="main-content">
+
+    <!-- HEADER -->
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <h1>Anamnese da Criança</h1>
+
+        <p>
+          Preencha as informações para avaliação inicial
+        </p>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <button class="notification-btn">
+          🔔
+        </button>
+
+        <div class="topbar-user">
+
+          <img
+            src="assets/imagem/PerfilPai.png"
+            alt="Usuário"
+          />
+
+          <span>
+            <ng-container *ngIf="currentUser$ | async as user">
+              {{ user.name || 'Usuário' }}
+            </ng-container>
+          </span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- PÁGINA -->
+    <section class="page-content">
+
       <router-outlet></router-outlet>
-    </div>
+
+    </section>
+
   </main>
+
 </section>

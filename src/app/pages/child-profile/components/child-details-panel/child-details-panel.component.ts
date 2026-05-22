@@ -5,7 +5,7 @@ import type { ChildRecord } from "../../../../api/interfaces/child.interface";
   selector: "app-child-details-panel",
   standalone: false,
   templateUrl: "./child-details-panel.component.html",
-  styleUrl: "./child-details-panel.component.scss",
+  styleUrls: ["./child-details-panel.component.scss"],
 })
 export class ChildDetailsPanelComponent {
   @Input() child: ChildRecord | null = null;

@@ -72,3 +72,4 @@ export class ChildProfileComponent implements OnInit {
     this.router.navigate(["/anamnesis"], { queryParams: { childId: child.id } });
   }
 }
+

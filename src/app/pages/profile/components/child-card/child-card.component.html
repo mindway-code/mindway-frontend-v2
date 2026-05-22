@@ -5,7 +5,7 @@
       <div class="child-card__text">
         <h3 class="child-card__title">{{ child.name }}</h3>
         <p class="child-card__subtitle">
-          Age: <strong>{{ child.age }}</strong> · Birth: <strong>{{ birthDateLabel }}</strong>
+          Idade: <strong>{{ child.age }}</strong> · Nascimento: <strong>{{ birthDateLabel }}</strong>
         </p>
       </div>
     </div>
@@ -13,17 +13,17 @@
 
   <div class="child-card__body">
     <p class="child-card__row">
-      <span class="child-card__label">Access code</span>
+      <span class="child-card__label">Código de acesso</span>
       <span class="child-card__value child-card__value--mono">{{ child.accessCode }}</span>
     </p>
 
     <p class="child-card__row">
-      <span class="child-card__label">Created</span>
+      <span class="child-card__label">Criado em</span>
       <span class="child-card__value">{{ createdAtLabel }}</span>
     </p>
 
     <p class="child-card__row" *ngIf="child.observation">
-      <span class="child-card__label">Observation</span>
+      <span class="child-card__label">Observação</span>
       <span class="child-card__value child-card__value--wrap">{{ child.observation }}</span>
     </p>
   </div>
@@ -34,10 +34,10 @@
       routerLink="/anamnesis"
       [queryParams]="{ childId: child.id }"
     >
-      View Anamnesis
+      Ver anamnese
     </a>
 
     <!-- TODO: create /child-profile route/page -->
-    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile">View Child Profile</a>
+    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile">Ver perfil da criança</a>
   </footer>
 </article>

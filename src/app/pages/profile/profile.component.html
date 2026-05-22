@@ -1,78 +1,98 @@
-<section class="profile-page">
-  <header class="profile-page__hero">
-    <div class="profile-page__hero-content">
-      <p class="profile-page__eyebrow">Account</p>
-      <h1 class="profile-page__title">My Profile</h1>
-      <p class="profile-page__subtitle">
-        Manage your personal information and children profiles in one place.
-      </p>
-    </div>
+<section class="dashboard-home">
 
-    <div class="profile-page__hero-actions">
-      <button
-        *ngIf="!editMode; else editActions"
-        class="btn-ui btn-ui--green btn-ui--sm"
-        type="button"
-        (click)="startEdit()"
-      >
-        Edit profile
-      </button>
-
-      <ng-template #editActions>
-        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
-          Close
-        </button>
-      </ng-template>
-    </div>
-  </header>
-
-  <div *ngIf="flashMessage" class="profile-page__flash" role="status">
-    {{ flashMessage }}
-  </div>
-
-  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">Loading your profile...</div>
-  <div *ngIf="userError$ | async as userError" class="profile-page__state profile-page__state--error" role="alert">
-    {{ userError }}
-  </div>
-
-  <ng-container *ngIf="user$ | async as user">
-    <div class="profile-page__grid">
-      <app-profile-summary-card [user]="user"></app-profile-summary-card>
-
-      <app-profile-edit-form
-        *ngIf="editMode"
-        [user]="user"
-        [saving]="(profileSaving$ | async) ?? false"
-        [error]="(profileError$ | async) ?? null"
-        (save)="saveProfile($event)"
-        (cancel)="cancelEdit()"
-      ></app-profile-edit-form>
-
-      <section *ngIf="!editMode" class="profile-page__tip card-ui card-ui--md">
-        <div class="card-ui__body">
-          <h2 class="card-ui__title">Quick tips</h2>
-          <p class="card-ui__subtitle">
-            Keep your information up to date and create children profiles to unlock anamnesis features.
-          </p>
+  <div class="stats-grid">
+    <div class="stat-card card-ui card-ui--sm">
+      <div class="card-ui__body">
+        <div class="stat-left">
+          <div class="stat-icon">📊</div>
+          <div>
+            <div class="stat-title">Relatórios</div>
+            <div class="stat-subtitle">Total registrado</div>
+          </div>
         </div>
-      </section>
+        <div class="stat-value">0</div>
+      </div>
     </div>
-  </ng-container>
 
-  <ng-container *ngIf="user$ | async as user">
-    <ng-container *ngIf="user.role === 'common'">
-      <ng-container *ngIf="children$ | async as children">
-        <app-children-section
-          [children]="children"
-          [loading]="(childrenLoading$ | async) ?? false"
-          [saving]="(childrenSaving$ | async) ?? false"
-          [error]="(childrenError$ | async) ?? null"
-          [showCreate]="showCreateChild"
-          (toggleCreate)="toggleCreateChild()"
-          (createChild)="createChild($event)"
-          (closeCreate)="closeCreateChild()"
-        ></app-children-section>
-      </ng-container>
-    </ng-container>
-  </ng-container>
+    <div class="stat-card card-ui card-ui--sm">
+      <div class="card-ui__body">
+        <div class="stat-left">
+          <div class="stat-icon">👁️</div>
+          <div>
+            <div class="stat-title">Observações</div>
+            <div class="stat-subtitle">Do dia a dia</div>
+          </div>
+        </div>
+        <div class="stat-value">0</div>
+      </div>
+    </div>
+
+    <div class="stat-card card-ui card-ui--sm">
+      <div class="card-ui__body">
+        <div class="stat-left">
+          <div class="stat-icon">🏫</div>
+          <div>
+            <div class="stat-title">Instituições</div>
+            <div class="stat-subtitle">Vinculadas</div>
+          </div>
+        </div>
+        <div class="stat-value">2</div>
+      </div>
+    </div>
+
+    <div class="stat-card card-ui card-ui--sm">
+      <div class="card-ui__body">
+        <div class="stat-left">
+          <div class="stat-icon">👩‍⚕️</div>
+          <div>
+            <div class="stat-title">Profissionais</div>
+            <div class="stat-subtitle">Envolvidos</div>
+          </div>
+        </div>
+        <div class="stat-value">4</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-panels">
+    <section class="quick-actions card-ui card-ui--md">
+      <div class="card-ui__body">
+        <h2 class="card-ui__title">Ações Rápidas</h2>
+        <ul class="actions-list">
+          <li><a routerLink="/reports-child" class="action-item">📄 Novo Relatório</a></li>
+          <li><a routerLink="/child-profile/observations" class="action-item">➕ Nova Observação</a></li>
+          <li><a routerLink="/profile" class="action-item">👤 Ver Perfil</a></li>
+          <li><a routerLink="/anamnesis" class="action-item">📝 Anamnese</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="recent-activities card-ui card-ui--md">
+      <div class="card-ui__body">
+        <h3 class="card-ui__title">Atividades Recentes</h3>
+        <p class="card-ui__subtitle">Nenhuma atividade registrada ainda. Comece adicionando um relatório ou observação!</p>
+      </div>
+    </section>
+
+    <section class="summary card-ui card-ui--md">
+      <div class="card-ui__body summary-body">
+        <h3>Resumo — <span class="child-name">Lucas Silva</span></h3>
+        <div class="summary-cards">
+          <div class="summary-item">
+            <div class="summary-label">Idade</div>
+            <div class="summary-value">7 anos</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Instituições</div>
+            <div class="summary-value">2</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Status</div>
+            <div class="summary-value">Ativo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
 </section>

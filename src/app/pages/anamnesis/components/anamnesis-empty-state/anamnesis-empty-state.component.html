@@ -1,13 +1,13 @@
 <section class="card-ui card-ui--md">
   <div class="card-ui__body">
-    <h2 class="card-ui__title" *ngIf="!selectedChildId">Select a child</h2>
-    <h2 class="card-ui__title" *ngIf="selectedChildId">No anamnesis found</h2>
+    <h2 class="card-ui__title" *ngIf="!selectedChildId">Selecione uma criança</h2>
+    <h2 class="card-ui__title" *ngIf="selectedChildId">Nenhuma anamnese encontrada</h2>
 
     <p class="card-ui__subtitle" *ngIf="!selectedChildId">
-      Choose a child above to view or create anamnesis information.
+      Escolha uma criança acima para visualizar ou criar informações de anamnese.
     </p>
     <p class="card-ui__subtitle" *ngIf="selectedChildId">
-      Create an anamnesis to start adding information.
+      Crie uma anamnese para começar a adicionar informações.
     </p>
 
     <button
@@ -17,7 +17,7 @@
       (click)="createAnamnesis.emit()"
       [disabled]="saving"
     >
-      Create anamnesis
+      Criar anamnese
     </button>
   </div>
 </section>

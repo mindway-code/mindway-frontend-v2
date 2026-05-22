@@ -1,6 +1,6 @@
 <app-anamnesis-section-shell
-  title="Birth"
-  subtitle="Birth and hospitalization information."
+  title="Nascimento"
+  subtitle="Informações de nascimento e hospitalização."
   [exists]="!!data"
   [editing]="editing"
   [saving]="saving"
@@ -9,17 +9,17 @@
   (delete)="delete.emit()"
 >
   <ng-container *ngIf="!editing">
-    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+    <p *ngIf="!data" class="text-muted mb-0">Nenhuma informação ainda.</p>
 
     <div *ngIf="data" class="anamnesis-section__grid">
-      <div class="anamnesis-section__field"><strong>Gestational weeks:</strong> {{ data.gestationalWeeks ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Birth type:</strong> {{ data.birthType ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Birth weight:</strong> {{ data.birthWeightGrams ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Birth height:</strong> {{ data.birthHeightCentimeters ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Semanas de gestação:</strong> {{ data.gestationalWeeks ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Tipo de parto:</strong> {{ data.birthType ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Peso ao nascer:</strong> {{ data.birthWeightGrams ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Altura ao nascer:</strong> {{ data.birthHeightCentimeters ?? "-" }}</div>
       <div class="anamnesis-section__field"><strong>Apgar 1 min:</strong> {{ data.apgarOneMinute ?? "-" }}</div>
       <div class="anamnesis-section__field"><strong>Apgar 5 min:</strong> {{ data.apgarFiveMinutes ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Complication:</strong> {{ data.birthComplication ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Hospitalization days:</strong> {{ data.hospitalizationDays ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Complicação:</strong> {{ data.birthComplication ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Dias de hospitalização:</strong> {{ data.hospitalizationDays ?? "-" }}</div>
     </div>
   </ng-container>
 
@@ -28,62 +28,62 @@
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="gestationalWeeks" placeholder=" " />
-          <label class="input-ui__label">Gestational weeks</label>
+          <label class="input-ui__label">Semanas de gestação</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="birthType" placeholder=" " />
-          <label class="input-ui__label">Birth type</label>
+          <label class="input-ui__label">Tipo de parto</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="birthWeightGrams" placeholder=" " />
-          <label class="input-ui__label">Birth weight (grams)</label>
+          <label class="input-ui__label">Peso ao nascer (gramas)</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="birthHeightCentimeters" placeholder=" " />
-          <label class="input-ui__label">Birth height (cm)</label>
+          <label class="input-ui__label">Altura ao nascer (cm)</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="apgarOneMinute" placeholder=" " />
-          <label class="input-ui__label">Apgar one minute</label>
+          <label class="input-ui__label">Apgar 1 minuto</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="apgarFiveMinutes" placeholder=" " />
-          <label class="input-ui__label">Apgar five minutes</label>
+          <label class="input-ui__label">Apgar 5 minutos</label>
         </div>
       </div>
 
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="birthComplication" placeholder=" " />
-          <label class="input-ui__label">Birth complication</label>
+          <label class="input-ui__label">Complicação ao nascer</label>
         </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="number" formControlName="hospitalizationDays" placeholder=" " />
-          <label class="input-ui__label">Hospitalization days</label>
+          <label class="input-ui__label">Dias de hospitalização</label>
         </div>
       </div>
     </div>
 
     <div class="anamnesis-section__footer">
-      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Salvar</button>
     </div>
   </form>
 </app-anamnesis-section-shell>

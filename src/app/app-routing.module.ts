@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonLayoutComponent } from './layout/common-layout/common-layout.component';
-import { LoginComponent } from './autenticacao/login/login.component';
-import { RegisterComponent } from './autenticacao/register/register.component';
-import { AuthGuard } from './autenticacao/guard/auth.guard';
-import { HomeComponent } from './paginas/home/home.component';
-import { SocialNetworkComponent } from './paginas/social-network/social-network.component';
-import { UnauthorizedComponent } from './paginas/unauthorized/unauthorized.component';
-import { RegisterOptionsComponent } from './autenticacao/register-options/register-options.component';
-import { RegisterSchoolComponent } from './autenticacao/register-school/register-school.component';
-import { RegisterTeacherComponent } from './autenticacao/register-teacher/register-teacher.component';
-import { RegisterTherapistComponent } from './autenticacao/register-therapist/register-therapist.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AuthGuard } from './auth/guard/auth.guard';
+import { HomeComponent } from './pages/home/home.component';
+import { SocialNetworkComponent } from './pages/social-network/social-network.component';
+import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
+import { RegisterOptionsComponent } from './auth/register-options/register-options.component';
+import { RegisterSchoolComponent } from './auth/register-school/register-school.component';
+import { RegisterTeacherComponent } from './auth/register-teacher/register-teacher.component';
+import { RegisterTherapistComponent } from './auth/register-therapist/register-therapist.component';
 import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';
-import { ProfileComponent } from './paginas/profile/profile.component';
-import { AnamnesisComponent } from './paginas/anamnesis/anamnesis.component';
-import { ChildProfileComponent } from './paginas/child-profile/child-profile.component';
-import { ReportsChildComponent } from './paginas/reports-child/reports-child.component';
-import { ChildObservationsComponent } from './paginas/child-observations/child-observations.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
+import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
+import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
+import { ChildObservationsComponent } from './pages/child-observations/child-observations.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)

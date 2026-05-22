@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { DashboardLayoutComponent } from './dashboard-layout.component';
-import { AuthService } from '../../servicos/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 describe('DashboardLayoutComponent', () => {
   let component: DashboardLayoutComponent;

@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { map, switchMap, take, tap } from "rxjs";
-import { AssociationChildService } from "../../servicos/association-child.service";
-import { ChildService } from "../../servicos/child.service";
+import { AssociationChildService } from "../../services/association-child.service";
+import { ChildService } from "../../services/child.service";
 import type { CreateAssociationChildDTO } from "../../api/interfaces/association-child.interface";
 import type { ChildRecord } from "../../api/interfaces/child.interface";
 

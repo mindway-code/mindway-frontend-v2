@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { distinctUntilChanged, filter, map, tap } from "rxjs";
-import { AnamnesisService } from "../../servicos/anamnesis.service";
-import { ChildService } from "../../servicos/child.service";
+import { AnamnesisService } from "../../services/anamnesis.service";
+import { ChildService } from "../../services/child.service";
 import type { AnamnesisRecord, UpdateAnamnesisGeneralNotesDTO } from "../../api/interfaces/anamnesis.interface";
 import type {
   UpsertAnamnesisBehaviorDTO,

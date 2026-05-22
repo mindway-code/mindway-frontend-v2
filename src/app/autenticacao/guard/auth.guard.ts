@@ -8,7 +8,7 @@ import {
   UrlTree,
 } from "@angular/router";
 import { Observable, map, of, switchMap, take } from "rxjs";
-import { AuthService } from "../../servicos/auth.service";
+import { AuthService } from "../../services/auth.service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanActivateChild {

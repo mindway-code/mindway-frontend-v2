@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../servicos/auth.service";
-import { ChildService } from "../../servicos/child.service";
-import { UserService } from "../../servicos/user.service";
+import { AuthService } from "../../services/auth.service";
+import { ChildService } from "../../services/child.service";
+import { UserService } from "../../services/user.service";
 import type { CreateChildDTO } from "../../api/interfaces/child.interface";
 import type { UpdateUserDTO } from "../../api/interfaces/user.interface";
 import { switchMap, take } from "rxjs";

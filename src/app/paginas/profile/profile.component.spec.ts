@@ -5,9 +5,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { ProfileComponent } from './profile.component';
-import { AuthService } from '../../servicos/auth.service';
-import { UserService } from '../../servicos/user.service';
-import { ChildService } from '../../servicos/child.service';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import { ChildService } from '../../services/child.service';
 import { ProfileSummaryCardComponent } from './components/profile-summary-card/profile-summary-card.component';
 import { ProfileEditFormComponent } from './components/profile-edit-form/profile-edit-form.component';
 import { ChildrenSectionComponent } from './components/children-section/children-section.component';

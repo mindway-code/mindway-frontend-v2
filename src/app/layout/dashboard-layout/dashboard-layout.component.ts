@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { AuthService } from "../../servicos/auth.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: 'app-dashboard-layout',

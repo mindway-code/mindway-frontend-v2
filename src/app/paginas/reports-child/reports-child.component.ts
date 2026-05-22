@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BehaviorSubject, combineLatest, map, take } from "rxjs";
-import { AuthService } from "../../servicos/auth.service";
-import { ChildService } from "../../servicos/child.service";
-import { ReportsChildService } from "../../servicos/reports-child.service";
+import { AuthService } from "../../services/auth.service";
+import { ChildService } from "../../services/child.service";
+import { ReportsChildService } from "../../services/reports-child.service";
 import type { ChildRecord } from "../../api/interfaces/child.interface";
 import type {
   CreateReportsChildDTO,

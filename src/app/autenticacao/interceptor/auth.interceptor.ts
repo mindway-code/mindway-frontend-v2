@@ -8,8 +8,8 @@ import {
 } from "@angular/common/http";
 import { Observable, catchError, finalize, shareReplay, switchMap, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
-import { AuthService } from "../../servicos/auth.service";
-import { TokenService } from "../../servicos/token.service";
+import { AuthService } from "../../services/auth.service";
+import { TokenService } from "../../services/token.service";
 import { Router } from "@angular/router";
 
 @Injectable()

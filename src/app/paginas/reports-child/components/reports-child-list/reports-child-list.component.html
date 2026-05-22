@@ -1,0 +1,26 @@
+<section class="reports-child-list">
+  <div *ngIf="loading" class="card-ui card-ui--md">
+    <div class="card-ui__body">
+      <p class="reports-child-list__muted">Carregando relatórios…</p>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <app-reports-child-empty-state
+      *ngIf="selectedChildId && (reports?.length ?? 0) === 0"
+      variant="no-reports"
+      (create)="create.emit()"
+    />
+
+    <div class="reports-child-list__grid" *ngIf="(reports?.length ?? 0) > 0">
+      <app-reports-child-card
+        *ngFor="let report of reports; trackBy: trackById"
+        [report]="report"
+        [canManage]="!!report.canManage"
+        (edit)="edit.emit($event)"
+        (delete)="delete.emit(report)"
+      />
+    </div>
+  </ng-container>
+</section>
+

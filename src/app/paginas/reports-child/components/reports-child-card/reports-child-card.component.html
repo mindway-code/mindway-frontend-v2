@@ -1,0 +1,38 @@
+<article class="card-ui card-ui--md reports-child-card">
+  <div class="card-ui__body">
+    <div class="reports-child-card__header">
+      <div>
+        <h3 class="card-ui__title reports-child-card__title">{{ report.title }}</h3>
+        <p class="card-ui__subtitle reports-child-card__meta">
+          {{ report.createdAt | date: "medium" }} • {{ report.userRole }}
+        </p>
+      </div>
+
+      <div class="reports-child-card__actions" *ngIf="canManage">
+        <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" (click)="edit.emit(report)">
+          Editar
+        </button>
+        <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="delete.emit(report)">
+          Excluir
+        </button>
+      </div>
+    </div>
+
+    <div class="reports-child-card__body">
+      <p *ngIf="report.behavior" class="reports-child-card__field">
+        <strong>Comportamento:</strong> {{ report.behavior }}
+      </p>
+      <p *ngIf="report.difficulty" class="reports-child-card__field">
+        <strong>Dificuldade:</strong> {{ report.difficulty }}
+      </p>
+      <p *ngIf="report.recommendation" class="reports-child-card__field">
+        <strong>Recomendação:</strong> {{ report.recommendation }}
+      </p>
+
+      <p *ngIf="!report.behavior && !report.difficulty && !report.recommendation" class="reports-child-card__muted">
+        Nenhum detalhe adicional fornecido.
+      </p>
+    </div>
+  </div>
+</article>
+

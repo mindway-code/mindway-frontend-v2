@@ -1,0 +1,20 @@
+<div class="card-ui card-ui--md reports-child-empty">
+  <div class="card-ui__body">
+    <ng-container *ngIf="variant === 'no-children'; else noReports">
+      <h3 class="card-ui__title">Nenhum perfil de criança disponível</h3>
+      <p class="card-ui__subtitle">
+        Para criar relatórios, você precisa ser responsável por uma criança ou conectar-se a uma criança usando um código de acesso.
+      </p>
+      <a class="btn-ui btn-ui--outline btn-ui--sm" routerLink="/child-profile">Conectar criança</a>
+    </ng-container>
+
+    <ng-template #noReports>
+      <h3 class="card-ui__title">Ainda não há relatórios</h3>
+      <p class="card-ui__subtitle">
+        Nenhum relatório criado para esta criança ainda. Crie o primeiro relatório para acompanhar comportamento, dificuldade e recomendações.
+      </p>
+      <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="create.emit()">Criar relatório</button>
+    </ng-template>
+  </div>
+</div>
+

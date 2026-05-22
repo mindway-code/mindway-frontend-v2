@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { DashboardLayoutComponent } from './dashboard-layout.component';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../servicos/auth.service';
 
 describe('DashboardLayoutComponent', () => {
   let component: DashboardLayoutComponent;
@@ -34,3 +34,4 @@ describe('DashboardLayoutComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

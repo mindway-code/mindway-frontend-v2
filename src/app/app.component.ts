@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { take } from "rxjs";
-import { AuthService } from "./services/auth.service";
+import { AuthService } from "./servicos/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -18,3 +18,4 @@ export class AppComponent implements OnInit {
     this.authService.restoreSession().pipe(take(1)).subscribe();
   }
 }
+

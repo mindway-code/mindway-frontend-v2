@@ -1,0 +1,70 @@
+<section class="child-create card-ui card-ui--md">
+  <header class="child-create__header">
+    <div>
+      <h3 class="child-create__title">Adicionar criança</h3>
+      <p class="child-create__subtitle">Crie um perfil de criança vinculado à sua conta.</p>
+    </div>
+
+    <div class="child-create__actions">
+      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancel.emit()" [disabled]="saving">
+        Fechar
+      </button>
+
+      <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="submit()" [disabled]="saving">
+        <ng-container *ngIf="!saving; else savingTpl">Criar criança</ng-container>
+        <ng-template #savingTpl>Criando...</ng-template>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="error" class="child-create__error" role="alert">
+    {{ error }}
+  </div>
+
+  <form class="child-create__form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="child-create__grid">
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="name" type="text" placeholder="Nome da criança" />
+          <label class="input-ui__label">Nome</label>
+        </div>
+        <p class="child-create__hint" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+          Insira um nome (pelo menos 2 caracteres).
+        </p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="age" type="number" placeholder="Idade" min="0" />
+          <label class="input-ui__label">Idade</label>
+        </div>
+        <p class="child-create__hint" *ngIf="form.controls.age.touched && form.controls.age.invalid">
+          Insira uma idade válida (0 ou mais).
+        </p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="birthDate" type="date" placeholder="Data de nascimento" />
+          <label class="input-ui__label">Data de nascimento</label>
+        </div>
+        <p class="child-create__hint" *ngIf="form.controls.birthDate.touched && form.controls.birthDate.invalid">
+          Selecione uma data de nascimento.
+        </p>
+      </div>
+
+      <div class="input-ui child-create__observation">
+        <div class="input-ui__field">
+          <textarea
+            class="input-ui__control"
+            formControlName="observation"
+            placeholder="Observações (opcional)"
+            rows="3"
+          ></textarea>
+          <label class="input-ui__label">Observação (opcional)</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+

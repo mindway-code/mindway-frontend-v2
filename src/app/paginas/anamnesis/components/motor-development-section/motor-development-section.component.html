@@ -1,0 +1,62 @@
+<app-anamnesis-section-shell
+  title="Desenvolvimento motor"
+  subtitle="Marcos de postura e coordenação."
+  [exists]="!!data"
+  [editing]="editing"
+  [saving]="saving"
+  (edit)="onEdit()"
+  (cancel)="onCancel()"
+  (delete)="delete.emit()"
+>
+  <ng-container *ngIf="!editing">
+    <p *ngIf="!data" class="text-muted mb-0">Nenhuma informação ainda.</p>
+
+    <div *ngIf="data" class="anamnesis-section__grid">
+      <div class="anamnesis-section__field"><strong>Idade de controle de pescoço:</strong> {{ data.neckControlAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Idade de sentar:</strong> {{ data.sittingAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Idade de engatinhar:</strong> {{ data.crawlingAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Idade dos primeiros passos:</strong> {{ data.firstStepsAgeMonths ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Coordenação fina:</strong> {{ data.fineCoordination ?? "-" }}</div>
+    </div>
+  </ng-container>
+
+  <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="anamnesis-section__form-grid">
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="neckControlAgeMonths" placeholder=" " />
+          <label class="input-ui__label">Idade de controle de pescoço (meses)</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="sittingAgeMonths" placeholder=" " />
+          <label class="input-ui__label">Idade de sentar (meses)</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="crawlingAgeMonths" placeholder=" " />
+          <label class="input-ui__label">Idade de engatinhar (meses)</label>
+        </div>
+      </div>
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="number" formControlName="firstStepsAgeMonths" placeholder=" " />
+          <label class="input-ui__label">Idade dos primeiros passos (meses)</label>
+        </div>
+      </div>
+      <div class="input-ui anamnesis-section__span-2">
+        <div class="input-ui__field">
+          <input class="input-ui__control" type="text" formControlName="fineCoordination" placeholder=" " />
+          <label class="input-ui__label">Coordenação fina</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="anamnesis-section__footer">
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Salvar</button>
+    </div>
+  </form>
+</app-anamnesis-section-shell>
+

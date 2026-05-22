@@ -1,0 +1,23 @@
+<section class="card-ui card-ui--md child-selector">
+  <div class="card-ui__body">
+    <h2 class="card-ui__title">Criança</h2>
+    <p class="card-ui__subtitle">Selecione uma criança para visualizar e gerenciar as informações de anamnese.</p>
+
+    <label class="child-selector__label" for="child-selector__select">Selecione uma criança</label>
+    <select
+      id="child-selector__select"
+      class="child-selector__control"
+      [value]="selectedChildId || ''"
+      (change)="onSelect($event)"
+      [disabled]="loading"
+    >
+      <option value="">Nenhuma criança selecionada</option>
+      <option *ngFor="let child of children || []" [value]="child.id">
+        {{ child.name }} — {{ child.age }} anos
+      </option>
+    </select>
+
+    <p *ngIf="loading" class="text-muted mb-0 mt-2">Carregando crianças...</p>
+  </div>
+</section>
+

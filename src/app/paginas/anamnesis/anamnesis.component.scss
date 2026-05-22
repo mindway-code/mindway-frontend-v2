@@ -1,0 +1,444 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  font-family:'Poppins',sans-serif;
+  background:#F5F7FA;
+  color:#1F2937;
+}
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page-container{
+  background:#F5F7FA;
+  min-height:100vh;
+  padding:24px;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.page-header{
+  margin-bottom:24px;
+}
+
+.page-header h1{
+  font-size:34px;
+  font-weight:700;
+  color:#006C70;
+  margin-bottom:4px;
+  letter-spacing:-0.5px;
+}
+
+.page-header p{
+  font-size:14px;
+  color:#667085;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.section-card{
+  background:#FFF;
+
+  border:1px solid #E4E7EC;
+
+  border-radius:20px;
+
+  padding:24px;
+
+  margin-bottom:20px;
+
+  box-shadow:
+  0 2px 10px rgba(15,23,42,.04);
+
+  transition:.2s;
+}
+
+.section-card:hover{
+  box-shadow:
+  0 6px 18px rgba(15,23,42,.06);
+}
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin-bottom:20px;
+
+  padding-bottom:14px;
+
+  border-bottom:1px solid #EAECF0;
+}
+
+.section-title h2{
+  font-size:20px;
+
+  font-weight:700;
+
+  color:#006C70;
+
+  letter-spacing:0;
+}
+
+/* =====================================================
+   ICONS
+===================================================== */
+
+.icon-box{
+  width:44px;
+  height:44px;
+
+  border-radius:12px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:20px;
+
+  flex-shrink:0;
+}
+
+.green{
+  background:#E8FAF5;
+}
+
+.blue{
+  background:#EAF4FF;
+}
+
+.yellow{
+  background:#FFF7DA;
+}
+
+.purple{
+  background:#F3E8FF;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.form-grid{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(240px,1fr));
+
+  gap:16px;
+}
+
+/* =====================================================
+   INPUT GROUP
+===================================================== */
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.input-group label{
+  font-size:13px;
+
+  font-weight:600;
+
+  color:#344054;
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+input,
+select,
+textarea{
+
+  width:100%;
+
+  padding:12px 14px;
+
+  border:1px solid #D0D5DD;
+
+  border-radius:12px;
+
+  background:#FFF;
+
+  font-family:'Poppins',sans-serif;
+
+  font-size:14px;
+
+  color:#101828;
+
+  transition:.2s;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:#98A2B3;
+  font-size:13px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+
+  border-color:#006C70;
+
+  box-shadow:
+  0 0 0 3px rgba(0,108,112,.10);
+}
+
+/* altura padrão */
+
+input,
+select{
+  height:46px;
+}
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+textarea{
+  resize:vertical;
+  min-height:110px;
+  padding-top:12px;
+}
+
+/* =====================================================
+   MOTOR DEVELOPMENT
+===================================================== */
+
+.development-grid{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(200px,1fr));
+
+  gap:14px;
+}
+
+.development-card{
+
+  background:#FCFDFD;
+
+  border:1px solid #EAECF0;
+
+  border-radius:16px;
+
+  padding:16px;
+
+  transition:.2s;
+}
+
+.development-card:hover{
+  border-color:#D0D5DD;
+}
+
+.development-card label{
+
+  display:block;
+
+  text-align:center;
+
+  margin-bottom:10px;
+
+  font-size:13px;
+
+  font-weight:600;
+
+  color:#475467;
+}
+
+/* =====================================================
+   CHIPS
+===================================================== */
+
+.chips-container{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.chip{
+
+  border:none;
+
+  border-radius:12px;
+
+  padding:9px 14px;
+
+  font-size:13px;
+
+  font-weight:500;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+  font-family:'Poppins',sans-serif;
+}
+
+.chip:hover{
+  transform:translateY(-1px);
+}
+
+.purple-chip{
+  background:#F3E8FF;
+  color:#7C3AED;
+}
+
+.blue-chip{
+  background:#E0F2FE;
+  color:#2563EB;
+}
+
+.red-chip{
+  background:#FEE2E2;
+  color:#DC2626;
+}
+
+.green-chip{
+  background:#DCFCE7;
+  color:#15803D;
+}
+
+.yellow-chip{
+  background:#FEF3C7;
+  color:#B45309;
+}
+
+.orange-chip{
+  background:#FFEDD5;
+  color:#EA580C;
+}
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.actions{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:12px;
+
+  margin-top:24px;
+}
+
+.btn-primary{
+
+  background:#006C70;
+
+  color:white;
+
+  border:none;
+
+  border-radius:12px;
+
+  height:46px;
+
+  min-width:180px;
+
+  padding:0 24px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.btn-primary:hover{
+  background:#00585B;
+  transform:translateY(-1px);
+}
+
+.btn-secondary{
+
+  background: #F4B313;
+
+  color:#344054;
+
+  border:1px solid #D0D5DD;
+
+  border-radius:12px;
+
+  height:46px;
+
+  min-width:180px;
+
+  padding:0 24px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.btn-secondary:hover{
+  background:#F9FAFB;
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width:768px){
+
+  .page-container{
+    padding:14px;
+  }
+
+  .page-header h1{
+    font-size:26px;
+  }
+
+  .section-title h2{
+    font-size:18px;
+  }
+
+  .form-grid,
+  .development-grid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .btn-primary,
+  .btn-secondary{
+    width:100%;
+  }
+}

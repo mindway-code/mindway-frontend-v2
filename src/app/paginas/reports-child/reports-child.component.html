@@ -1,0 +1,63 @@
+<section class="reports-child">
+  <header class="reports-child__header">
+    <div>
+      <h1 class="reports-child__title">Relatórios da Criança</h1>
+      <p class="reports-child__subtitle">Crie, revise e gerencie relatórios das crianças às quais você tem acesso.</p>
+    </div>
+
+    <button
+      class="btn-ui btn-ui--green"
+      type="button"
+      [disabled]="!selectedChildId || (saving$ | async)"
+      (click)="onOpenCreate()"
+    >
+      Criar relatório
+    </button>
+  </header>
+
+  <ng-container *ngIf="children$ | async as children">
+    <app-reports-child-selector
+      [children]="children"
+      [selectedChildId]="selectedChildId"
+      [loading]="(childrenLoading$ | async) ?? false"
+      (selectedChildIdChange)="onSelectChild($event)"
+    />
+
+    <app-reports-child-empty-state
+      *ngIf="!(childrenLoading$ | async) && children.length === 0"
+      variant="no-children"
+    />
+
+    <ng-container *ngIf="children.length > 0">
+      <app-reports-child-form
+        *ngIf="showCreateForm"
+        mode="create"
+        [saving]="(saving$ | async) ?? false"
+        (submitReport)="onCreateReport($event)"
+        (cancel)="onCancelForm()"
+      />
+
+      <app-reports-child-form
+        *ngIf="editingReport"
+        mode="edit"
+        [saving]="(saving$ | async) ?? false"
+        [report]="editingReport"
+        (submitReport)="onUpdateReport($event)"
+        (cancel)="onCancelForm()"
+      />
+
+      <app-reports-child-list
+        [reports]="reportsWithPermissions$ | async"
+        [loading]="(reportsLoading$ | async) ?? false"
+        [selectedChildId]="selectedChildId"
+        (create)="onOpenCreate()"
+        (edit)="onEditReport($event)"
+        (delete)="onDeleteReport($event)"
+      />
+    </ng-container>
+
+    <p *ngIf="childrenError$ | async as err" class="reports-child__error">{{ err }}</p>
+    <p *ngIf="reportsError$ | async as err" class="reports-child__error">{{ err }}</p>
+  </ng-container>
+</section>
+

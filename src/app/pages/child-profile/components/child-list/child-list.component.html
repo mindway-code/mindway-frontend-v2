@@ -1,10 +1,42 @@
 <div class="child-list" *ngIf="children?.length; else emptyTpl">
-  <app-child-profile-card
-    *ngFor="let child of children; trackBy: trackById"
-    [child]="child"
-    [active]="child.id === selectedChildId"
-    (selectChild)="selectChild.emit($event)"
-  ></app-child-profile-card>
+  <div class="child-list__search">
+    <label class="child-list__label" for="child-profile-search">Search child</label>
+    <input
+      id="child-profile-search"
+      class="child-list__search-input"
+      type="search"
+      [(ngModel)]="searchTerm"
+      placeholder="Type a name to filter associated children"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="select-ui select-ui--lg">
+    <div class="select-ui__field">
+      <select
+        id="child-profile-select"
+        class="select-ui__control"
+        [ngModel]="selectedChildId || ''"
+        (ngModelChange)="onSelectById($event)"
+      >
+        <option value="">Select a child</option>
+        <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
+          {{ child.name }} - {{ child.age }}y
+        </option>
+      </select>
+
+      <label class="select-ui__label" for="child-profile-select">Associated children</label>
+      <span class="select-ui__arrow" aria-hidden="true">v</span>
+    </div>
+  </div>
+
+  <p class="child-list__hint" *ngIf="filteredChildren.length; else noMatchesTpl">
+    {{ filteredChildren.length }} child<span *ngIf="filteredChildren.length !== 1">ren</span> available in this view.
+  </p>
+
+  <ng-template #noMatchesTpl>
+    <p class="child-list__hint">No matching child found for this search.</p>
+  </ng-template>
 </div>
 
 <ng-template #emptyTpl>

@@ -20,7 +20,13 @@
     (cancel)="closeCreate.emit()"
   ></app-child-create-form>
 
-  <div *ngIf="loading" class="children-section__state text-muted">Loading children...</div>
+  <section *ngIf="loading" class="card-ui card-ui--md children-section__loading">
+    <div class="card-ui__body loading-ui">
+      <span class="loading-ui__line loading-ui__line--sm"></span>
+      <span class="loading-ui__line loading-ui__line--lg"></span>
+      <span class="loading-ui__block"></span>
+    </div>
+  </section>
 
   <div *ngIf="!loading && error && !showCreate" class="children-section__state children-section__state--error" role="alert">
     {{ error }}
@@ -44,4 +50,3 @@
     </div>
   </ng-container>
 </section>
-

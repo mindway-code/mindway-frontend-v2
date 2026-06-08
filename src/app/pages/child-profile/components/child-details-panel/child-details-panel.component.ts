@@ -10,5 +10,8 @@ import type { ChildRecord } from "../../../../api/interfaces/child.interface";
 export class ChildDetailsPanelComponent {
   @Input() child: ChildRecord | null = null;
   @Output() openAnamnesis = new EventEmitter<ChildRecord>();
-}
 
+  get childInitial(): string {
+    return this.child?.name?.trim().charAt(0).toUpperCase() || "C";
+  }
+}

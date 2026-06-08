@@ -1,9 +1,14 @@
 <section class="card-ui card-ui--md reports-child-form">
   <div class="card-ui__body">
     <div class="reports-child-form__header">
-      <h2 class="card-ui__title">
-        {{ mode === "create" ? "Create report" : "Edit report" }}
-      </h2>
+      <div>
+        <h2 class="card-ui__title">
+          {{ mode === "create" ? "Create report" : "Edit report" }}
+        </h2>
+        <p class="card-ui__subtitle reports-child-form__subtitle">
+          Capture the most relevant notes in a structured way that is still easy to review later.
+        </p>
+      </div>
 
       <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" [disabled]="saving" (click)="cancel.emit()">
         Cancel
@@ -11,9 +16,16 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="reports-child-form__grid">
-      <div class="input-group-ui">
+      <div class="input-group-ui reports-child-form__span-2">
         <label class="input-group-ui__label" for="rTitle">Title</label>
-        <input id="rTitle" class="input-group-ui__control" type="text" formControlName="title" [disabled]="saving" />
+        <input
+          id="rTitle"
+          class="input-group-ui__control"
+          type="text"
+          formControlName="title"
+          [disabled]="saving"
+          placeholder="Weekly follow-up, school feedback, therapy summary..."
+        />
       </div>
 
       <div class="input-group-ui">
@@ -21,9 +33,10 @@
         <textarea
           id="rBehavior"
           class="input-group-ui__control"
-          rows="3"
+          rows="4"
           formControlName="behavior"
           [disabled]="saving"
+          placeholder="Describe observed behaviors, interactions, or patterns."
         ></textarea>
       </div>
 
@@ -32,20 +45,22 @@
         <textarea
           id="rDifficulty"
           class="input-group-ui__control"
-          rows="3"
+          rows="4"
           formControlName="difficulty"
           [disabled]="saving"
+          placeholder="Record challenges, obstacles, or situations that need attention."
         ></textarea>
       </div>
 
-      <div class="input-group-ui">
+      <div class="input-group-ui reports-child-form__span-2">
         <label class="input-group-ui__label" for="rRecommendation">Recommendation</label>
         <textarea
           id="rRecommendation"
           class="input-group-ui__control"
-          rows="3"
+          rows="4"
           formControlName="recommendation"
           [disabled]="saving"
+          placeholder="Add next steps, guidance, or actions for the responsible adults."
         ></textarea>
       </div>
 
@@ -57,4 +72,3 @@
     </form>
   </div>
 </section>
-

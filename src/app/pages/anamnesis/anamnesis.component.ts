@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { distinctUntilChanged, filter, map, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, take, tap } from "rxjs";
 import { AnamnesisService } from "../../services/anamnesis.service";
 import { ChildService } from "../../services/child.service";
+import type { ChildRecord } from "../../api/interfaces/child.interface";
 import type { AnamnesisRecord, UpdateAnamnesisGeneralNotesDTO } from "../../api/interfaces/anamnesis.interface";
 import type {
   UpsertAnamnesisBehaviorDTO,
@@ -21,6 +22,9 @@ import type {
   styleUrls: ["./anamnesis.component.scss"],
 })
 export class AnamnesisComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly selectedChildIdSubject = new BehaviorSubject<string | null>(null);
+
   readonly children$ = this.childService.children$;
   readonly childrenLoading$ = this.childService.loading$;
   readonly childrenError$ = this.childService.error$;
@@ -29,6 +33,12 @@ export class AnamnesisComponent implements OnInit {
   readonly loading$ = this.anamnesisService.loading$;
   readonly saving$ = this.anamnesisService.saving$;
   readonly error$ = this.anamnesisService.error$;
+  readonly selectedChild$ = combineLatest([this.children$, this.selectedChildIdSubject]).pipe(
+    map(([children, childId]) => children.find((child) => child.id === childId) ?? null)
+  );
+  readonly overview$ = combineLatest([this.selectedChild$, this.anamnesis$]).pipe(
+    map(([child, anamnesis]) => this.buildOverview(child, anamnesis))
+  );
 
   selectedChildId: string | null = null;
 
@@ -41,16 +51,28 @@ export class AnamnesisComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.childService.loadChildren().subscribe();
+    this.childService
+      .loadAccessibleChildren({ page: 1, pageSize: 50 })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          if (this.selectedChildId) {
+            this.childService.selectChildById(this.selectedChildId);
+          }
+        },
+        error: () => {
+          // Service already exposes a user-friendly error message.
+        },
+      });
 
-    this.anamnesis$.pipe(tap((a) => (this.anamnesisSnapshot = a)), takeUntilDestroyed()).subscribe();
+    this.anamnesis$.pipe(tap((a) => (this.anamnesisSnapshot = a)), takeUntilDestroyed(this.destroyRef)).subscribe();
 
     this.route.queryParamMap
       .pipe(
         map((params) => params.get("childId")),
         filter((childId): childId is string => Boolean(childId)),
         distinctUntilChanged(),
-        takeUntilDestroyed()
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((childId) => this.onChildSelected(childId));
   }
@@ -59,11 +81,15 @@ export class AnamnesisComponent implements OnInit {
     const normalized = childId?.trim() ?? "";
     if (!normalized) {
       this.selectedChildId = null;
+      this.selectedChildIdSubject.next(null);
+      this.childService.selectChild(null);
       this.anamnesisService.clearState();
       return;
     }
 
     this.selectedChildId = normalized;
+    this.selectedChildIdSubject.next(normalized);
+    this.childService.selectChildById(normalized);
     this.anamnesisService.clearState();
     this.anamnesisService.loadByChildId(normalized).subscribe();
   }
@@ -148,5 +174,39 @@ export class AnamnesisComponent implements OnInit {
   onSaveGeneralNotes(payload: UpdateAnamnesisGeneralNotesDTO): void {
     if (!this.selectedChildId) return;
     this.anamnesisService.updateGeneralNotes(this.selectedChildId, payload).subscribe();
+  }
+
+  private buildOverview(child: ChildRecord | null, anamnesis: AnamnesisRecord | null): {
+    child: ChildRecord | null;
+    completedSections: number;
+    totalSections: number;
+    hasAnamnesis: boolean;
+  } {
+    const totalSections = 7;
+    if (!anamnesis) {
+      return {
+        child,
+        completedSections: 0,
+        totalSections,
+        hasAnamnesis: false,
+      };
+    }
+
+    const completedSections = [
+      anamnesis.birth,
+      anamnesis.motorDevelopment,
+      anamnesis.languageCommunication,
+      anamnesis.health,
+      anamnesis.behavior,
+      anamnesis.routine,
+      anamnesis.generalNotes?.trim() ? true : null,
+    ].filter(Boolean).length;
+
+    return {
+      child,
+      completedSections,
+      totalSections,
+      hasAnamnesis: true,
+    };
   }
 }

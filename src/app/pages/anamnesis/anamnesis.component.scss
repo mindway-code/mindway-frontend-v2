@@ -1,42 +1,186 @@
 .anamnesis-page {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-lg);
+  gap: 1.25rem;
 }
 
-.anamnesis-page__header {
+.anamnesis-page__hero {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(244, 179, 19, 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(0, 108, 112, 0.08), rgba(255, 255, 255, 0.96));
+}
+
+.anamnesis-page__hero-body {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--gap-md);
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.anamnesis-page__hero-copy {
+  max-width: 58ch;
 }
 
 .anamnesis-page__eyebrow {
   margin: 0;
   color: var(--text-muted);
-  font-weight: var(--fw-md);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
 }
 
 .anamnesis-page__title {
-  margin: 0;
+  margin: 0.2rem 0 0;
   color: var(--text-dark);
   font-weight: var(--fw-xlg);
 }
 
 .anamnesis-page__subtitle {
-  margin: 0.35rem 0 0;
+  margin: 0.5rem 0 0;
   color: var(--text-muted);
-  max-width: 70ch;
+}
+
+.anamnesis-page__hero-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.anamnesis-page__hero-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(0, 108, 112, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text-green, #006c70);
+  font-weight: 600;
+}
+
+.anamnesis-page__top-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.anamnesis-page__overview {
+  border: 1px solid rgba(223, 229, 228, 0.9);
+}
+
+.anamnesis-page__overview-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.anamnesis-page__overview-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.3rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(108, 117, 125, 0.12);
+  color: var(--text-muted, #6c757d);
+  font-weight: 600;
+}
+
+.anamnesis-page__overview-badge--active {
+  background: rgba(0, 108, 112, 0.12);
+  color: var(--text-green, #006c70);
+}
+
+.anamnesis-page__overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.anamnesis-page__overview-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid rgba(0, 108, 112, 0.08);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(244, 247, 246, 0.7), rgba(255, 255, 255, 1));
+}
+
+.anamnesis-page__overview-label {
+  color: var(--text-muted, #6c757d);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.anamnesis-page__overview-value {
+  color: var(--text-dark, #212529);
+  font-size: 1rem;
+}
+
+.anamnesis-page__overview-value--wrap {
+  line-height: 1.55;
+}
+
+.anamnesis-page__overview-empty {
+  min-height: 12rem;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: var(--text-muted, #6c757d);
+}
+
+.anamnesis-page__state,
+.anamnesis-page__error {
+  border: 1px solid rgba(223, 229, 228, 0.9);
+}
+
+.anamnesis-page__section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.anamnesis-page__section-title {
+  margin: 0;
+  color: var(--text-dark, #212529);
+  font-weight: 700;
+}
+
+.anamnesis-page__section-copy {
+  margin: 0.4rem 0 0;
+  color: var(--text-muted, #6c757d);
+  max-width: 64ch;
 }
 
 .anamnesis-page__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-lg);
+  gap: 1rem;
+  align-items: start;
 }
 
-@media (max-width: 900px) {
-  .anamnesis-page__grid {
+.anamnesis-page__grid app-general-notes-section {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 980px) {
+  .anamnesis-page__top-grid,
+  .anamnesis-page__grid,
+  .anamnesis-page__overview-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .anamnesis-page__hero-chip {
+    width: 100%;
+    justify-content: center;
   }
 }

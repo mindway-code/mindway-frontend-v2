@@ -89,6 +89,25 @@ export class ChildService {
     this.selectedChildSubject.next(child);
   }
 
+  selectChildById(childId: string | null): void {
+    const normalized = childId?.trim() ?? "";
+    if (!normalized) {
+      this.selectedChildSubject.next(null);
+      return;
+    }
+
+    const match = this.childrenSubject.value.find((child) => child.id === normalized) ?? null;
+    this.selectedChildSubject.next(match);
+  }
+
+  getChildrenSnapshot(): ChildRecord[] {
+    return this.childrenSubject.value;
+  }
+
+  getSelectedChildSnapshot(): ChildRecord | null {
+    return this.selectedChildSubject.value;
+  }
+
   createChild(payload: CreateChildDTO): Observable<ChildRecord> {
     this.savingSubject.next(true);
     this.errorSubject.next(null);

@@ -71,6 +71,16 @@
   grid-column: 1 / -1;
 }
 
+.profile-page__loading-card {
+  min-height: 17rem;
+}
+
+.profile-page__loading-avatar {
+  min-height: 5rem;
+  max-width: 5rem;
+  border-radius: 999px;
+}
+
 @media (max-width: 768px) {
   .profile-page {
     padding: 0;

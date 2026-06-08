@@ -1,18 +1,87 @@
 <section class="anamnesis-page">
-  <header class="anamnesis-page__header">
-    <div>
-      <p class="anamnesis-page__eyebrow">Child anamnesis</p>
-      <h1 class="anamnesis-page__title">Anamnesis</h1>
-      <p class="anamnesis-page__subtitle">Select a child to view and manage anamnesis information.</p>
+  <header class="anamnesis-page__hero card-ui card-ui--md">
+    <div class="card-ui__body anamnesis-page__hero-body">
+      <div class="anamnesis-page__hero-copy">
+        <p class="anamnesis-page__eyebrow">Child anamnesis</p>
+        <h1 class="anamnesis-page__title">Anamnesis workspace</h1>
+        <p class="anamnesis-page__subtitle">
+          Review the child overview, find the right record quickly, and edit each section in a cleaner, easier reading flow.
+        </p>
+      </div>
+
+      <ng-container *ngIf="overview$ | async as overview">
+        <div class="anamnesis-page__hero-summary">
+          <div class="anamnesis-page__hero-chip">
+            {{ overview.completedSections }}/{{ overview.totalSections }} sections completed
+          </div>
+          <div class="anamnesis-page__hero-chip" *ngIf="overview.child; else noChildChip">
+            {{ overview.child.name }} - {{ overview.child.age }}y
+          </div>
+          <ng-template #noChildChip>
+            <div class="anamnesis-page__hero-chip">Select a child to begin</div>
+          </ng-template>
+        </div>
+      </ng-container>
     </div>
   </header>
 
-  <app-child-selector
-    [children]="children$ | async"
-    [selectedChildId]="selectedChildId"
-    [loading]="(childrenLoading$ | async) ?? false"
-    (selectedChildIdChange)="onChildSelected($event)"
-  ></app-child-selector>
+  <div class="anamnesis-page__top-grid">
+    <app-child-selector
+      [children]="children$ | async"
+      [selectedChildId]="selectedChildId"
+      [loading]="(childrenLoading$ | async) ?? false"
+      (selectedChildIdChange)="onChildSelected($event)"
+    ></app-child-selector>
+
+    <section class="card-ui card-ui--md anamnesis-page__overview" *ngIf="overview$ | async as overview">
+      <div class="card-ui__body">
+        <div class="anamnesis-page__overview-header">
+          <div>
+            <h2 class="card-ui__title">Overview</h2>
+            <p class="card-ui__subtitle">A quick summary before you edit the detailed sections.</p>
+          </div>
+
+          <span class="anamnesis-page__overview-badge" [class.anamnesis-page__overview-badge--active]="overview.hasAnamnesis">
+            {{ overview.hasAnamnesis ? "In progress" : "Not created" }}
+          </span>
+        </div>
+
+        <ng-container *ngIf="overview.child; else noChildOverview">
+          <div class="anamnesis-page__overview-grid">
+            <article class="anamnesis-page__overview-card">
+              <span class="anamnesis-page__overview-label">Child</span>
+              <strong class="anamnesis-page__overview-value">{{ overview.child.name }}</strong>
+            </article>
+
+            <article class="anamnesis-page__overview-card">
+              <span class="anamnesis-page__overview-label">Birth date</span>
+              <strong class="anamnesis-page__overview-value">{{ overview.child.birthDate | date: "longDate" }}</strong>
+            </article>
+
+            <article class="anamnesis-page__overview-card">
+              <span class="anamnesis-page__overview-label">Completed</span>
+              <strong class="anamnesis-page__overview-value">
+                {{ overview.completedSections }}/{{ overview.totalSections }} sections
+              </strong>
+            </article>
+
+            <article class="anamnesis-page__overview-card">
+              <span class="anamnesis-page__overview-label">Observation</span>
+              <strong class="anamnesis-page__overview-value anamnesis-page__overview-value--wrap">
+                {{ overview.child.observation || "No observation added." }}
+              </strong>
+            </article>
+          </div>
+        </ng-container>
+
+        <ng-template #noChildOverview>
+          <div class="anamnesis-page__overview-empty">
+            Select a child to load the anamnesis summary and editing sections.
+          </div>
+        </ng-template>
+      </div>
+    </section>
+  </div>
 
   <section *ngIf="childrenError$ | async as error" class="anamnesis-page__error card-ui card-ui--md card-ui--accent">
     <div class="card-ui__body">{{ error }}</div>
@@ -20,7 +89,11 @@
 
   <ng-container *ngIf="loading$ | async; else anamnesisContent">
     <section class="anamnesis-page__state card-ui card-ui--md">
-      <div class="card-ui__body">Loading anamnesis...</div>
+      <div class="card-ui__body loading-ui">
+        <span class="loading-ui__line loading-ui__line--sm"></span>
+        <span class="loading-ui__line loading-ui__line--lg"></span>
+        <span class="loading-ui__block"></span>
+      </div>
     </section>
   </ng-container>
 
@@ -37,6 +110,15 @@
     ></app-anamnesis-empty-state>
 
     <ng-container *ngIf="anamnesis$ | async as anamnesis">
+      <div class="anamnesis-page__section-header">
+        <div>
+          <h2 class="anamnesis-page__section-title">Detailed sections</h2>
+          <p class="anamnesis-page__section-copy">
+            Each card can be reviewed first and then edited individually, keeping the reading flow cleaner for any user.
+          </p>
+        </div>
+      </div>
+
       <div class="anamnesis-page__grid">
         <app-birth-section
           [data]="anamnesis.birth"

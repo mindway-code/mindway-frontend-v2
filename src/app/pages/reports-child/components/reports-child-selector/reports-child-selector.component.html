@@ -1,23 +1,51 @@
-<div class="card-ui card-ui--md reports-child-selector">
+<section class="card-ui card-ui--md reports-child-selector">
   <div class="card-ui__body">
-    <div class="select-ui">
-      <label class="select-ui__label" for="reportsChildSelect">Select child</label>
+    <div class="reports-child-selector__header">
+      <div>
+        <h2 class="card-ui__title">Child selection</h2>
+        <p class="card-ui__subtitle">Search by name, then open the report history for the correct child.</p>
+      </div>
 
-      <select
-        id="reportsChildSelect"
-        class="select-ui__field"
-        [disabled]="loading || !(children?.length)"
-        [ngModel]="selectedChildId || ''"
-        (ngModelChange)="onChange($event)"
-      >
-        <option value="" disabled>Choose a child to manage reports</option>
-        <option *ngFor="let child of children; trackBy: trackById" [value]="child.id">
-          {{ child.name }} ({{ child.age }}y)
-        </option>
-      </select>
+      <div class="reports-child-selector__count">
+        {{ filteredChildren.length }} result<span *ngIf="filteredChildren.length !== 1">s</span>
+      </div>
     </div>
 
-    <p *ngIf="loading" class="reports-child-selector__hint">Loading children…</p>
-  </div>
-</div>
+    <div class="reports-child-selector__search">
+      <label class="reports-child-selector__label" for="reports-child-search">Search child</label>
+      <input
+        id="reports-child-search"
+        class="reports-child-selector__search-input"
+        type="search"
+        [(ngModel)]="searchTerm"
+        placeholder="Type the child's name"
+        autocomplete="off"
+      />
+    </div>
 
+    <div class="select-ui select-ui--lg">
+      <div class="select-ui__field">
+        <select
+          id="reportsChildSelect"
+          class="select-ui__control"
+          [disabled]="loading || !(children?.length)"
+          [ngModel]="selectedChildId || ''"
+          (ngModelChange)="onChange($event)"
+        >
+          <option value="" disabled>Choose a child to manage reports</option>
+          <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
+            {{ child.name }} - {{ child.age }}y
+          </option>
+        </select>
+
+        <label class="select-ui__label" for="reportsChildSelect">Associated children</label>
+        <span class="select-ui__arrow" aria-hidden="true">v</span>
+      </div>
+    </div>
+
+    <p *ngIf="loading" class="reports-child-selector__hint">Loading children...</p>
+    <p *ngIf="!loading && filteredChildren.length === 0" class="reports-child-selector__hint">
+      No child found with this search.
+    </p>
+  </div>
+</section>

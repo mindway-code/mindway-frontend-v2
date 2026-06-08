@@ -4,7 +4,7 @@
       <div>
         <h3 class="card-ui__title reports-child-card__title">{{ report.title }}</h3>
         <p class="card-ui__subtitle reports-child-card__meta">
-          {{ report.createdAt | date: "medium" }} • {{ report.userRole }}
+          {{ report.createdAt | date: "medium" }} - {{ report.userRole }}
         </p>
       </div>
 
@@ -16,6 +16,12 @@
           Delete
         </button>
       </div>
+    </div>
+
+    <div class="reports-child-card__chips">
+      <span class="reports-child-card__chip" *ngIf="report.behavior">Behavior</span>
+      <span class="reports-child-card__chip" *ngIf="report.difficulty">Difficulty</span>
+      <span class="reports-child-card__chip" *ngIf="report.recommendation">Recommendation</span>
     </div>
 
     <div class="reports-child-card__body">
@@ -35,4 +41,3 @@
     </div>
   </div>
 </article>
-

@@ -1,11 +1,10 @@
 .reports-child-list__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
 }
 
 .reports-child-list__muted {
   margin: 0;
   opacity: 0.75;
 }
-

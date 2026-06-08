@@ -4,7 +4,35 @@
   align-items: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.child-details__identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.child-details__avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 108, 112, 0.12);
+  color: var(--bg-green, #006c70);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.child-details__eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--text-muted, #7a7a7a);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .child-details__title {
@@ -16,29 +44,69 @@
   color: var(--text-muted, #7a7a7a);
 }
 
-.child-details__grid {
+.child-details__facts {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 1rem;
 }
 
-.child-details__row {
+.child-details__fact {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid rgba(0, 108, 112, 0.08);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(244, 247, 246, 0.7), rgba(255, 255, 255, 1));
 }
 
+.child-details__fact-label,
 .child-details__label {
   color: var(--text-muted, #7a7a7a);
   font-weight: 600;
 }
 
-.child-details__value {
+.child-details__fact-value {
+  color: var(--text-dark, #222);
+  font-size: 1rem;
+}
+
+.child-details__notes {
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.child-details__note {
+  margin: 0.6rem 0 0;
   color: var(--text, #222);
+  line-height: 1.6;
 }
 
 .child-details__empty {
-  padding: 0.5rem 0;
+  display: grid;
+  gap: 0.5rem;
+  min-height: 18rem;
+  place-content: center;
+  text-align: center;
+  color: var(--text-muted, #7a7a7a);
 }
 
+.child-details__empty-title {
+  margin: 0;
+  color: var(--text-dark, #222);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.child-details__empty-copy {
+  margin: 0;
+  max-width: 30ch;
+}
+
+@media (max-width: 640px) {
+  .child-details__facts {
+    grid-template-columns: 1fr;
+  }
+}

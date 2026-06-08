@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BehaviorSubject, combineLatest, map, take } from "rxjs";
 import { AuthService } from "../../services/auth.service";
@@ -21,6 +21,8 @@ type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean };
   styleUrls: ["./reports-child.component.scss"],
 })
 export class ReportsChildComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly currentUser$ = this.authService.currentUser$;
 
   readonly children$ = this.childService.children$;
@@ -42,6 +44,22 @@ export class ReportsChildComponent implements OnInit {
 
   readonly reportsWithPermissions$ = combineLatest([this.reports$, this.currentUser$, this.selectedChild$]).pipe(
     map(([reports, user, child]) => reports.map((r) => ({ ...r, canManage: this.canManageReport(user, child, r) })))
+  );
+  readonly reportSummary$ = combineLatest([this.selectedChild$, this.reportsWithPermissions$]).pipe(
+    map(([child, reports]) => {
+      const latestCreatedAt = reports.length
+        ? [...reports]
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+            ?.createdAt ?? null
+        : null;
+
+      return {
+        child,
+        totalReports: reports.length,
+        manageableReports: reports.filter((report) => report.canManage).length,
+        latestCreatedAt,
+      };
+    })
   );
 
   selectedChildId: string | null = null;
@@ -68,7 +86,7 @@ export class ReportsChildComponent implements OnInit {
       });
 
     this.selectedChildId$
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((childId) => {
         const normalized = childId?.trim() ?? "";
         if (!normalized) {

@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { map, switchMap, take, tap } from "rxjs";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { distinctUntilChanged, map, switchMap, take, tap } from "rxjs";
 import { AssociationChildService } from "../../services/association-child.service";
 import { ChildService } from "../../services/child.service";
 import type { CreateAssociationChildDTO } from "../../api/interfaces/association-child.interface";
@@ -13,6 +14,8 @@ import type { ChildRecord } from "../../api/interfaces/child.interface";
   styleUrls: ["./child-profile.component.scss"],
 })
 export class ChildProfileComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly children$ = this.childService.children$;
   readonly selectedChild$ = this.childService.selectedChild$;
   readonly childrenLoading$ = this.childService.loading$;
@@ -25,16 +28,30 @@ export class ChildProfileComponent implements OnInit {
   constructor(
     private readonly childService: ChildService,
     private readonly associationChildService: AssociationChildService,
+    private readonly route: ActivatedRoute,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap
+      .pipe(
+        map((params) => params.get("childId")),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((childId) => {
+        const children = this.childService.getChildrenSnapshot();
+        if (!children.length) return;
+
+        this.applySelection(childId, children);
+      });
+
     this.childService
       .loadAccessibleChildren({ page: 1, pageSize: 50 })
       .pipe(take(1))
       .subscribe({
         next: (children) => {
-          if (children.length) this.childService.selectChild(children[0]);
+          this.applySelection(this.route.snapshot.queryParamMap.get("childId"), children);
         },
         error: () => {
           // Service already exposes a user-friendly error message.
@@ -42,8 +59,9 @@ export class ChildProfileComponent implements OnInit {
       });
   }
 
-  onSelectChild(child: ChildRecord): void {
+  onSelectChild(child: ChildRecord | null): void {
     this.childService.selectChild(child);
+    this.syncRouteSelection(child?.id ?? null);
   }
 
   onAssociateByAccessCode(payload: CreateAssociationChildDTO): void {
@@ -54,7 +72,8 @@ export class ChildProfileComponent implements OnInit {
           this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 }).pipe(
             tap((children) => {
               const match = children.find((child) => child.id === result.child.id) ?? null;
-              this.childService.selectChild(match ?? children[0] ?? null);
+              this.childService.selectChild(match);
+              this.syncRouteSelection(match?.id ?? null);
             })
           )
         ),
@@ -70,5 +89,30 @@ export class ChildProfileComponent implements OnInit {
 
   onOpenAnamnesis(child: ChildRecord): void {
     this.router.navigate(["/anamnesis"], { queryParams: { childId: child.id } });
+  }
+
+  private applySelection(childId: string | null, children: ChildRecord[]): void {
+    const normalized = childId?.trim() ?? "";
+    if (normalized) {
+      this.childService.selectChildById(normalized);
+      return;
+    }
+
+    const currentSelected = this.childService.getSelectedChildSnapshot();
+    if (currentSelected && children.some((child) => child.id === currentSelected.id)) {
+      this.childService.selectChild(currentSelected);
+      return;
+    }
+
+    this.childService.selectChild(null);
+  }
+
+  private syncRouteSelection(childId: string | null): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { childId: childId || null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
   }
 }

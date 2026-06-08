@@ -37,7 +37,8 @@
       View Anamnesis
     </a>
 
-    <!-- TODO: create /child-profile route/page -->
-    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile">View Child Profile</a>
+    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile" [queryParams]="{ childId: child.id }">
+      View Child Profile
+    </a>
   </footer>
 </article>

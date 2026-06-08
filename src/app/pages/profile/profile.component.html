@@ -13,6 +13,7 @@
         *ngIf="!editMode; else editActions"
         class="btn-ui btn-ui--green btn-ui--sm"
         type="button"
+        [disabled]="((userLoading$ | async) ?? false) && !((user$ | async) ?? null)"
         (click)="startEdit()"
       >
         Edit profile
@@ -35,8 +36,8 @@
     {{ userError }}
   </div>
 
-  <ng-container *ngIf="user$ | async as user">
-    <div class="profile-page__grid">
+  <div class="profile-page__grid">
+    <ng-container *ngIf="user$ | async as user; else profileLoadingCards">
       <app-profile-summary-card [user]="user"></app-profile-summary-card>
 
       <app-profile-edit-form
@@ -56,23 +57,38 @@
           </p>
         </div>
       </section>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="user$ | async as user">
-    <ng-container *ngIf="user.role === 'common'">
-      <ng-container *ngIf="children$ | async as children">
-        <app-children-section
-          [children]="children"
-          [loading]="(childrenLoading$ | async) ?? false"
-          [saving]="(childrenSaving$ | async) ?? false"
-          [error]="(childrenError$ | async) ?? null"
-          [showCreate]="showCreateChild"
-          (toggleCreate)="toggleCreateChild()"
-          (createChild)="createChild($event)"
-          (closeCreate)="closeCreateChild()"
-        ></app-children-section>
-      </ng-container>
     </ng-container>
-  </ng-container>
+
+    <ng-template #profileLoadingCards>
+      <section class="card-ui card-ui--md profile-page__loading-card">
+        <div class="card-ui__body loading-ui">
+          <span class="loading-ui__line loading-ui__line--sm"></span>
+          <span class="loading-ui__line loading-ui__line--md"></span>
+          <span class="loading-ui__line loading-ui__line--lg"></span>
+          <span class="loading-ui__block profile-page__loading-avatar"></span>
+          <span class="loading-ui__line loading-ui__line--md"></span>
+        </div>
+      </section>
+
+      <section class="card-ui card-ui--md profile-page__loading-card">
+        <div class="card-ui__body loading-ui">
+          <span class="loading-ui__line loading-ui__line--sm"></span>
+          <span class="loading-ui__line loading-ui__line--lg"></span>
+          <span class="loading-ui__line loading-ui__line--lg"></span>
+          <span class="loading-ui__block loading-ui__block--sm"></span>
+        </div>
+      </section>
+    </ng-template>
+  </div>
+
+  <app-children-section
+    [children]="(children$ | async) ?? []"
+    [loading]="(childrenLoading$ | async) ?? false"
+    [saving]="(childrenSaving$ | async) ?? false"
+    [error]="(childrenError$ | async) ?? null"
+    [showCreate]="showCreateChild"
+    (toggleCreate)="toggleCreateChild()"
+    (createChild)="createChild($event)"
+    (closeCreate)="closeCreateChild()"
+  ></app-children-section>
 </section>

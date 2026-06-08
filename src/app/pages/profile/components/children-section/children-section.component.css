@@ -39,6 +39,10 @@
   padding: var(--padding-md);
 }
 
+.children-section__loading {
+  border: 1px solid rgba(223, 229, 228, 0.9);
+}
+
 .children-section__state--error {
   border: 1px solid rgba(220, 53, 69, 0.35);
   border-radius: var(--radius-md);
@@ -62,4 +66,3 @@
     grid-template-columns: 1fr;
   }
 }
-

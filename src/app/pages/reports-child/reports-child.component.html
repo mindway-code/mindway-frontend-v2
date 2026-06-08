@@ -1,27 +1,104 @@
 <section class="reports-child">
-  <header class="reports-child__header">
-    <div>
-      <h1 class="reports-child__title">Child Reports</h1>
-      <p class="reports-child__subtitle">Create, review, and manage reports for children you have access to.</p>
-    </div>
+  <header class="reports-child__hero card-ui card-ui--md">
+    <div class="card-ui__body reports-child__hero-body">
+      <div class="reports-child__hero-copy">
+        <p class="reports-child__eyebrow">Child reports</p>
+        <h1 class="reports-child__title">Reports workspace</h1>
+        <p class="reports-child__subtitle">
+          Select a child, review the report history clearly, and create or update notes in a calmer, more readable layout.
+        </p>
+      </div>
 
-    <button
-      class="btn-ui btn-ui--green"
-      type="button"
-      [disabled]="!selectedChildId || (saving$ | async)"
-      (click)="onOpenCreate()"
-    >
-      Create report
-    </button>
+      <ng-container *ngIf="reportSummary$ | async as summary">
+        <div class="reports-child__hero-summary">
+          <div class="reports-child__hero-chip">
+            {{ summary.totalReports }} report<span *ngIf="summary.totalReports !== 1">s</span>
+          </div>
+          <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
+            {{ summary.child.name }} - {{ summary.child.age }}y
+          </div>
+          <ng-template #noChildChip>
+            <div class="reports-child__hero-chip">Select a child to begin</div>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
   </header>
 
   <ng-container *ngIf="children$ | async as children">
-    <app-reports-child-selector
-      [children]="children"
-      [selectedChildId]="selectedChildId"
-      [loading]="(childrenLoading$ | async) ?? false"
-      (selectedChildIdChange)="onSelectChild($event)"
-    />
+    <div class="reports-child__top-grid">
+      <app-reports-child-selector
+        [children]="children"
+        [selectedChildId]="selectedChildId"
+        [loading]="(childrenLoading$ | async) ?? false"
+        (selectedChildIdChange)="onSelectChild($event)"
+      />
+
+      <section class="card-ui card-ui--md reports-child__overview" *ngIf="reportSummary$ | async as summary">
+        <div class="card-ui__body">
+          <div class="reports-child__overview-header">
+            <div>
+              <h2 class="card-ui__title">Overview</h2>
+              <p class="card-ui__subtitle">Quick context before creating or editing child reports.</p>
+            </div>
+
+            <button
+              class="btn-ui btn-ui--green btn-ui--sm"
+              type="button"
+              [disabled]="!selectedChildId || (saving$ | async)"
+              (click)="onOpenCreate()"
+            >
+              Create report
+            </button>
+          </div>
+
+          <ng-container *ngIf="summary.child; else emptyOverview">
+            <div class="reports-child__overview-grid">
+              <article class="reports-child__overview-card">
+                <span class="reports-child__overview-label">Selected child</span>
+                <strong class="reports-child__overview-value">{{ summary.child.name }}</strong>
+              </article>
+
+              <article class="reports-child__overview-card">
+                <span class="reports-child__overview-label">Birth date</span>
+                <strong class="reports-child__overview-value">{{ summary.child.birthDate | date: "longDate" }}</strong>
+              </article>
+
+              <article class="reports-child__overview-card">
+                <span class="reports-child__overview-label">Reports created</span>
+                <strong class="reports-child__overview-value">{{ summary.totalReports }}</strong>
+              </article>
+
+              <article class="reports-child__overview-card">
+                <span class="reports-child__overview-label">You can manage</span>
+                <strong class="reports-child__overview-value">{{ summary.manageableReports }}</strong>
+              </article>
+
+              <article class="reports-child__overview-card reports-child__overview-card--span-2">
+                <span class="reports-child__overview-label">Last report</span>
+                <strong class="reports-child__overview-value">
+                  {{ summary.latestCreatedAt ? (summary.latestCreatedAt | date: "medium") : "No reports yet." }}
+                </strong>
+              </article>
+            </div>
+          </ng-container>
+
+          <ng-template #emptyOverview>
+            <div class="reports-child__overview-empty">
+              Choose a child to load the report summary and available actions.
+            </div>
+          </ng-template>
+        </div>
+      </section>
+    </div>
+
+    <section *ngIf="(childrenLoading$ | async) && children.length === 0" class="card-ui card-ui--md reports-child__loading">
+      <div class="card-ui__body loading-ui">
+        <span class="loading-ui__line loading-ui__line--sm"></span>
+        <span class="loading-ui__line loading-ui__line--lg"></span>
+        <span class="loading-ui__block"></span>
+      </div>
+    </section>
 
     <app-reports-child-empty-state
       *ngIf="!(childrenLoading$ | async) && children.length === 0"
@@ -46,6 +123,15 @@
         (cancel)="onCancelForm()"
       />
 
+      <div class="reports-child__section-header">
+        <div>
+          <h2 class="reports-child__section-title">Report history</h2>
+          <p class="reports-child__section-copy">
+            Read reports in card form and jump into editing only when needed, keeping the main view simpler for any user.
+          </p>
+        </div>
+      </div>
+
       <app-reports-child-list
         [reports]="reportsWithPermissions$ | async"
         [loading]="(reportsLoading$ | async) ?? false"
@@ -60,4 +146,3 @@
     <p *ngIf="reportsError$ | async as err" class="reports-child__error">{{ err }}</p>
   </ng-container>
 </section>
-

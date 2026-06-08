@@ -1,33 +1,47 @@
 <ng-container *ngIf="child; else emptyTpl">
   <header class="child-details__header">
-    <div>
-      <h2 class="child-details__title">{{ child?.name }}</h2>
-      <p class="child-details__subtitle">
-        {{ child?.age }} years • Born {{ child?.birthDate | date: "mediumDate" }}
-      </p>
+    <div class="child-details__identity">
+      <div class="child-details__avatar" aria-hidden="true">{{ childInitial }}</div>
+
+      <div>
+        <p class="child-details__eyebrow">Selected child</p>
+        <h2 class="child-details__title">{{ child.name }}</h2>
+        <p class="child-details__subtitle">
+          Review the essential profile details before opening another workflow.
+        </p>
+      </div>
     </div>
 
-    <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="openAnamnesis.emit(child)">
-      Open anamnesis
-    </button>
+    <div class="child-details__actions">
+      <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="openAnamnesis.emit(child)">
+        Open anamnesis
+      </button>
+    </div>
   </header>
 
-  <div class="child-details__grid">
-    <!-- <div class="child-details__row">
-      <span class="child-details__label">Access code</span>
-      <span class="child-details__value"><strong>{{ child?.accessCode }}</strong></span>
-    </div> -->
+  <div class="child-details__facts">
+    <article class="child-details__fact">
+      <span class="child-details__fact-label">Age</span>
+      <strong class="child-details__fact-value">{{ child.age }} years</strong>
+    </article>
 
-    <div class="child-details__row">
-      <span class="child-details__label">Observation</span>
-      <span class="child-details__value">{{ child?.observation || "—" }}</span>
-    </div>
+    <article class="child-details__fact">
+      <span class="child-details__fact-label">Birth date</span>
+      <strong class="child-details__fact-value">{{ child.birthDate | date: "longDate" }}</strong>
+    </article>
   </div>
+
+  <article class="child-details__notes">
+    <span class="child-details__label">Observation</span>
+    <p class="child-details__note">{{ child.observation || "No observation added yet." }}</p>
+  </article>
 </ng-container>
 
 <ng-template #emptyTpl>
-  <div class="child-details__empty text-muted">
-    Select a child to see details.
+  <div class="child-details__empty">
+    <p class="child-details__empty-title">No child selected</p>
+    <p class="child-details__empty-copy">
+      The profile stays hidden until you choose a child, helping avoid seeing the wrong information by mistake.
+    </p>
   </div>
 </ng-template>
-

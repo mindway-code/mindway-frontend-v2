@@ -2,23 +2,23 @@
   <div class="card-ui__body">
     <div class="reports-child-selector__header">
       <div>
-        <h2 class="card-ui__title">Child selection</h2>
-        <p class="card-ui__subtitle">Search by name, then open the report history for the correct child.</p>
+        <h2 class="card-ui__title">Seleção da criança</h2>
+        <p class="card-ui__subtitle">Pesquise pelo nome e abra o histórico de relatórios da criança correta.</p>
       </div>
 
       <div class="reports-child-selector__count">
-        {{ filteredChildren.length }} result<span *ngIf="filteredChildren.length !== 1">s</span>
+        {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span>
       </div>
     </div>
 
     <div class="reports-child-selector__search">
-      <label class="reports-child-selector__label" for="reports-child-search">Search child</label>
+      <label class="reports-child-selector__label" for="reports-child-search">Pesquisar criança</label>
       <input
         id="reports-child-search"
         class="reports-child-selector__search-input"
         type="search"
         [(ngModel)]="searchTerm"
-        placeholder="Type the child's name"
+        placeholder="Digite o nome da criança"
         autocomplete="off"
       />
     </div>
@@ -32,20 +32,20 @@
           [ngModel]="selectedChildId || ''"
           (ngModelChange)="onChange($event)"
         >
-          <option value="" disabled>Choose a child to manage reports</option>
+          <option value="" disabled>Escolha uma criança para gerenciar relatórios</option>
           <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
-            {{ child.name }} - {{ child.age }}y
+            {{ child.name }} - {{ child.age }} anos
           </option>
         </select>
 
-        <label class="select-ui__label" for="reportsChildSelect">Associated children</label>
+        <label class="select-ui__label" for="reportsChildSelect">Crianças associadas</label>
         <span class="select-ui__arrow" aria-hidden="true">v</span>
       </div>
     </div>
 
-    <p *ngIf="loading" class="reports-child-selector__hint">Loading children...</p>
+    <p *ngIf="loading" class="reports-child-selector__hint">Carregando crianças...</p>
     <p *ngIf="!loading && filteredChildren.length === 0" class="reports-child-selector__hint">
-      No child found with this search.
+      Nenhuma criança encontrada com esta pesquisa.
     </p>
   </div>
 </section>

@@ -1,79 +1,88 @@
-<section class="dashboard-layout">
-  <aside class="dashboard-aside" aria-label="Sidebar">
-    <!-- <div class="dashboard-aside__brand">
-      <a routerLink="/" class="dashboard-aside__brand-link">home</a>
-    </div> -->
+<section
+  class="dashboard-layout"
+  [class.dashboard-layout--collapsed]="!isDesktopSidebarExpanded && !isMobileViewport"
+  [class.dashboard-layout--mobile-open]="isMobileSidebarOpen"
+>
+  <button
+    class="dashboard-layout__overlay"
+    type="button"
+    *ngIf="isMobileViewport && isMobileSidebarOpen"
+    (click)="closeMobileSidebar()"
+    aria-label="Fechar menu de navegação"
+  ></button>
+
+  <aside class="dashboard-aside" aria-label="Menu lateral">
+    <div class="dashboard-aside__topbar">
+      <a routerLink="/" class="dashboard-aside__brand">
+        <span class="dashboard-aside__brand-mark">M</span>
+        <span class="dashboard-aside__brand-text" *ngIf="isDesktopSidebarExpanded || isMobileViewport">Mindway</span>
+      </a>
+
+      <button
+        class="dashboard-aside__toggle"
+        type="button"
+        (click)="toggleSidebar()"
+        [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
+        [attr.aria-label]="isMobileViewport ? 'Fechar menu' : 'Ocultar ou mostrar menu lateral'"
+      >
+        <i class="bi" [ngClass]="isMobileViewport ? 'bi-x-lg' : (isDesktopSidebarExpanded ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar')"></i>
+      </button>
+    </div>
 
     <div class="dashboard-aside__user">
       <img
         class="dashboard-aside__avatar"
         src="assets/img/placeholder.PNG"
-        alt="User profile placeholder"
+        alt="Imagem padrão do perfil do usuário"
       />
 
-      <div class="dashboard-aside__user-info">
-        <p class="dashboard-aside__welcome">Welcome</p>
+      <div class="dashboard-aside__user-info" *ngIf="isDesktopSidebarExpanded || isMobileViewport">
+        <p class="dashboard-aside__welcome">Bem vindo(a)!</p>
 
         <strong class="dashboard-aside__name">
           <ng-container *ngIf="currentUser$ | async as user; else userFallback">
             {{ user.name || user.email }}
           </ng-container>
 
-          <ng-template #userFallback>User</ng-template>
+          <ng-template #userFallback>Usuário</ng-template>
         </strong>
       </div>
     </div>
 
-    <nav class="dashboard-aside__nav" aria-label="Dashboard navigation">
+    <nav class="dashboard-aside__nav" aria-label="Navegação do painel">
       <a
+        *ngFor="let item of navItems"
         class="dashboard-aside__link"
-        routerLink="/profile"
+        [routerLink]="item.route"
         routerLinkActive="dashboard-aside__link--active"
+        (click)="closeMobileSidebar()"
       >
-        Profile
-      </a>
-
-      <a
-        class="dashboard-aside__link"
-        routerLink="/anamnesis"
-        routerLinkActive="dashboard-aside__link--active"
-      >
-        Anamnesis
-      </a>
-
-      <!-- TODO: create /child-profile route/page -->
-      <a
-        class="dashboard-aside__link"
-        routerLink="/child-profile"
-        routerLinkActive="dashboard-aside__link--active"
-      >
-        Child Profile
-      </a>
-
-      <a
-        class="dashboard-aside__link"
-        routerLink="/reports-child"
-        routerLinkActive="dashboard-aside__link--active"
-      >
-        Child Reports
-      </a>
-
-      <!-- TODO: create /social-network-user route/page -->
-      <a
-        class="dashboard-aside__link"
-        routerLink="/social-network-user"
-        routerLinkActive="dashboard-aside__link--active"
-      >
-        Social Network User
+        <i class="bi dashboard-aside__link-icon" [ngClass]="item.icon" aria-hidden="true"></i>
+        <span class="dashboard-aside__link-text" *ngIf="isDesktopSidebarExpanded || isMobileViewport">{{ item.label }}</span>
       </a>
     </nav>
 
     <div class="dashboard-aside__footer">
-      <a class="dashboard-aside__home-link" routerLink="/">Back to Home</a>
+      <a class="dashboard-aside__home-link" routerLink="/" (click)="closeMobileSidebar()">
+        <i class="bi bi-house-door dashboard-aside__link-icon" aria-hidden="true"></i>
+        <span *ngIf="isDesktopSidebarExpanded || isMobileViewport">Voltar ao início</span>
+      </a>
     </div>
   </aside>
 
   <main class="dashboard-layout__main">
+
+    
+      <button
+        class="dashboard-layout__menu-button"
+        type="button"
+        (click)="toggleSidebar()"
+        [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
+      >
+        <i class="bi bi-list" aria-hidden="true"></i>
+        <span>{{ isMobileViewport ? "Menu" : (isDesktopSidebarExpanded ? "Ocultar menu lateral" : "Mostrar menu lateral") }}</span>
+      </button>
+
     <div class="dashboard-layout__panel">
       <router-outlet></router-outlet>
     </div>

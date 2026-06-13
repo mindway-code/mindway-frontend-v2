@@ -1,6 +1,6 @@
 <app-anamnesis-section-shell
-  title="Health"
-  subtitle="Diagnosis, medication and allergies."
+  title="Saúde"
+  subtitle="Diagnóstico, medicação e alergias."
   [exists]="!!data"
   [editing]="editing"
   [saving]="saving"
@@ -9,12 +9,12 @@
   (delete)="delete.emit()"
 >
   <ng-container *ngIf="!editing">
-    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+    <p *ngIf="!data" class="text-muted mb-0">Nenhuma informação ainda.</p>
 
     <div *ngIf="data" class="anamnesis-section__grid">
-      <div class="anamnesis-section__field"><strong>Diagnosis:</strong> {{ data.diagnosis ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Medication:</strong> {{ data.medication ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Allergies:</strong> {{ data.allergies ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Diagnóstico:</strong> {{ data.diagnosis ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Medicação:</strong> {{ data.medication ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Alergias:</strong> {{ data.allergies ?? "-" }}</div>
     </div>
   </ng-container>
 
@@ -23,26 +23,25 @@
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="diagnosis" placeholder=" " />
-          <label class="input-ui__label">Diagnosis</label>
+          <label class="input-ui__label">Diagnóstico</label>
         </div>
       </div>
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="medication" placeholder=" " />
-          <label class="input-ui__label">Medication</label>
+          <label class="input-ui__label">Medicação</label>
         </div>
       </div>
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="allergies" placeholder=" " />
-          <label class="input-ui__label">Allergies</label>
+          <label class="input-ui__label">Alergias</label>
         </div>
       </div>
     </div>
 
     <div class="anamnesis-section__footer">
-      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Salvar</button>
     </div>
   </form>
 </app-anamnesis-section-shell>
-

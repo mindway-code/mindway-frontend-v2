@@ -53,7 +53,7 @@ export class TaskService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load tasks.");
+        this.errorSubject.next("Não foi possível carregar as tarefas.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -68,7 +68,7 @@ export class TaskService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create task.");
+        this.errorSubject.next("Não foi possível criar a tarefa.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -83,7 +83,7 @@ export class TaskService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update task.");
+        this.errorSubject.next("Não foi possível atualizar a tarefa.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -98,7 +98,7 @@ export class TaskService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
       catchError((err) => {
-        this.errorSubject.next("Could not delete task.");
+        this.errorSubject.next("Não foi possível excluir a tarefa.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

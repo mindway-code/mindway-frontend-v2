@@ -59,7 +59,7 @@ export class MessageService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load messages.");
+        this.errorSubject.next("Não foi possível carregar as mensagens.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -74,7 +74,7 @@ export class MessageService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not send message.");
+        this.errorSubject.next("Não foi possível enviar a mensagem.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -89,7 +89,7 @@ export class MessageService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((m) => m.id !== messageId))),
       catchError((err) => {
-        this.errorSubject.next("Could not delete message.");
+        this.errorSubject.next("Não foi possível excluir a mensagem.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

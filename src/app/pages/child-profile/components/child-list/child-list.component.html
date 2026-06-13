@@ -1,12 +1,12 @@
 <div class="child-list" *ngIf="children?.length; else emptyTpl">
   <div class="child-list__search">
-    <label class="child-list__label" for="child-profile-search">Search child</label>
+    <label class="child-list__label" for="child-profile-search">Pesquisar criança</label>
     <input
       id="child-profile-search"
       class="child-list__search-input"
       type="search"
       [(ngModel)]="searchTerm"
-      placeholder="Type a name to filter associated children"
+      placeholder="Ex: Pedro"
       autocomplete="off"
     />
   </div>
@@ -19,26 +19,26 @@
         [ngModel]="selectedChildId || ''"
         (ngModelChange)="onSelectById($event)"
       >
-        <option value="">Select a child</option>
+        <option value="">Selecione uma criança</option>
         <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
-          {{ child.name }} - {{ child.age }}y
+          {{ child.name }} - {{ child.age }} anos
         </option>
       </select>
 
-      <label class="select-ui__label" for="child-profile-select">Associated children</label>
+      <label class="select-ui__label" for="child-profile-select">Crianças associadas</label>
       <span class="select-ui__arrow" aria-hidden="true">v</span>
     </div>
   </div>
 
   <p class="child-list__hint" *ngIf="filteredChildren.length; else noMatchesTpl">
-    {{ filteredChildren.length }} child<span *ngIf="filteredChildren.length !== 1">ren</span> available in this view.
+    {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span> nesta visualização.
   </p>
 
   <ng-template #noMatchesTpl>
-    <p class="child-list__hint">No matching child found for this search.</p>
+    <p class="child-list__hint">Nenhuma criança encontrada para esta pesquisa.</p>
   </ng-template>
 </div>
 
 <ng-template #emptyTpl>
-  <div class="child-list__empty text-muted">No children available.</div>
+  <div class="child-list__empty text-muted">Nenhuma criança disponível.</div>
 </ng-template>

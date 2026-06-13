@@ -4,44 +4,44 @@
       <div class="child-details__avatar" aria-hidden="true">{{ childInitial }}</div>
 
       <div>
-        <p class="child-details__eyebrow">Selected child</p>
+        <p class="child-details__eyebrow">Criança selecionada</p>
         <h2 class="child-details__title">{{ child.name }}</h2>
         <p class="child-details__subtitle">
-          Review the essential profile details before opening another workflow.
+          Revise os dados essenciais do perfil antes de abrir outro fluxo.
         </p>
       </div>
     </div>
 
     <div class="child-details__actions">
       <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="openAnamnesis.emit(child)">
-        Open anamnesis
+        Abrir anamnese
       </button>
     </div>
   </header>
 
   <div class="child-details__facts">
     <article class="child-details__fact">
-      <span class="child-details__fact-label">Age</span>
-      <strong class="child-details__fact-value">{{ child.age }} years</strong>
+      <span class="child-details__fact-label">Idade</span>
+      <strong class="child-details__fact-value">{{ child.age }} anos</strong>
     </article>
 
     <article class="child-details__fact">
-      <span class="child-details__fact-label">Birth date</span>
+      <span class="child-details__fact-label">Data de nascimento</span>
       <strong class="child-details__fact-value">{{ child.birthDate | date: "longDate" }}</strong>
     </article>
   </div>
 
   <article class="child-details__notes">
-    <span class="child-details__label">Observation</span>
-    <p class="child-details__note">{{ child.observation || "No observation added yet." }}</p>
+    <span class="child-details__label">Observação</span>
+    <p class="child-details__note">{{ child.observation || "Nenhuma observação adicionada ainda." }}</p>
   </article>
 </ng-container>
 
 <ng-template #emptyTpl>
   <div class="child-details__empty">
-    <p class="child-details__empty-title">No child selected</p>
+    <p class="child-details__empty-title">Nenhuma criança selecionada</p>
     <p class="child-details__empty-copy">
-      The profile stays hidden until you choose a child, helping avoid seeing the wrong information by mistake.
+      O perfil permanece oculto até você escolher uma criança, ajudando a evitar a visualização de informações erradas por engano.
     </p>
   </div>
 </ng-template>

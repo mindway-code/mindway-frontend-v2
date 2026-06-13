@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           this.editMode = false;
-          this.flashMessage = "Profile updated.";
+          this.flashMessage = "Perfil atualizado.";
         },
         error: () => {
           // Service exposes a user-friendly error message.
@@ -85,7 +85,7 @@ export class ProfileComponent implements OnInit {
     this.childService.createChild(payload).pipe(take(1)).subscribe({
       next: () => {
         this.showCreateChild = false;
-        this.flashMessage = "Child created.";
+        this.flashMessage = "Criança criada.";
       },
       error: () => {
         // Service exposes a user-friendly error message.

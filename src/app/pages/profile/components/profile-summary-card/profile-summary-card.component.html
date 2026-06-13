@@ -4,29 +4,14 @@
       <img
         class="profile-summary__avatar"
         src="assets/img/placeholder.PNG"
-        alt="User profile placeholder"
+        alt="Imagem padrão do perfil do usuário"
       />
 
       <div class="profile-summary__text">
-        <p class="profile-summary__eyebrow">Account</p>
-        <h2 class="profile-summary__title">{{ user?.name || "User" }}</h2>
+        <p class="profile-summary__eyebrow">Conta</p>
+        <h2 class="profile-summary__title">{{ user?.name || "Usuário" }}</h2>
         <p class="profile-summary__subtitle">{{ user?.email || "—" }}</p>
       </div>
     </div>
   </header>
-
-  <div class="profile-summary__meta">
-    <div class="profile-summary__meta-item">
-      <span class="profile-summary__meta-label">Role</span>
-      <span class="profile-summary__meta-value">{{ user?.role || "—" }}</span>
-    </div>
-
-    <!-- <div class="profile-summary__meta-item">
-      <span class="profile-summary__meta-label">User ID</span>
-      <span class="profile-summary__meta-value profile-summary__meta-value--mono">
-        {{ user?.id || "—" }}
-      </span>
-    </div> -->
-  </div>
 </section>
-

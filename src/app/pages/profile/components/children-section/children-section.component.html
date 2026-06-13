@@ -1,14 +1,14 @@
 <section class="children-section">
   <header class="children-section__header">
     <div>
-      <p class="children-section__eyebrow">Family</p>
-      <h2 class="children-section__title">Children</h2>
-      <p class="children-section__subtitle">Create and manage your children profiles.</p>
+      <p class="children-section__eyebrow">Família</p>
+      <h2 class="children-section__title">Crianças</h2>
+      <p class="children-section__subtitle">Gerencie os perfis dos seus filhos.</p>
     </div>
 
     <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="toggleCreate.emit()">
-      <ng-container *ngIf="!showCreate; else hideTpl">Add child</ng-container>
-      <ng-template #hideTpl>Hide form</ng-template>
+      <ng-container *ngIf="!showCreate; else hideTpl">Adicionar criança</ng-container>
+      <ng-template #hideTpl>Ocultar formulário</ng-template>
     </button>
   </header>
 
@@ -35,12 +35,12 @@
   <ng-container *ngIf="!loading && !error">
     <div *ngIf="children.length === 0" class="children-section__empty card-ui card-ui--md">
       <div class="card-ui__body card-ui__body--center">
-        <h3 class="children-section__empty-title">No children registered yet</h3>
+        <h3 class="children-section__empty-title">Nenhuma criança cadastrada ainda</h3>
         <p class="children-section__empty-subtitle">
-          Create a child profile to start organizing anamnesis and development information.
+          Crie um perfil infantil para começar a organizar anamnese e informações de desenvolvimento.
         </p>
         <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="toggleCreate.emit()">
-          Add child
+          Adicionar criança
         </button>
       </div>
     </div>

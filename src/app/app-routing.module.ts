@@ -16,6 +16,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
 import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
+import { DashboradComponent } from './pages/dashborad/dashborad.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -29,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: DashboardLayoutComponent,
+    component: CommonLayoutComponent,
      canActivate: [AuthGuard],
     children: [
       { path: '', component: ProfileComponent, pathMatch: 'full' },
@@ -47,6 +48,12 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [{ path: '', component: ChildProfileComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: DashboradComponent, pathMatch: 'full' }],
   },
   {
     path: 'reports-child',

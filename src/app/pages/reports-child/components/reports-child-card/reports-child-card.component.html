@@ -10,33 +10,33 @@
 
       <div class="reports-child-card__actions" *ngIf="canManage">
         <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" (click)="edit.emit(report)">
-          Edit
+          Editar
         </button>
         <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="delete.emit(report)">
-          Delete
+          Excluir
         </button>
       </div>
     </div>
 
     <div class="reports-child-card__chips">
-      <span class="reports-child-card__chip" *ngIf="report.behavior">Behavior</span>
-      <span class="reports-child-card__chip" *ngIf="report.difficulty">Difficulty</span>
-      <span class="reports-child-card__chip" *ngIf="report.recommendation">Recommendation</span>
+      <span class="reports-child-card__chip" *ngIf="report.behavior">Comportamento</span>
+      <span class="reports-child-card__chip" *ngIf="report.difficulty">Dificuldade</span>
+      <span class="reports-child-card__chip" *ngIf="report.recommendation">Recomendação</span>
     </div>
 
     <div class="reports-child-card__body">
       <p *ngIf="report.behavior" class="reports-child-card__field">
-        <strong>Behavior:</strong> {{ report.behavior }}
+        <strong>Comportamento:</strong> {{ report.behavior }}
       </p>
       <p *ngIf="report.difficulty" class="reports-child-card__field">
-        <strong>Difficulty:</strong> {{ report.difficulty }}
+        <strong>Dificuldade:</strong> {{ report.difficulty }}
       </p>
       <p *ngIf="report.recommendation" class="reports-child-card__field">
-        <strong>Recommendation:</strong> {{ report.recommendation }}
+        <strong>Recomendação:</strong> {{ report.recommendation }}
       </p>
 
       <p *ngIf="!report.behavior && !report.difficulty && !report.recommendation" class="reports-child-card__muted">
-        No additional details provided.
+        Nenhum detalhe adicional informado.
       </p>
     </div>
   </div>

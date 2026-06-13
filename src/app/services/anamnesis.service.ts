@@ -55,7 +55,7 @@ export class AnamnesisService {
             return of(null);
           }
 
-          this.errorSubject.next("Could not load anamnesis.");
+          this.errorSubject.next("Não foi possível carregar a anamnese.");
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -70,7 +70,7 @@ export class AnamnesisService {
       map((res) => res.data),
       tap((created) => this.anamnesisSubject.next(created)),
       catchError((err) => {
-        this.errorSubject.next("Could not create anamnesis.");
+        this.errorSubject.next("Não foi possível criar a anamnese.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -87,7 +87,7 @@ export class AnamnesisService {
         map((res) => res.data),
         tap((updated) => this.anamnesisSubject.next(updated)),
         catchError((err) => {
-          this.errorSubject.next("Could not update general notes.");
+          this.errorSubject.next("Não foi possível atualizar as notas gerais.");
           return throwError(() => err);
         }),
         finalize(() => this.savingSubject.next(false))
@@ -95,11 +95,11 @@ export class AnamnesisService {
   }
 
   upsertBirth(childId: string, payload: UpsertAnamnesisBirthDTO, exists: boolean): Observable<AnamnesisRecord> {
-    return this.upsertSection(childId, "birth", payload, exists, "Could not save birth information.");
+    return this.upsertSection(childId, "birth", payload, exists, "Não foi possível salvar as informações de nascimento.");
   }
 
   deleteBirth(childId: string): Observable<void> {
-    return this.deleteSection(childId, "birth", "Could not delete birth information.");
+    return this.deleteSection(childId, "birth", "Não foi possível excluir as informações de nascimento.");
   }
 
   upsertMotorDevelopment(
@@ -107,11 +107,11 @@ export class AnamnesisService {
     payload: UpsertAnamnesisMotorDevelopmentDTO,
     exists: boolean
   ): Observable<AnamnesisRecord> {
-    return this.upsertSection(childId, "motor-development", payload, exists, "Could not save motor development.");
+    return this.upsertSection(childId, "motor-development", payload, exists, "Não foi possível salvar o desenvolvimento motor.");
   }
 
   deleteMotorDevelopment(childId: string): Observable<void> {
-    return this.deleteSection(childId, "motorDevelopment", "Could not delete motor development.");
+    return this.deleteSection(childId, "motorDevelopment", "Não foi possível excluir o desenvolvimento motor.");
   }
 
   upsertLanguageCommunication(
@@ -124,36 +124,36 @@ export class AnamnesisService {
       "language-communication",
       payload,
       exists,
-      "Could not save language and communication."
+      "Não foi possível salvar linguagem e comunicação."
     );
   }
 
   deleteLanguageCommunication(childId: string): Observable<void> {
-    return this.deleteSection(childId, "languageCommunication", "Could not delete language and communication.");
+    return this.deleteSection(childId, "languageCommunication", "Não foi possível excluir linguagem e comunicação.");
   }
 
   upsertHealth(childId: string, payload: UpsertAnamnesisHealthDTO, exists: boolean): Observable<AnamnesisRecord> {
-    return this.upsertSection(childId, "health", payload, exists, "Could not save health information.");
+    return this.upsertSection(childId, "health", payload, exists, "Não foi possível salvar as informações de saúde.");
   }
 
   deleteHealth(childId: string): Observable<void> {
-    return this.deleteSection(childId, "health", "Could not delete health information.");
+    return this.deleteSection(childId, "health", "Não foi possível excluir as informações de saúde.");
   }
 
   upsertBehavior(childId: string, payload: UpsertAnamnesisBehaviorDTO, exists: boolean): Observable<AnamnesisRecord> {
-    return this.upsertSection(childId, "behavior", payload, exists, "Could not save behavior information.");
+    return this.upsertSection(childId, "behavior", payload, exists, "Não foi possível salvar as informações de comportamento.");
   }
 
   deleteBehavior(childId: string): Observable<void> {
-    return this.deleteSection(childId, "behavior", "Could not delete behavior information.");
+    return this.deleteSection(childId, "behavior", "Não foi possível excluir as informações de comportamento.");
   }
 
   upsertRoutine(childId: string, payload: UpsertAnamnesisRoutineDTO, exists: boolean): Observable<AnamnesisRecord> {
-    return this.upsertSection(childId, "routine", payload, exists, "Could not save routine information.");
+    return this.upsertSection(childId, "routine", payload, exists, "Não foi possível salvar as informações de rotina.");
   }
 
   deleteRoutine(childId: string): Observable<void> {
-    return this.deleteSection(childId, "routine", "Could not delete routine information.");
+    return this.deleteSection(childId, "routine", "Não foi possível excluir as informações de rotina.");
   }
 
   clearState(): void {

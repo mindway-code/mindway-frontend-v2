@@ -58,7 +58,7 @@ export class AppointmentService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load appointments.");
+        this.errorSubject.next("Não foi possível carregar os atendimentos.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -73,7 +73,7 @@ export class AppointmentService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create appointment.");
+        this.errorSubject.next("Não foi possível criar o atendimento.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -88,7 +88,7 @@ export class AppointmentService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update appointment.");
+        this.errorSubject.next("Não foi possível atualizar o atendimento.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -103,7 +103,7 @@ export class AppointmentService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
       catchError((err) => {
-        this.errorSubject.next("Could not delete appointment.");
+        this.errorSubject.next("Não foi possível excluir o atendimento.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

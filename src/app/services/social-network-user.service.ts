@@ -51,7 +51,7 @@ export class SocialNetworkUserService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load social network users.");
+        this.errorSubject.next("Não foi possível carregar os usuários da rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -66,7 +66,7 @@ export class SocialNetworkUserService {
       map((res) => res.data),
       tap((item) => this.selectedItemSubject.next(item)),
       catchError((err) => {
-        this.errorSubject.next("Could not load social network user.");
+        this.errorSubject.next("Não foi possível carregar o usuário da rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -81,7 +81,7 @@ export class SocialNetworkUserService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create social network user.");
+        this.errorSubject.next("Não foi possível criar o usuário da rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -96,7 +96,7 @@ export class SocialNetworkUserService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update social network user.");
+        this.errorSubject.next("Não foi possível atualizar o usuário da rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -111,7 +111,7 @@ export class SocialNetworkUserService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
       catchError((err) => {
-        this.errorSubject.next("Could not delete social network user.");
+        this.errorSubject.next("Não foi possível excluir o usuário da rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

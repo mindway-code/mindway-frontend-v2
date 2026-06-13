@@ -34,11 +34,10 @@ export class AssociationChildService {
     return this.http.post<SuccessResponse<AssociateChildResult>>(this.associationChildrenUrl, payload).pipe(
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next(toMessage(err, "Could not connect child."));
+        this.errorSubject.next(toMessage(err, "Não foi possível conectar a criança."));
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
     );
   }
 }
-

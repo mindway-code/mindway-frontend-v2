@@ -45,7 +45,7 @@ export class ReportsChildService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load reports.");
+        this.errorSubject.next("Não foi possível carregar os relatórios.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -62,7 +62,7 @@ export class ReportsChildService {
         this.reportsSubject.next([created, ...this.reportsSubject.value]);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not create report.");
+        this.errorSubject.next("Não foi possível criar o relatório.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -82,7 +82,7 @@ export class ReportsChildService {
         if (selected?.id === updated.id) this.selectedReportSubject.next(updated);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not update report.");
+        this.errorSubject.next("Não foi possível atualizar o relatório.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -101,7 +101,7 @@ export class ReportsChildService {
         if (selected?.id === reportId) this.selectedReportSubject.next(null);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not delete report.");
+        this.errorSubject.next("Não foi possível excluir o relatório.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -121,4 +121,3 @@ export class ReportsChildService {
     this.paginationSubject.next(null);
   }
 }
-

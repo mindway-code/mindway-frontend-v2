@@ -51,7 +51,7 @@ export class FamilyMemberService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load family members.");
+        this.errorSubject.next("Não foi possível carregar os familiares.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -66,7 +66,7 @@ export class FamilyMemberService {
       map((res) => res.data),
       tap((item) => this.selectedItemSubject.next(item)),
       catchError((err) => {
-        this.errorSubject.next("Could not load family member.");
+        this.errorSubject.next("Não foi possível carregar o familiar.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -81,7 +81,7 @@ export class FamilyMemberService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create family member.");
+        this.errorSubject.next("Não foi possível criar o familiar.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -96,7 +96,7 @@ export class FamilyMemberService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update family member.");
+        this.errorSubject.next("Não foi possível atualizar o familiar.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -113,7 +113,7 @@ export class FamilyMemberService {
         this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id));
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not delete family member.");
+        this.errorSubject.next("Não foi possível excluir o familiar.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

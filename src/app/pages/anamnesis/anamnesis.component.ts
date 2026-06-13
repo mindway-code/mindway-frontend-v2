@@ -106,7 +106,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteBirth(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Birth section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de nascimento?")) return;
     this.anamnesisService.deleteBirth(this.selectedChildId).subscribe();
   }
 
@@ -119,7 +119,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteMotorDevelopment(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Motor Development section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de desenvolvimento motor?")) return;
     this.anamnesisService.deleteMotorDevelopment(this.selectedChildId).subscribe();
   }
 
@@ -132,7 +132,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteLanguageCommunication(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Language & Communication section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de linguagem e comunicação?")) return;
     this.anamnesisService.deleteLanguageCommunication(this.selectedChildId).subscribe();
   }
 
@@ -143,7 +143,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteHealth(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Health section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de saúde?")) return;
     this.anamnesisService.deleteHealth(this.selectedChildId).subscribe();
   }
 
@@ -156,7 +156,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteBehavior(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Behavior section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de comportamento?")) return;
     this.anamnesisService.deleteBehavior(this.selectedChildId).subscribe();
   }
 
@@ -167,7 +167,7 @@ export class AnamnesisComponent implements OnInit {
 
   onDeleteRoutine(): void {
     if (!this.selectedChildId) return;
-    if (!confirm("Are you sure you want to delete the Routine section?")) return;
+    if (!confirm("Tem certeza de que deseja excluir a seção de rotina?")) return;
     this.anamnesisService.deleteRoutine(this.selectedChildId).subscribe();
   }
 

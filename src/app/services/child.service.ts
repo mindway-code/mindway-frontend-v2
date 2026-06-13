@@ -56,7 +56,7 @@ export class ChildService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load children.");
+        this.errorSubject.next("Não foi possível carregar as crianças.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -78,7 +78,7 @@ export class ChildService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Could not load children.");
+        this.errorSubject.next("Não foi possível carregar as crianças.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -118,7 +118,7 @@ export class ChildService {
         this.childrenSubject.next([created, ...this.childrenSubject.value]);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not create child.");
+        this.errorSubject.next("Não foi possível criar o perfil infantil.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))

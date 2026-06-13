@@ -39,7 +39,7 @@ export class SocialNetworkService {
       map((res) => res.data),
       catchError((err) => {
         // Backend middleware currently seems to block therapists; keep error generic.
-        this.errorSubject.next("Could not load social networks.");
+        this.errorSubject.next("Não foi possível carregar as redes sociais.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -54,7 +54,7 @@ export class SocialNetworkService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create social network.");
+        this.errorSubject.next("Não foi possível criar a rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -69,7 +69,7 @@ export class SocialNetworkService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update social network.");
+        this.errorSubject.next("Não foi possível atualizar a rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -84,7 +84,7 @@ export class SocialNetworkService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
       catchError((err) => {
-        this.errorSubject.next("Could not delete social network.");
+        this.errorSubject.next("Não foi possível excluir a rede social.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

@@ -20,7 +20,7 @@ export class HomeComponent {
   placeholderImg = 'assets/img/placeholder.PNG';
   cards: HomeCard[] = [
     {
-      title: 'Meu Perfil',
+      title: 'Meu perfil',
       description: 'Acesse e gerencie suas informações pessoais de forma rápida e organizada.',
       img: 'assets/webp/family.webp',
       alt: 'Ilustração da área de perfil',
@@ -36,12 +36,12 @@ export class HomeComponent {
       route: '/reports'
     },
     {
-      title: 'Ficha Anamnese',
-      description: 'Consulte e preencha a ficha de anamnese com praticidade e clareza.',
+      title: 'Acessar painel',
+      description: 'Consulte e preencha informações com praticidade e clareza.',
       img: 'assets/webp/relate2.webp',
       alt: 'Ilustração da ficha de anamnese',
-      buttonText: 'Abrir ficha',
-      route: '/anamnesis'
+      buttonText: 'Ir para o painel',
+      route: '/dashboard'
     }
   ];
 }

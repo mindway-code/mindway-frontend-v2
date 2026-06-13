@@ -57,7 +57,7 @@ export class AuthService {
         tap((token) => this.tokenService.setAccessToken(token)),
         tap(() => void 0),
         catchError((err) => {
-          this.errorSubject.next(toMessage(err, "Invalid email or password."));
+          this.errorSubject.next(toMessage(err, "E-mail ou senha inválidos."));
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -76,7 +76,7 @@ export class AuthService {
         map((res) => res.data.accessToken),
         tap((token) => this.tokenService.setAccessToken(token)),
         catchError((err) => {
-          this.errorSubject.next(toMessage(err, "Could not register."));
+          this.errorSubject.next(toMessage(err, "Não foi possível cadastrar."));
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -108,7 +108,7 @@ export class AuthService {
         catchError((err) => {
           // If backend is unreachable, still clear local state.
           this.clearAuthState();
-          this.errorSubject.next(toMessage(err, "Logged out locally."));
+          this.errorSubject.next(toMessage(err, "Sessão encerrada localmente."));
           return of(void 0);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -123,7 +123,7 @@ export class AuthService {
       map((res) => res.data),
       tap((user) => this.currentUserSubject.next(user)),
       catchError((err) => {
-        this.errorSubject.next(toMessage(err, "Could not load current user."));
+        this.errorSubject.next(toMessage(err, "Não foi possível carregar o usuário atual."));
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))

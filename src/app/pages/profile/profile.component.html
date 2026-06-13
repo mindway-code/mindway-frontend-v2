@@ -1,10 +1,10 @@
 <section class="profile-page">
   <header class="profile-page__hero">
     <div class="profile-page__hero-content">
-      <p class="profile-page__eyebrow">Account</p>
-      <h1 class="profile-page__title">My Profile</h1>
+      <p class="profile-page__eyebrow">Conta</p>
+      <h1 class="profile-page__title">Meu perfil</h1>
       <p class="profile-page__subtitle">
-        Manage your personal information and children profiles in one place.
+        Gerencie suas informações pessoais e os perfis de seus filhos em um só lugar.
       </p>
     </div>
 
@@ -16,12 +16,12 @@
         [disabled]="((userLoading$ | async) ?? false) && !((user$ | async) ?? null)"
         (click)="startEdit()"
       >
-        Edit profile
+        Editar perfil
       </button>
 
       <ng-template #editActions>
         <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
-          Close
+          Fechar
         </button>
       </ng-template>
     </div>
@@ -31,7 +31,7 @@
     {{ flashMessage }}
   </div>
 
-  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">Loading your profile...</div>
+  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">Carregando seu perfil...</div>
   <div *ngIf="userError$ | async as userError" class="profile-page__state profile-page__state--error" role="alert">
     {{ userError }}
   </div>
@@ -48,15 +48,6 @@
         (save)="saveProfile($event)"
         (cancel)="cancelEdit()"
       ></app-profile-edit-form>
-
-      <section *ngIf="!editMode" class="profile-page__tip card-ui card-ui--md">
-        <div class="card-ui__body">
-          <h2 class="card-ui__title">Quick tips</h2>
-          <p class="card-ui__subtitle">
-            Keep your information up to date and create children profiles to unlock anamnesis features.
-          </p>
-        </div>
-      </section>
     </ng-container>
 
     <ng-template #profileLoadingCards>

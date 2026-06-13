@@ -35,8 +35,8 @@
 
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="nome@dominio.com" type="email" autocomplete="email" formControlName="email" />
-              <label class="input-ui__label">Email</label>
+              <input class="input-ui__control" placeholder="nome&#64;dominio.com" type="email" autocomplete="email" formControlName="email" />
+              <label class="input-ui__label">E-mail</label>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
           <div class="input-ui">
             <div class="input-ui__field">
               <input class="input-ui__control" placeholder="****" type="password" autocomplete="new-password" formControlName="confirmPassword" />
-              <label class="input-ui__label">Confirmar Senha</label>
+              <label class="input-ui__label">Confirmar senha</label>
             </div>
           </div>
 
@@ -59,7 +59,7 @@
           </div>
 
           <button class="btn-ui btn-ui--green w-100" type="submit" [disabled]="form.invalid || (loading$ | async)">
-            Criar Conta
+            Criar conta
           </button>
         </form>
 

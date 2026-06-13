@@ -2,23 +2,23 @@
   <header class="anamnesis-page__hero card-ui card-ui--md">
     <div class="card-ui__body anamnesis-page__hero-body">
       <div class="anamnesis-page__hero-copy">
-        <p class="anamnesis-page__eyebrow">Child anamnesis</p>
-        <h1 class="anamnesis-page__title">Anamnesis workspace</h1>
+        <p class="anamnesis-page__eyebrow">Anamnese infantil</p>
+        <h1 class="anamnesis-page__title">Área de anamnese</h1>
         <p class="anamnesis-page__subtitle">
-          Review the child overview, find the right record quickly, and edit each section in a cleaner, easier reading flow.
+          Revise o resumo da criança, encontre o registro certo rapidamente e edite cada seção em um fluxo mais claro.
         </p>
       </div>
 
       <ng-container *ngIf="overview$ | async as overview">
         <div class="anamnesis-page__hero-summary">
           <div class="anamnesis-page__hero-chip">
-            {{ overview.completedSections }}/{{ overview.totalSections }} sections completed
+            {{ overview.completedSections }}/{{ overview.totalSections }} seções concluídas
           </div>
           <div class="anamnesis-page__hero-chip" *ngIf="overview.child; else noChildChip">
-            {{ overview.child.name }} - {{ overview.child.age }}y
+            {{ overview.child.name }} - {{ overview.child.age }} anos
           </div>
           <ng-template #noChildChip>
-            <div class="anamnesis-page__hero-chip">Select a child to begin</div>
+            <div class="anamnesis-page__hero-chip">Selecione uma criança para começar</div>
           </ng-template>
         </div>
       </ng-container>
@@ -37,38 +37,38 @@
       <div class="card-ui__body">
         <div class="anamnesis-page__overview-header">
           <div>
-            <h2 class="card-ui__title">Overview</h2>
-            <p class="card-ui__subtitle">A quick summary before you edit the detailed sections.</p>
+              <h2 class="card-ui__title">Resumo</h2>
+              <p class="card-ui__subtitle">Um resumo rápido antes de editar as seções detalhadas.</p>
           </div>
 
           <span class="anamnesis-page__overview-badge" [class.anamnesis-page__overview-badge--active]="overview.hasAnamnesis">
-            {{ overview.hasAnamnesis ? "In progress" : "Not created" }}
+            {{ overview.hasAnamnesis ? "Em andamento" : "Não criada" }}
           </span>
         </div>
 
         <ng-container *ngIf="overview.child; else noChildOverview">
           <div class="anamnesis-page__overview-grid">
             <article class="anamnesis-page__overview-card">
-              <span class="anamnesis-page__overview-label">Child</span>
+              <span class="anamnesis-page__overview-label">Criança</span>
               <strong class="anamnesis-page__overview-value">{{ overview.child.name }}</strong>
             </article>
 
             <article class="anamnesis-page__overview-card">
-              <span class="anamnesis-page__overview-label">Birth date</span>
+              <span class="anamnesis-page__overview-label">Data de nascimento</span>
               <strong class="anamnesis-page__overview-value">{{ overview.child.birthDate | date: "longDate" }}</strong>
             </article>
 
             <article class="anamnesis-page__overview-card">
-              <span class="anamnesis-page__overview-label">Completed</span>
+              <span class="anamnesis-page__overview-label">Concluído</span>
               <strong class="anamnesis-page__overview-value">
-                {{ overview.completedSections }}/{{ overview.totalSections }} sections
+                {{ overview.completedSections }}/{{ overview.totalSections }} seções
               </strong>
             </article>
 
             <article class="anamnesis-page__overview-card">
-              <span class="anamnesis-page__overview-label">Observation</span>
+              <span class="anamnesis-page__overview-label">Observação</span>
               <strong class="anamnesis-page__overview-value anamnesis-page__overview-value--wrap">
-                {{ overview.child.observation || "No observation added." }}
+                {{ overview.child.observation || "Nenhuma observação adicionada." }}
               </strong>
             </article>
           </div>
@@ -76,7 +76,7 @@
 
         <ng-template #noChildOverview>
           <div class="anamnesis-page__overview-empty">
-            Select a child to load the anamnesis summary and editing sections.
+            Selecione uma criança para carregar o resumo da anamnese e as seções de edição.
           </div>
         </ng-template>
       </div>
@@ -112,9 +112,9 @@
     <ng-container *ngIf="anamnesis$ | async as anamnesis">
       <div class="anamnesis-page__section-header">
         <div>
-          <h2 class="anamnesis-page__section-title">Detailed sections</h2>
+          <h2 class="anamnesis-page__section-title">Seções detalhadas</h2>
           <p class="anamnesis-page__section-copy">
-            Each card can be reviewed first and then edited individually, keeping the reading flow cleaner for any user.
+            Cada cartão pode ser revisado primeiro e editado individualmente depois, mantendo a leitura mais clara para qualquer usuário.
           </p>
         </div>
       </div>

@@ -153,7 +153,7 @@ export class ReportsChildComponent implements OnInit {
 
   onDeleteReport(report: ReportWithPermissions): void {
     if (!report.canManage) return;
-    if (!confirm("Are you sure you want to delete this report?")) return;
+    if (!confirm("Tem certeza de que deseja excluir este relatório?")) return;
 
     this.reportsChildService
       .deleteReport(report.id)

@@ -3,70 +3,70 @@
     <div class="reports-child-form__header">
       <div>
         <h2 class="card-ui__title">
-          {{ mode === "create" ? "Create report" : "Edit report" }}
+          {{ mode === "create" ? "Criar relatório" : "Editar relatório" }}
         </h2>
         <p class="card-ui__subtitle reports-child-form__subtitle">
-          Capture the most relevant notes in a structured way that is still easy to review later.
+          Registre as notas mais relevantes de forma estruturada e fácil de revisar depois.
         </p>
       </div>
 
       <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" [disabled]="saving" (click)="cancel.emit()">
-        Cancel
+        Cancelar
       </button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="reports-child-form__grid">
       <div class="input-group-ui reports-child-form__span-2">
-        <label class="input-group-ui__label" for="rTitle">Title</label>
+        <label class="input-group-ui__label" for="rTitle">Título</label>
         <input
           id="rTitle"
           class="input-group-ui__control"
           type="text"
           formControlName="title"
           [disabled]="saving"
-          placeholder="Weekly follow-up, school feedback, therapy summary..."
+          placeholder="Acompanhamento semanal, retorno da escola, resumo da terapia..."
         />
       </div>
 
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rBehavior">Behavior</label>
+        <label class="input-group-ui__label" for="rBehavior">Comportamento</label>
         <textarea
           id="rBehavior"
           class="input-group-ui__control"
           rows="4"
           formControlName="behavior"
           [disabled]="saving"
-          placeholder="Describe observed behaviors, interactions, or patterns."
+          placeholder="Descreva comportamentos observados, interações ou padrões."
         ></textarea>
       </div>
 
       <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rDifficulty">Difficulty</label>
+        <label class="input-group-ui__label" for="rDifficulty">Dificuldade</label>
         <textarea
           id="rDifficulty"
           class="input-group-ui__control"
           rows="4"
           formControlName="difficulty"
           [disabled]="saving"
-          placeholder="Record challenges, obstacles, or situations that need attention."
+          placeholder="Registre desafios, obstáculos ou situações que precisam de atenção."
         ></textarea>
       </div>
 
       <div class="input-group-ui reports-child-form__span-2">
-        <label class="input-group-ui__label" for="rRecommendation">Recommendation</label>
+        <label class="input-group-ui__label" for="rRecommendation">Recomendação</label>
         <textarea
           id="rRecommendation"
           class="input-group-ui__control"
           rows="4"
           formControlName="recommendation"
           [disabled]="saving"
-          placeholder="Add next steps, guidance, or actions for the responsible adults."
+          placeholder="Adicione próximos passos, orientações ou ações para os responsáveis."
         ></textarea>
       </div>
 
       <div class="reports-child-form__actions">
         <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">
-          {{ mode === "create" ? "Create" : "Save" }}
+          {{ mode === "create" ? "Criar" : "Salvar" }}
         </button>
       </div>
     </form>

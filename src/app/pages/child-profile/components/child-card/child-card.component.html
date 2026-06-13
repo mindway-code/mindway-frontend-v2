@@ -2,11 +2,11 @@
   <div class="card-ui__body child-card__body">
     <div class="child-card__header">
       <h3 class="child-card__title">{{ child.name }}</h3>
-      <span class="child-card__age">{{ child.age }}y</span>
+      <span class="child-card__age">{{ child.age }} anos</span>
     </div>
 
     <p class="child-card__meta">
-      Born {{ child.birthDate | date: "mediumDate" }}
+      Nascimento {{ child.birthDate | date: "mediumDate" }}
     </p>
 <!-- 
     <p *ngIf="child.observation" class="child-card__note">
@@ -18,4 +18,3 @@
     </p> -->
   </div>
 </button>
-

@@ -33,7 +33,7 @@ export class UserService {
       map((res) => res.data),
       tap((me) => this.currentUserSubject.next(me)),
       catchError((err) => {
-        this.errorSubject.next("Could not load profile.");
+        this.errorSubject.next("Não foi possível carregar o perfil.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -57,7 +57,7 @@ export class UserService {
         }),
         map((res) => res.data),
         catchError((err) => {
-          this.errorSubject.next("Could not load users.");
+          this.errorSubject.next("Não foi possível carregar os usuários.");
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -74,7 +74,7 @@ export class UserService {
         this.itemsSubject.next([created, ...this.itemsSubject.value]);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not create user.");
+        this.errorSubject.next("Não foi possível criar o usuário.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -89,7 +89,7 @@ export class UserService {
       map((res) => res.data),
       tap((updated) => this.currentUserSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Could not update profile.");
+        this.errorSubject.next("Não foi possível atualizar o perfil.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))
@@ -106,7 +106,7 @@ export class UserService {
         this.currentUserSubject.next(null);
       }),
       catchError((err) => {
-        this.errorSubject.next("Could not delete user.");
+        this.errorSubject.next("Não foi possível excluir o usuário.");
         return throwError(() => err);
       }),
       finalize(() => this.savingSubject.next(false))

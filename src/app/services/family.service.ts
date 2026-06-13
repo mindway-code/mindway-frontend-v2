@@ -40,7 +40,7 @@ export class FamilyService {
         }),
         map((res) => res.data),
         catchError((err) => {
-          this.errorSubject.next("Could not load families.");
+          this.errorSubject.next("Não foi possível carregar as famílias.");
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -64,7 +64,7 @@ export class FamilyService {
         }),
         map((res) => res.data),
         catchError((err) => {
-          this.errorSubject.next("Could not load families.");
+          this.errorSubject.next("Não foi possível carregar as famílias.");
           return throwError(() => err);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -79,7 +79,7 @@ export class FamilyService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Could not create family.");
+        this.errorSubject.next("Não foi possível criar a família.");
         return throwError(() => err);
       }),
       finalize(() => this.loadingSubject.next(false))
@@ -93,12 +93,12 @@ export class FamilyService {
    * Treat these as TODO until backend is fixed.
    */
   updateMyFamily(_dto: UpdateFamilyDTO): Observable<FamilyRecord> {
-    this.errorSubject.next("TODO: backend route PUT /families/me appears broken (missing :id).");
+    this.errorSubject.next("Não foi possível atualizar a família no momento.");
     return throwError(() => new Error("Backend route PUT /families/me is not usable yet."));
   }
 
   deleteMyFamily(): Observable<DeleteResult> {
-    this.errorSubject.next("TODO: backend route DELETE /families/me appears broken (missing :id).");
+    this.errorSubject.next("Não foi possível excluir a família no momento.");
     return throwError(() => new Error("Backend route DELETE /families/me is not usable yet."));
   }
 }

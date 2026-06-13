@@ -2,23 +2,23 @@
   <header class="reports-child__hero card-ui card-ui--md">
     <div class="card-ui__body reports-child__hero-body">
       <div class="reports-child__hero-copy">
-        <p class="reports-child__eyebrow">Child reports</p>
-        <h1 class="reports-child__title">Reports workspace</h1>
+        <p class="reports-child__eyebrow">Relatórios infantis</p>
+        <h1 class="reports-child__title">Área de relatórios</h1>
         <p class="reports-child__subtitle">
-          Select a child, review the report history clearly, and create or update notes in a calmer, more readable layout.
+          Selecione uma criança, revise o histórico de relatórios com clareza e crie ou atualize notas em um layout mais tranquilo.
         </p>
       </div>
 
       <ng-container *ngIf="reportSummary$ | async as summary">
         <div class="reports-child__hero-summary">
           <div class="reports-child__hero-chip">
-            {{ summary.totalReports }} report<span *ngIf="summary.totalReports !== 1">s</span>
+            {{ summary.totalReports }} relatório<span *ngIf="summary.totalReports !== 1">s</span>
           </div>
           <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
-            {{ summary.child.name }} - {{ summary.child.age }}y
+            {{ summary.child.name }} - {{ summary.child.age }} anos
           </div>
           <ng-template #noChildChip>
-            <div class="reports-child__hero-chip">Select a child to begin</div>
+            <div class="reports-child__hero-chip">Selecione uma criança para começar</div>
           </ng-template>
         </div>
       </ng-container>
@@ -38,8 +38,8 @@
         <div class="card-ui__body">
           <div class="reports-child__overview-header">
             <div>
-              <h2 class="card-ui__title">Overview</h2>
-              <p class="card-ui__subtitle">Quick context before creating or editing child reports.</p>
+              <h2 class="card-ui__title">Resumo</h2>
+              <p class="card-ui__subtitle">Contexto rápido antes de criar ou editar relatórios infantis.</p>
             </div>
 
             <button
@@ -48,36 +48,36 @@
               [disabled]="!selectedChildId || (saving$ | async)"
               (click)="onOpenCreate()"
             >
-              Create report
+              Criar relatório
             </button>
           </div>
 
           <ng-container *ngIf="summary.child; else emptyOverview">
             <div class="reports-child__overview-grid">
               <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Selected child</span>
+                <span class="reports-child__overview-label">Criança selecionada</span>
                 <strong class="reports-child__overview-value">{{ summary.child.name }}</strong>
               </article>
 
               <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Birth date</span>
+                <span class="reports-child__overview-label">Data de nascimento</span>
                 <strong class="reports-child__overview-value">{{ summary.child.birthDate | date: "longDate" }}</strong>
               </article>
 
               <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Reports created</span>
+                <span class="reports-child__overview-label">Relatórios criados</span>
                 <strong class="reports-child__overview-value">{{ summary.totalReports }}</strong>
               </article>
 
               <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">You can manage</span>
+                <span class="reports-child__overview-label">Você pode gerenciar</span>
                 <strong class="reports-child__overview-value">{{ summary.manageableReports }}</strong>
               </article>
 
               <article class="reports-child__overview-card reports-child__overview-card--span-2">
-                <span class="reports-child__overview-label">Last report</span>
+                <span class="reports-child__overview-label">Último relatório</span>
                 <strong class="reports-child__overview-value">
-                  {{ summary.latestCreatedAt ? (summary.latestCreatedAt | date: "medium") : "No reports yet." }}
+                  {{ summary.latestCreatedAt ? (summary.latestCreatedAt | date: "medium") : "Nenhum relatório ainda." }}
                 </strong>
               </article>
             </div>
@@ -85,7 +85,7 @@
 
           <ng-template #emptyOverview>
             <div class="reports-child__overview-empty">
-              Choose a child to load the report summary and available actions.
+              Escolha uma criança para carregar o resumo dos relatórios e as ações disponíveis.
             </div>
           </ng-template>
         </div>
@@ -125,9 +125,9 @@
 
       <div class="reports-child__section-header">
         <div>
-          <h2 class="reports-child__section-title">Report history</h2>
+          <h2 class="reports-child__section-title">Histórico de relatórios</h2>
           <p class="reports-child__section-copy">
-            Read reports in card form and jump into editing only when needed, keeping the main view simpler for any user.
+            Leia os relatórios em cartões e edite apenas quando necessário, mantendo a visualização principal mais simples.
           </p>
         </div>
       </div>

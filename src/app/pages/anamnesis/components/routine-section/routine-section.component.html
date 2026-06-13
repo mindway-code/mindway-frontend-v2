@@ -1,6 +1,6 @@
 <app-anamnesis-section-shell
-  title="Routine"
-  subtitle="Daily routine and schedules."
+  title="Rotina"
+  subtitle="Rotina diária e horários."
   [exists]="!!data"
   [editing]="editing"
   [saving]="saving"
@@ -9,15 +9,15 @@
   (delete)="delete.emit()"
 >
   <ng-container *ngIf="!editing">
-    <p *ngIf="!data" class="text-muted mb-0">No information yet.</p>
+    <p *ngIf="!data" class="text-muted mb-0">Nenhuma informação ainda.</p>
 
     <div *ngIf="data" class="anamnesis-section__grid">
-      <div class="anamnesis-section__field"><strong>Wakes up at:</strong> {{ data.wakesUpAt ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Sleeps at:</strong> {{ data.sleepsAt ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Therapies:</strong> {{ data.therapies ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>School period:</strong> {{ data.schoolPeriod ?? "-" }}</div>
-      <div class="anamnesis-section__field"><strong>Extra activity:</strong> {{ data.extraActivity ?? "-" }}</div>
-      <div class="anamnesis-section__field anamnesis-section__span-2"><strong>Observation:</strong> {{ data.routineObservation ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Acorda às:</strong> {{ data.wakesUpAt ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Dorme às:</strong> {{ data.sleepsAt ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Terapias:</strong> {{ data.therapies ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Período escolar:</strong> {{ data.schoolPeriod ?? "-" }}</div>
+      <div class="anamnesis-section__field"><strong>Atividade extra:</strong> {{ data.extraActivity ?? "-" }}</div>
+      <div class="anamnesis-section__field anamnesis-section__span-2"><strong>Observação:</strong> {{ data.routineObservation ?? "-" }}</div>
     </div>
   </ng-container>
 
@@ -26,44 +26,43 @@
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="wakesUpAt" placeholder=" " />
-          <label class="input-ui__label">Wakes up at</label>
+          <label class="input-ui__label">Acorda às</label>
         </div>
       </div>
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="sleepsAt" placeholder=" " />
-          <label class="input-ui__label">Sleeps at</label>
+          <label class="input-ui__label">Dorme às</label>
         </div>
       </div>
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="therapies" placeholder=" " />
-          <label class="input-ui__label">Therapies</label>
+          <label class="input-ui__label">Terapias</label>
         </div>
       </div>
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="schoolPeriod" placeholder=" " />
-          <label class="input-ui__label">School period</label>
+          <label class="input-ui__label">Período escolar</label>
         </div>
       </div>
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" type="text" formControlName="extraActivity" placeholder=" " />
-          <label class="input-ui__label">Extra activity</label>
+          <label class="input-ui__label">Atividade extra</label>
         </div>
       </div>
       <div class="input-ui anamnesis-section__span-2">
         <div class="input-ui__field">
           <textarea class="input-ui__control" formControlName="routineObservation" placeholder=" "></textarea>
-          <label class="input-ui__label">Routine observation</label>
+          <label class="input-ui__label">Observação da rotina</label>
         </div>
       </div>
     </div>
 
     <div class="anamnesis-section__footer">
-      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Save</button>
+      <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">Salvar</button>
     </div>
   </form>
 </app-anamnesis-section-shell>
-

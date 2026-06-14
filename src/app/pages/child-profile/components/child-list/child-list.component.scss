@@ -1,7 +1,6 @@
 .child-list {
   display: grid;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 .child-list__search {
@@ -41,4 +40,13 @@
 
 .child-list__empty {
   padding: 0.75rem 0;
+}
+
+
+
+@media (max-width: 700px) {
+  .child-list {
+    max-width: inherit;
+    min-width: 300px;
+  }
 }

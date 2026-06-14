@@ -19,14 +19,13 @@
         [ngModel]="selectedChildId || ''"
         (ngModelChange)="onSelectById($event)"
       >
-        <option value="">Selecione uma criança</option>
+        <option value="">Clique aqui</option>
         <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
           {{ child.name }} - {{ child.age }} anos
         </option>
       </select>
 
       <label class="select-ui__label" for="child-profile-select">Crianças associadas</label>
-      <span class="select-ui__arrow" aria-hidden="true">v</span>
     </div>
   </div>
 

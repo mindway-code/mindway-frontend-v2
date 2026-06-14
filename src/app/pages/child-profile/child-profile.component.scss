@@ -13,7 +13,6 @@
 .child-profile-page__hero-body {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
   align-items: flex-start;
   flex-wrap: wrap;
 }
@@ -41,6 +40,7 @@
   align-items: center;
   min-height: 2.5rem;
   padding: 0.6rem 0.9rem;
+  margin-top: 1rem;
   border: 1px solid rgba(0, 108, 112, 0.12);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.78);
@@ -69,7 +69,6 @@
   }
 }
 
-.child-profile-page__selector,
 .child-profile-page__details,
 .child-profile-page__associate-more {
   border: 1px solid rgba(223, 229, 228, 0.9);

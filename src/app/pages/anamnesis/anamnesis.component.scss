@@ -14,13 +14,12 @@
 .anamnesis-page__hero-body {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .anamnesis-page__hero-copy {
-  max-width: 58ch;
+  max-width: 550px;
 }
 
 .anamnesis-page__eyebrow {
@@ -47,6 +46,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
+  margin-top: 1rem;
 }
 
 .anamnesis-page__hero-chip {
@@ -62,8 +62,6 @@
 }
 
 .anamnesis-page__top-grid {
-  display: grid;
-  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
 }
@@ -171,7 +169,6 @@
 }
 
 @media (max-width: 980px) {
-  .anamnesis-page__top-grid,
   .anamnesis-page__grid,
   .anamnesis-page__overview-grid {
     grid-template-columns: 1fr;

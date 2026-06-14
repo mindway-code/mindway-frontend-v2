@@ -1,96 +1,39 @@
 <section class="reports-child">
-  <header class="reports-child__hero card-ui card-ui--md">
-    <div class="card-ui__body reports-child__hero-body">
+  <header class="reports-child__hero card-ui--md">
+    <div class=" reports-child__hero-body">
       <div class="reports-child__hero-copy">
         <p class="reports-child__eyebrow">Relatórios infantis</p>
         <h1 class="reports-child__title">Área de relatórios</h1>
         <p class="reports-child__subtitle">
           Selecione uma criança, revise o histórico de relatórios com clareza e crie ou atualize notas em um layout mais tranquilo.
         </p>
+        <ng-container *ngIf="reportSummary$ | async as summary">
+          <div class="reports-child__hero-summary">
+            <div class="reports-child__hero-chip">
+              {{ summary.totalReports }} relatório<span *ngIf="summary.totalReports !== 1">s</span>
+            </div>
+            <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
+              {{ summary.child.name }} - {{ summary.child.age }} anos
+            </div>
+            <ng-template #noChildChip>
+              <div class="reports-child__hero-chip">Selecione uma criança para começar</div>
+            </ng-template>
+          </div>
+        </ng-container>
       </div>
 
-      <ng-container *ngIf="reportSummary$ | async as summary">
-        <div class="reports-child__hero-summary">
-          <div class="reports-child__hero-chip">
-            {{ summary.totalReports }} relatório<span *ngIf="summary.totalReports !== 1">s</span>
-          </div>
-          <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
-            {{ summary.child.name }} - {{ summary.child.age }} anos
-          </div>
-          <ng-template #noChildChip>
-            <div class="reports-child__hero-chip">Selecione uma criança para começar</div>
-          </ng-template>
-        </div>
+      <ng-container *ngIf="children$ | async as children">
+          <app-reports-child-selector
+            [children]="children"
+            [selectedChildId]="selectedChildId"
+            [loading]="(childrenLoading$ | async) ?? false"
+            (selectedChildIdChange)="onSelectChild($event)"
+          />
       </ng-container>
     </div>
   </header>
 
   <ng-container *ngIf="children$ | async as children">
-    <div class="reports-child__top-grid">
-      <app-reports-child-selector
-        [children]="children"
-        [selectedChildId]="selectedChildId"
-        [loading]="(childrenLoading$ | async) ?? false"
-        (selectedChildIdChange)="onSelectChild($event)"
-      />
-
-      <section class="card-ui card-ui--md reports-child__overview" *ngIf="reportSummary$ | async as summary">
-        <div class="card-ui__body">
-          <div class="reports-child__overview-header">
-            <div>
-              <h2 class="card-ui__title">Resumo</h2>
-              <p class="card-ui__subtitle">Contexto rápido antes de criar ou editar relatórios infantis.</p>
-            </div>
-
-            <button
-              class="btn-ui btn-ui--green btn-ui--sm"
-              type="button"
-              [disabled]="!selectedChildId || (saving$ | async)"
-              (click)="onOpenCreate()"
-            >
-              Criar relatório
-            </button>
-          </div>
-
-          <ng-container *ngIf="summary.child; else emptyOverview">
-            <div class="reports-child__overview-grid">
-              <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Criança selecionada</span>
-                <strong class="reports-child__overview-value">{{ summary.child.name }}</strong>
-              </article>
-
-              <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Data de nascimento</span>
-                <strong class="reports-child__overview-value">{{ summary.child.birthDate | date: "longDate" }}</strong>
-              </article>
-
-              <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Relatórios criados</span>
-                <strong class="reports-child__overview-value">{{ summary.totalReports }}</strong>
-              </article>
-
-              <article class="reports-child__overview-card">
-                <span class="reports-child__overview-label">Você pode gerenciar</span>
-                <strong class="reports-child__overview-value">{{ summary.manageableReports }}</strong>
-              </article>
-
-              <article class="reports-child__overview-card reports-child__overview-card--span-2">
-                <span class="reports-child__overview-label">Último relatório</span>
-                <strong class="reports-child__overview-value">
-                  {{ summary.latestCreatedAt ? (summary.latestCreatedAt | date: "medium") : "Nenhum relatório ainda." }}
-                </strong>
-              </article>
-            </div>
-          </ng-container>
-
-          <ng-template #emptyOverview>
-            <div class="reports-child__overview-empty">
-              Escolha uma criança para carregar o resumo dos relatórios e as ações disponíveis.
-            </div>
-          </ng-template>
-        </div>
-      </section>
-    </div>
 
     <section *ngIf="(childrenLoading$ | async) && children.length === 0" class="card-ui card-ui--md reports-child__loading">
       <div class="card-ui__body loading-ui">

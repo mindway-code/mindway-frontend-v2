@@ -1,3 +1,7 @@
+.reports-child-selector-body {
+  max-width: 250px;
+}
+
 .reports-child-selector__header {
   display: flex;
   justify-content: space-between;
@@ -52,4 +56,12 @@
 .reports-child-selector__hint {
   margin: 0.85rem 0 0;
   color: var(--text-muted, #6c757d);
+}
+
+
+@media (max-width: 700px) {
+  .reports-child-selector-body {
+    max-width: inherit;
+    min-width: 300px;
+  }
 }

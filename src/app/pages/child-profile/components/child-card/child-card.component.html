@@ -1,4 +1,4 @@
-<button class="child-card card-ui card-ui--md" type="button" [class.child-card--active]="active" (click)="selectChild.emit(child)">
+<button class="child-card card-ui--sm" type="button" [class.child-card--active]="active" (click)="selectChild.emit(child)">
   <div class="card-ui__body child-card__body">
     <div class="child-card__header">
       <h3 class="child-card__title">{{ child.name }}</h3>
@@ -8,13 +8,5 @@
     <p class="child-card__meta">
       Nascimento {{ child.birthDate | date: "mediumDate" }}
     </p>
-<!-- 
-    <p *ngIf="child.observation" class="child-card__note">
-      {{ child.observation }}
-    </p>
-
-    <p class="child-card__code">
-      Access code: <strong>{{ child.accessCode }}</strong>
-    </p> -->
   </div>
 </button>

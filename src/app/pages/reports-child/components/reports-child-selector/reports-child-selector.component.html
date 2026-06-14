@@ -1,16 +1,5 @@
-<section class="card-ui card-ui--md reports-child-selector">
-  <div class="card-ui__body">
-    <div class="reports-child-selector__header">
-      <div>
-        <h2 class="card-ui__title">Seleção da criança</h2>
-        <p class="card-ui__subtitle">Pesquise pelo nome e abra o histórico de relatórios da criança correta.</p>
-      </div>
-
-      <div class="reports-child-selector__count">
-        {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span>
-      </div>
-    </div>
-
+<section class="card-ui--sm reports-child-selector">
+  <div class="reports-child-selector-body">
     <div class="reports-child-selector__search">
       <label class="reports-child-selector__label" for="reports-child-search">Pesquisar criança</label>
       <input
@@ -18,7 +7,7 @@
         class="reports-child-selector__search-input"
         type="search"
         [(ngModel)]="searchTerm"
-        placeholder="Digite o nome da criança"
+        placeholder="Ex: Pedro"
         autocomplete="off"
       />
     </div>
@@ -32,14 +21,13 @@
           [ngModel]="selectedChildId || ''"
           (ngModelChange)="onChange($event)"
         >
-          <option value="" disabled>Escolha uma criança para gerenciar relatórios</option>
+          <option value="" >Clique aqui</option>
           <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
             {{ child.name }} - {{ child.age }} anos
           </option>
         </select>
 
         <label class="select-ui__label" for="reportsChildSelect">Crianças associadas</label>
-        <span class="select-ui__arrow" aria-hidden="true">v</span>
       </div>
     </div>
 

@@ -1,25 +1,36 @@
 <section class="child-profile-page">
   <header class="child-profile-page__hero card-ui card-ui--md">
-    <div class="card-ui__body child-profile-page__hero-body">
+    <div class=" child-profile-page__hero-body">
       <div>
         <p class="child-profile-page__eyebrow">Crianças</p>
         <h1 class="child-profile-page__title">Perfil da criança</h1>
         <p class="child-profile-page__subtitle">
           Escolha uma criança associada para exibir apenas os dados essenciais: idade, nascimento e observação.
         </p>
-      </div>
 
-      <div *ngIf="childrenLoading$ | async; else childrenCountTpl" class="child-profile-page__hero-pill">
-        Carregando crianças...
-      </div>
+        <div *ngIf="childrenLoading$ | async; else childrenCountTpl" class="child-profile-page__hero-pill">
+          Carregando crianças...
+        </div>
 
-      <ng-template #childrenCountTpl>
-        <ng-container *ngIf="children$ | async as children">
-          <div class="child-profile-page__hero-pill">
-            {{ children.length }} criança<span *ngIf="children.length !== 1">s</span> associada<span *ngIf="children.length !== 1">s</span>
-          </div>
+        <ng-template #childrenCountTpl>
+          <ng-container *ngIf="children$ | async as children">
+            <div class="child-profile-page__hero-pill">
+              {{ children.length }} criança<span class="me-1" *ngIf="children.length !== 1">s</span> associada<span *ngIf="children.length !== 1">s</span>
+            </div>
+          </ng-container>
+        </ng-template>
+      </div>
+      <ng-container *ngIf="children$ | async as children">
+        <ng-container *ngIf="!(childrenLoading$ | async) && children.length > 0">
+            <section class="card-ui--sm child-profile-page__selector">
+                <app-child-list
+                  [children]="children"
+                  [selectedChildId]="(selectedChildId$ | async) ?? null"
+                  (selectChild)="onSelectChild($event)"
+                ></app-child-list>
+            </section>
         </ng-container>
-      </ng-template>
+      </ng-container>
     </div>
   </header>
 
@@ -70,28 +81,6 @@
     </section>
 
     <ng-container *ngIf="!(childrenLoading$ | async) && children.length > 0">
-      <div class="child-profile-page__grid">
-        <section class="card-ui card-ui--md child-profile-page__selector">
-          <div class="card-ui__body">
-
-            <app-child-list
-              [children]="children"
-              [selectedChildId]="(selectedChildId$ | async) ?? null"
-              (selectChild)="onSelectChild($event)"
-            ></app-child-list>
-          </div>
-        </section>
-
-        <section class="card-ui card-ui--md child-profile-page__details">
-          <div class="card-ui__body">
-            <app-child-details-panel
-              [child]="(selectedChild$ | async) ?? null"
-              (openAnamnesis)="onOpenAnamnesis($event)"
-            ></app-child-details-panel>
-          </div>
-        </section>
-      </div>
-
       <section class="card-ui card-ui--md child-profile-page__associate-more">
         <div class="card-ui__body">
           <h2 class="card-ui__title">Adicionar outra criança</h2>
@@ -104,6 +93,15 @@
             [error]="(associationError$ | async) ?? null"
             (associate)="onAssociateByAccessCode($event)"
           ></app-child-access-code-form>
+        </div>
+      </section>
+
+      <section class="card-ui card-ui--md child-profile-page__details">
+        <div class="card-ui__body">
+          <app-child-details-panel
+            [child]="(selectedChild$ | async) ?? null"
+            (openAnamnesis)="onOpenAnamnesis($event)"
+          ></app-child-details-panel>
         </div>
       </section>
     </ng-container>

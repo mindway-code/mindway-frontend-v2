@@ -4,7 +4,7 @@
       <div>
         <h3 class="card-ui__title reports-child-card__title">{{ report.title }}</h3>
         <p class="card-ui__subtitle reports-child-card__meta">
-          {{ report.createdAt | date: "medium" }} - {{ report.userRole }}
+          {{ report.createdAt | date: "medium" }} - Criado por {{ creatorLabel }} ({{ roleLabel }})
         </p>
       </div>
 

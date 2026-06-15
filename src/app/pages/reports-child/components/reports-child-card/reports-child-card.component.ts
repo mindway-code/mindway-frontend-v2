@@ -13,5 +13,20 @@ export class ReportsChildCardComponent {
 
   @Output() edit = new EventEmitter<ReportsChildRecord>();
   @Output() delete = new EventEmitter<ReportsChildRecord>();
-}
 
+  get creatorLabel(): string {
+    return this.report.user?.name || this.report.user?.email || "Usuário não identificado";
+  }
+
+  get roleLabel(): string {
+    const labels: Record<ReportsChildRecord["userRole"], string> = {
+      admin: "Administrador",
+      common: "Responsável",
+      enterprise: "Escola",
+      professional: "Profissional",
+      therapist: "Terapeuta",
+    };
+
+    return labels[this.report.userRole] ?? this.report.userRole;
+  }
+}

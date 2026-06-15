@@ -1,0 +1,108 @@
+<section class="link-school">
+  <div class="link-school__visual" aria-hidden="true">
+    <img class="link-school__image" src="/assets/webp/school-webp-3.webp" alt="school" />
+  </div>
+
+  <main class="link-school__content">
+    <a class="link-school__brand" routerLink="/" aria-label="Voltar ao início">
+      <span class="link-school__brand-mark">M</span>
+      <span>MindWay</span>
+    </a>
+
+    <div class="link-school__intro">
+      <p class="link-school__eyebrow">Cadastro da escola</p>
+      <h2>Você foi convidado(a) para entrar no MindWay</h2>
+      <p>
+        Crie a conta da escola para organizar acompanhamentos, colaborar com profissionais e acessar os recursos da plataforma.
+      </p>
+    </div>
+
+    <ul class="link-school__benefits" aria-label="Benefícios para a escola">
+      <li>
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        Perfil institucional com acesso seguro.
+      </li>
+      <li>
+        <i class="bi bi-people" aria-hidden="true"></i>
+        Fluxo preparado para equipes e responsáveis.
+      </li>
+      <li>
+        <i class="bi bi-journal-check" aria-hidden="true"></i>
+        Informações organizadas em um só lugar.
+      </li>
+    </ul>
+
+    <form class="link-school__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="link-school__form-header">
+        <h2>Concluir cadastro</h2>
+        <p>Use os dados oficiais da escola para criar o acesso.</p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="name" type="text" autocomplete="organization" placeholder=" " />
+          <label class="input-ui__label">Nome da escola</label>
+        </div>
+        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+          Informe o nome da escola.
+        </p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
+          <label class="input-ui__label">E-mail institucional</label>
+        </div>
+        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+          Informe um e-mail válido.
+        </p>
+      </div>
+
+      <div class="link-school__form-grid">
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
+            <label class="input-ui__label">Senha</label>
+          </div>
+          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+            Use pelo menos 6 caracteres.
+          </p>
+        </div>
+
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              placeholder=" "
+            />
+            <label class="input-ui__label">Confirmar senha</label>
+          </div>
+          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
+            Confirme a senha.
+          </p>
+        </div>
+      </div>
+
+      <p class="link-school__error" *ngIf="passwordsDoNotMatch" role="alert">
+        As senhas precisam ser iguais.
+      </p>
+
+      <p class="link-school__error" *ngIf="error$ | async as error" role="alert">
+        {{ error }}
+      </p>
+
+      <button class="btn-ui btn-ui--green link-school__submit" type="submit" [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)">
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta da escola</ng-container>
+        <ng-template #loadingTpl>Criando conta...</ng-template>
+      </button>
+
+      <p class="link-school__login">
+        Já tem uma conta?
+        <a routerLink="/login">Entrar</a>
+      </p>
+    </form>
+  </main>
+</section>

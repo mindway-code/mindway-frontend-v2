@@ -1,0 +1,112 @@
+<section class="link-therapist">
+  <div class="link-therapist__visual" aria-hidden="true">
+    <img class="link-therapist__image" src="/assets/webp/professional-webp.webp" alt="" />
+  </div>
+
+  <main class="link-therapist__content">
+    <a class="link-therapist__brand" routerLink="/" aria-label="Voltar ao início">
+      <span class="link-therapist__brand-mark">M</span>
+      <span>MindWay</span>
+    </a>
+
+    <div class="link-therapist__intro">
+      <p class="link-therapist__eyebrow">Cadastro de terapeuta</p>
+      <h2>Você foi convidado(a) para colaborar no MindWay</h2>
+      <p>
+        Crie sua conta de terapeuta para acessar acompanhamentos, registrar observações e trabalhar com a rede de apoio da criança.
+      </p>
+    </div>
+
+    <ul class="link-therapist__benefits" aria-label="Benefícios para terapeutas">
+      <li>
+        <i class="bi bi-heart-pulse" aria-hidden="true"></i>
+        Acesso seguro aos dados compartilhados.
+      </li>
+      <li>
+        <i class="bi bi-clipboard2-check" aria-hidden="true"></i>
+        Registros organizados para acompanhar evoluções.
+      </li>
+      <li>
+        <i class="bi bi-people" aria-hidden="true"></i>
+        Colaboração simples com famílias, escolas e profissionais.
+      </li>
+    </ul>
+
+    <form class="link-therapist__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="link-therapist__form-header">
+        <h2>Concluir cadastro</h2>
+        <p>Use seus dados profissionais para criar o acesso.</p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="name" type="text" autocomplete="name" placeholder=" " />
+          <label class="input-ui__label">Nome completo</label>
+        </div>
+        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+          Informe seu nome.
+        </p>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
+          <label class="input-ui__label">E-mail profissional</label>
+        </div>
+        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+          Informe um e-mail válido.
+        </p>
+      </div>
+
+      <div class="link-therapist__form-grid">
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
+            <label class="input-ui__label">Senha</label>
+          </div>
+          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+            Use pelo menos 6 caracteres.
+          </p>
+        </div>
+
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              placeholder=" "
+            />
+            <label class="input-ui__label">Confirmar senha</label>
+          </div>
+          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
+            Confirme a senha.
+          </p>
+        </div>
+      </div>
+
+      <p class="link-therapist__error" *ngIf="passwordsDoNotMatch" role="alert">
+        As senhas precisam ser iguais.
+      </p>
+
+      <p class="link-therapist__error" *ngIf="error$ | async as error" role="alert">
+        {{ error }}
+      </p>
+
+      <button
+        class="btn-ui btn-ui--green link-therapist__submit"
+        type="submit"
+        [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)"
+      >
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta de terapeuta</ng-container>
+        <ng-template #loadingTpl>Criando conta...</ng-template>
+      </button>
+
+      <p class="link-therapist__login">
+        Já tem uma conta?
+        <a routerLink="/login">Entrar</a>
+      </p>
+    </form>
+  </main>
+</section>

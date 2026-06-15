@@ -1,0 +1,243 @@
+:host {
+  display: block;
+}
+
+.dashborad-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xlg);
+  color: var(--text-dark);
+}
+
+.dashborad-page__welcome {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--gap-lg);
+  padding: clamp(1.1rem, 3vw, 2rem);
+  background-color: var(--bg-light);
+  border-color: var(--border-light);
+  box-shadow: none;
+}
+
+.dashborad-page__welcome-copy {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.dashborad-page__eyebrow,
+.dashborad-page__section-label {
+  margin: 0;
+  color: var(--text-accent);
+  font-size: 0.78rem;
+  font-weight: var(--fw-xlg);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashborad-page__welcome h1 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: clamp(1.75rem, 4vw, 2.1rem);
+  font-weight: var(--fw-xlg);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.dashborad-page__welcome p {
+  margin: 0;
+  color: var(--bg-green);
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  font-weight: var(--fw-xlg);
+}
+
+.dashborad-page__welcome span {
+  max-width: 72ch;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.dashborad-page__role-card {
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: var(--padding-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  background-color: var(--bg-white);
+}
+
+.dashborad-page__role-card span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.dashborad-page__role-card strong {
+  color: var(--bg-green);
+  font-size: 1.1rem;
+}
+
+.dashborad-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xlg);
+}
+
+.dashborad-page__action-icon,
+.dashborad-page__tip-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--border-md);
+  background-color: var(--bg-green-light);
+  color: var(--bg-green);
+  font-size: 1.2rem;
+}
+
+.dashborad-page__section-header h2,
+.dashborad-page__action h3,
+.dashborad-page__tip h3 {
+  margin: 0;
+  color: var(--text-dark);
+  font-weight: var(--fw-xlg);
+}
+
+.dashborad-page__action p,
+.dashborad-page__tip p,
+.dashborad-page__section-header span {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.dashborad-page__actions,
+.dashborad-page__tips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.dashborad-page__section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-lg);
+}
+
+.dashborad-page__section-header h2 {
+  margin-top: 0.35rem;
+  font-size: clamp(1.15rem, 2vw, 1.3rem);
+}
+
+.dashborad-page__section-header span {
+  max-width: 28ch;
+  text-align: right;
+}
+
+.dashborad-page__action-grid,
+.dashborad-page__tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-md);
+}
+
+.dashborad-page__action {
+  min-height: 150px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--gap-md);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--border-md);
+  box-shadow: none;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.dashborad-page__action:hover {
+  border-color: var(--bg-green);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.dashborad-page__action h3,
+.dashborad-page__tip h3 {
+  font-size: 1rem;
+}
+
+.dashborad-page__action p,
+.dashborad-page__tip p {
+  margin-top: 0.35rem;
+}
+
+.dashborad-page__tips-grid {
+  padding: var(--padding-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  background-color: var(--bg-light);
+}
+
+.dashborad-page__tip {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-md);
+  min-width: 0;
+}
+
+.dashborad-page__tip-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  background-color: var(--bg-white);
+  color: var(--text-accent);
+  border: 1px solid var(--border-light);
+  font-size: 1rem;
+}
+
+@media (max-width: 980px) {
+  .dashborad-page__welcome {
+    flex-direction: column;
+  }
+
+  .dashborad-page__role-card {
+    min-width: 0;
+  }
+
+  .dashborad-page__action-grid,
+  .dashborad-page__tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashborad-page__section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashborad-page__section-header span {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashborad-page {
+    gap: var(--gap-lg);
+  }
+
+  .dashborad-page__welcome,
+  .dashborad-page__tips-grid {
+    padding: var(--padding-md);
+  }
+
+  .dashborad-page__action {
+    min-height: auto;
+  }
+}

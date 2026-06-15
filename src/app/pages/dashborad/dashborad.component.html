@@ -1,1 +1,51 @@
-<p>Painel em funcionamento.</p>
+<section class="dashborad-page" *ngIf="viewModel$ | async as vm">
+  <header class="dashborad-page__welcome card-ui card-ui--accent">
+    <div class="dashborad-page__welcome-copy">
+      <p class="dashborad-page__eyebrow">{{ vm.eyebrow }}</p>
+      <h1>Olá, {{ vm.displayName }}.</h1>
+      <span>{{ vm.description }}</span>
+    </div>
+  </header>
+
+  <div class="dashborad-page__content">
+
+    <section class="dashborad-page__actions" aria-labelledby="dashboard-actions-title">
+      <div class="dashborad-page__section-header">
+        <div>
+          <p class="dashborad-page__section-label">Atalhos</p>
+          <h2 id="dashboard-actions-title">Acesse o que importa agora</h2>
+        </div>
+        <span>Escolha uma ação para continuar.</span>
+      </div>
+
+      <div class="dashborad-page__action-grid">
+        <button class="dashborad-page__action card-ui" type="button" *ngFor="let action of vm.actions" (click)="navigateTo(action.route)">
+          <i class="bi dashborad-page__action-icon {{ action.icon }}" aria-hidden="true"></i>
+          <div>
+            <h3>{{ action.label }}</h3>
+            <p>{{ action.description }}</p>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <section class="dashborad-page__tips" aria-labelledby="dashboard-tips-title">
+      <div class="dashborad-page__section-header">
+        <div>
+          <p class="dashborad-page__section-label">Boas práticas</p>
+          <h2 id="dashboard-tips-title">Dicas para usar melhor o MindWay</h2>
+        </div>
+      </div>
+
+      <div class="dashborad-page__tips-grid">
+        <article class="dashborad-page__tip" *ngFor="let tip of vm.tips">
+          <i class="bi dashborad-page__tip-icon {{ tip.icon }}" aria-hidden="true"></i>
+          <div>
+            <h3>{{ tip.title }}</h3>
+            <p>{{ tip.description }}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>

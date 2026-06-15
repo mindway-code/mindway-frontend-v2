@@ -16,52 +16,64 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="reports-child-form__grid">
-      <div class="input-group-ui reports-child-form__span-2">
-        <label class="input-group-ui__label" for="rTitle">Título</label>
-        <input
-          id="rTitle"
-          class="input-group-ui__control"
-          type="text"
-          formControlName="title"
-          [disabled]="saving"
-          placeholder="Acompanhamento semanal, retorno da escola, resumo da terapia..."
-        />
+      <div class="input-ui reports-child-form__span-2">
+        <div class="input-ui__field">
+          <input
+            id="rTitle"
+            class="input-ui__control"
+            type="text"
+            formControlName="title"
+            [disabled]="saving"
+            placeholder=" "
+          />
+          <label class="input-ui__label" for="rTitle">Título</label>
+        </div>
+        <p class="input-ui__hint">Ex: acompanhamento semanal, retorno da escola ou resumo da terapia.</p>
       </div>
 
-      <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rBehavior">Comportamento</label>
-        <textarea
-          id="rBehavior"
-          class="input-group-ui__control"
-          rows="4"
-          formControlName="behavior"
-          [disabled]="saving"
-          placeholder="Descreva comportamentos observados, interações ou padrões."
-        ></textarea>
+      <div class="input-ui">
+        <div class="input-ui__field reports-child-form__textarea-field">
+          <textarea
+            id="rBehavior"
+            class="input-ui__control"
+            rows="4"
+            formControlName="behavior"
+            [disabled]="saving"
+            placeholder=" "
+          ></textarea>
+          <label class="input-ui__label" for="rBehavior">Comportamento</label>
+        </div>
+        <p class="input-ui__hint">Descreva comportamentos observados, interações ou padrões.</p>
       </div>
 
-      <div class="input-group-ui">
-        <label class="input-group-ui__label" for="rDifficulty">Dificuldade</label>
-        <textarea
-          id="rDifficulty"
-          class="input-group-ui__control"
-          rows="4"
-          formControlName="difficulty"
-          [disabled]="saving"
-          placeholder="Registre desafios, obstáculos ou situações que precisam de atenção."
-        ></textarea>
+      <div class="input-ui">
+        <div class="input-ui__field reports-child-form__textarea-field">
+          <textarea
+            id="rDifficulty"
+            class="input-ui__control"
+            rows="4"
+            formControlName="difficulty"
+            [disabled]="saving"
+            placeholder=" "
+          ></textarea>
+          <label class="input-ui__label" for="rDifficulty">Dificuldade</label>
+        </div>
+        <p class="input-ui__hint">Registre desafios, obstáculos ou situações que precisam de atenção.</p>
       </div>
 
-      <div class="input-group-ui reports-child-form__span-2">
-        <label class="input-group-ui__label" for="rRecommendation">Recomendação</label>
-        <textarea
-          id="rRecommendation"
-          class="input-group-ui__control"
-          rows="4"
-          formControlName="recommendation"
-          [disabled]="saving"
-          placeholder="Adicione próximos passos, orientações ou ações para os responsáveis."
-        ></textarea>
+      <div class="input-ui reports-child-form__span-2">
+        <div class="input-ui__field reports-child-form__textarea-field">
+          <textarea
+            id="rRecommendation"
+            class="input-ui__control"
+            rows="4"
+            formControlName="recommendation"
+            [disabled]="saving"
+            placeholder=" "
+          ></textarea>
+          <label class="input-ui__label" for="rRecommendation">Recomendação</label>
+        </div>
+        <p class="input-ui__hint">Adicione próximos passos, orientações ou ações para os responsáveis.</p>
       </div>
 
       <div class="reports-child-form__actions">

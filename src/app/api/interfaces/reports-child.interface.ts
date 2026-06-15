@@ -9,6 +9,10 @@ export interface ReportsChildRecord {
   behavior?: string | null;
   difficulty?: string | null;
   recommendation?: string | null;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -27,4 +31,3 @@ export interface UpdateReportsChildDTO {
   difficulty?: string | null;
   recommendation?: string | null;
 }
-

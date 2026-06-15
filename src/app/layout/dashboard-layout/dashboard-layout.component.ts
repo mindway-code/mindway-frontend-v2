@@ -20,9 +20,7 @@ export class DashboardLayoutComponent {
     { label: "Anamnese", route: "/anamnesis", icon: "bi-journal-text" },
     { label: "Criança", route: "/child-profile", icon: "bi-person" },
     { label: "Relatórios", route: "/reports-child", icon: "bi-clipboard-data" },
-    { label: "Escola", route: "#", icon: "bi-building" },
-    { label: "Professores", route: "#", icon: "bi-person-workspace" },
-    { label: "Mensagens", route: "#", icon: "bi-clipboard-data" },
+    { label: "Mensagens", route: "#", icon: "bi-chat" },
     { label: "Configurações", route: "#", icon: "bi-gear" },
   ];
 

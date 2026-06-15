@@ -35,12 +35,10 @@
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="age" type="number" placeholder="Idade" min="0" />
+          <input class="input-ui__control" formControlName="age" type="number" placeholder="Idade" min="0" readonly />
           <label class="input-ui__label">Idade</label>
         </div>
-        <p class="child-create__hint" *ngIf="form.controls.age.touched && form.controls.age.invalid">
-          Informe uma idade válida (0 ou mais).
-        </p>
+        <p class="child-create__hint">Calculada automaticamente pela data de nascimento.</p>
       </div>
 
       <div class="input-ui">

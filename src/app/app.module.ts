@@ -54,6 +54,10 @@ import { ReportsChildListComponent } from './pages/reports-child/components/repo
 import { ReportsChildCardComponent } from './pages/reports-child/components/reports-child-card/reports-child-card.component';
 import { ReportsChildFormComponent } from './pages/reports-child/components/reports-child-form/reports-child-form.component';
 import { ReportsChildEmptyStateComponent } from './pages/reports-child/components/reports-child-empty-state/reports-child-empty-state.component';
+import { LinkSchoolComponent } from './auth/link-school/link-school.component';
+import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
+import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
+import { DashboradComponent } from './pages/dashborad/dashborad.component';
 
 registerLocaleData(localePt);
 
@@ -101,6 +105,10 @@ registerLocaleData(localePt);
     ReportsChildCardComponent,
     ReportsChildFormComponent,
     ReportsChildEmptyStateComponent,
+    LinkSchoolComponent,
+    LinkProfessionalComponent,
+    LinkTherapistComponent,
+    DashboradComponent
   ],
   imports: [
     BrowserModule,

@@ -17,6 +17,9 @@ import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
 import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
+import { LinkSchoolComponent } from './auth/link-school/link-school.component';
+import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
+import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -34,7 +37,24 @@ const routes: Routes = [
      canActivate: [AuthGuard],
     children: [
       { path: '', component: ProfileComponent, pathMatch: 'full' },
-      { path: 'social-network', component: SocialNetworkComponent },
+    ],
+  },
+  {
+    path: 'link-school',
+    children: [
+      { path: '', component: LinkSchoolComponent, pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'link-professional',
+    children: [
+      { path: '', component: LinkProfessionalComponent, pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'link-therapist',
+    children: [
+      { path: '', component: LinkTherapistComponent, pathMatch: 'full' },
     ],
   },
   {

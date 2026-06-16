@@ -20,6 +20,7 @@ import { DashboradComponent } from './pages/dashborad/dashborad.component';
 import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
+import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -43,6 +44,12 @@ const routes: Routes = [
     path: 'link-school',
     children: [
       { path: '', component: LinkSchoolComponent, pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'link-clinic',
+    children: [
+      { path: '', component: LinkClinicComponent, pathMatch: 'full' },
     ],
   },
   {

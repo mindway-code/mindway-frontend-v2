@@ -77,9 +77,45 @@
     [loading]="(childrenLoading$ | async) ?? false"
     [saving]="(childrenSaving$ | async) ?? false"
     [error]="(childrenError$ | async) ?? null"
+    [userRole]="(user$ | async)?.role ?? null"
+    [associationLoading]="(associationLoading$ | async) ?? false"
+    [associationError]="(associationError$ | async) ?? null"
     [showCreate]="showCreateChild"
     (toggleCreate)="toggleCreateChild()"
     (createChild)="createChild($event)"
     (closeCreate)="closeCreateChild()"
+    (associateChild)="associateChild($event)"
   ></app-children-section>
+
+  <section class="profile-page__invites card-ui card-ui--md">
+    <header class="profile-page__invites-header">
+      <div>
+        <p class="profile-page__eyebrow">Convites</p>
+        <h2 class="profile-page__section-title">Compartilhar acesso</h2>
+        <p class="profile-page__subtitle">
+          Envie o link adequado para cada pessoa ou instituição entrar no MindWay.
+        </p>
+      </div>
+    </header>
+
+    <div class="profile-page__invite-grid">
+      <article class="profile-page__invite-card" *ngFor="let invite of inviteLinks">
+        <div class="profile-page__invite-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="invite.icon"></i>
+        </div>
+
+        <div class="profile-page__invite-copy">
+          <h3>{{ invite.label }}</h3>
+          <p>{{ invite.description }}</p>
+          <a [href]="getInviteUrl(invite.path)" target="_blank" rel="noopener">
+            {{ getInviteUrl(invite.path) }}
+          </a>
+        </div>
+
+        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="copyInviteLink(invite.path)">
+          Copiar
+        </button>
+      </article>
+    </div>
+  </section>
 </section>

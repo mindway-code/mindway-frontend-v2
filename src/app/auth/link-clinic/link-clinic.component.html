@@ -1,64 +1,64 @@
-<section class="link-professional">
-  <div class="link-professional__visual" aria-hidden="true">
-    <img class="link-professional__image" src="/assets/webp/work-webp.webp" alt="professional" />
+<section class="link-clinic">
+  <div class="link-clinic__visual" aria-hidden="true">
+    <img class="link-clinic__image" src="/assets/webp/clinic-webp.webp" alt="clínica" />
   </div>
 
-  <main class="link-professional__content">
-    <a class="link-professional__brand" routerLink="/" aria-label="Voltar ao início">
-      <span class="link-professional__brand-mark">M</span>
+  <main class="link-clinic__content">
+    <a class="link-clinic__brand" routerLink="/" aria-label="Voltar ao início">
+      <span class="link-clinic__brand-mark">M</span>
       <span>MindWay</span>
     </a>
 
-    <div class="link-professional__intro">
-      <p class="link-professional__eyebrow">Cadastro profissional</p>
-      <h2>Você foi convidado(a) para colaborar no MindWay</h2>
+    <div class="link-clinic__intro">
+      <p class="link-clinic__eyebrow">Cadastro da clínica</p>
+      <h2>Você foi convidado(a) para entrar no MindWay</h2>
       <p>
-        Crie sua conta profissional para acessar acompanhamentos, contribuir com registros e trabalhar junto à rede de apoio.
+        Crie a conta da clínica para organizar acompanhamentos, colaborar com profissionais e acessar os recursos da plataforma.
       </p>
     </div>
 
-    <ul class="link-professional__benefits" aria-label="Benefícios para profissionais">
+    <ul class="link-clinic__benefits" aria-label="Benefícios para a clínica">
       <li>
-        <i class="bi bi-person-check" aria-hidden="true"></i>
-        Acesso profissional com perfil próprio.
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        Perfil institucional com acesso seguro.
       </li>
       <li>
-        <i class="bi bi-journal-medical" aria-hidden="true"></i>
-        Registros claros para acompanhar evoluções.
+        <i class="bi bi-people" aria-hidden="true"></i>
+        Fluxo preparado para equipes e responsáveis.
       </li>
       <li>
-        <i class="bi bi-diagram-3" aria-hidden="true"></i>
-        Colaboração organizada com famílias e escolas.
+        <i class="bi bi-journal-check" aria-hidden="true"></i>
+        Informações organizadas em um só lugar.
       </li>
     </ul>
 
-    <form class="link-professional__form" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="link-professional__form-header">
+    <form class="link-clinic__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="link-clinic__form-header">
         <h2>Concluir cadastro</h2>
-        <p>Use seus dados profissionais para criar o acesso.</p>
+        <p>Use os dados oficiais da clínica para criar o acesso.</p>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="name" type="text" autocomplete="name" placeholder=" " />
-          <label class="input-ui__label">Nome completo</label>
+          <input class="input-ui__control" formControlName="name" type="text" autocomplete="organization" placeholder=" " />
+          <label class="input-ui__label">Nome da clínica</label>
         </div>
         <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
-          Informe seu nome.
+          Informe o nome da clínica.
         </p>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
-          <label class="input-ui__label">E-mail profissional</label>
+          <label class="input-ui__label">E-mail institucional</label>
         </div>
         <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
           Informe um e-mail válido.
         </p>
       </div>
 
-      <div class="link-professional__form-grid">
+      <div class="link-clinic__form-grid">
         <div class="input-ui">
           <div class="input-ui__field">
             <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
@@ -86,24 +86,20 @@
         </div>
       </div>
 
-      <p class="link-professional__error" *ngIf="passwordsDoNotMatch" role="alert">
+      <p class="link-clinic__error" *ngIf="passwordsDoNotMatch" role="alert">
         As senhas precisam ser iguais.
       </p>
 
-      <p class="link-professional__error" *ngIf="error$ | async as error" role="alert">
+      <p class="link-clinic__error" *ngIf="error$ | async as error" role="alert">
         {{ error }}
       </p>
 
-      <button
-        class="btn-ui btn-ui--green link-professional__submit"
-        type="submit"
-        [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)"
-      >
-        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta profissional</ng-container>
+      <button class="btn-ui btn-ui--green link-clinic__submit" type="submit" [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)">
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta da clínica</ng-container>
         <ng-template #loadingTpl>Criando conta...</ng-template>
       </button>
 
-      <p class="link-professional__login">
+      <p class="link-clinic__login">
         Já tem uma conta?
         <a routerLink="/login">Entrar</a>
       </p>

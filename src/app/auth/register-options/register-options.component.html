@@ -1,38 +1,91 @@
-<div class="register-container">
-  <div class="register">
-    <div class="img-container">
-      <div class="overlay flex-column">
-        <h3>Junte-se ao MindWay!</h3>
-        <h5>Acesse a melhor plataforma de acompanhamento terapêutico.</h5>
-      </div>   
-    </div>
-    <div class="form-container">
-          <div class="card-ui card-body">
-            <h3 class=" mb-3">Crie sua conta</h3>
-            <form class="d-flex align-items-center flex-column gap-3">
-                <a class="btn--group btn-ui--green" routerLink="/register-school">
-                        <i class="bi bi-building-add"></i>
-                        Escola
-                </a>
-                <a class="btn--group btn-ui--green" routerLink="/register-teacher">
-                        <i class="bi bi-person-plus"></i>
-                        Professor
-                </a>
-                <a class="btn--group btn-ui--green" routerLink="/register-therapist">
-                        <i class="bi bi-person-badge"></i>
-                        Terapeuta
-                </a>
-                <a class="btn--group btn-ui--green" routerLink="/register">
-                        <i class="bi bi-person-plus"></i>
-                        Cliente
-                </a>
-            </form>
+<section class="register-options">
+  <aside class="register-options__hero" aria-label="Boas-vindas ao cadastro">
+    <a class="register-options__brand" routerLink="/" aria-label="Voltar ao início">
+      <span class="register-options__brand-mark">M</span>
+      <span>MindWay</span>
+    </a>
 
-            <div class="d-flex justify-content-center mt-3 text-center gap-3">
-              <a routerLink="/login">Já tenho conta</a>
-            </div>
-          </div>
+    <div class="register-options__hero-copy">
+      <p class="register-options__eyebrow">Escolha seu acesso</p>
+      <h1>Crie a conta certa para começar com segurança.</h1>
+      <p>
+        Cada perfil libera uma experiência preparada para responsáveis, instituições e profissionais da rede de apoio.
+      </p>
     </div>
-  </div>
-</div>
 
+    <div class="register-options__note">
+      <i class="bi bi-shield-check" aria-hidden="true"></i>
+      <span>Você poderá acessar o MindWay com permissões adequadas ao seu papel.</span>
+    </div>
+  </aside>
+
+  <main class="register-options__content">
+    <div class="register-options__header">
+      <p class="register-options__eyebrow">Cadastro</p>
+      <h2>Como você deseja entrar?</h2>
+      <p>Selecione a opção mais próxima do seu perfil para continuar.</p>
+    </div>
+
+    <div class="register-options__grid">
+      <a class="register-options__card" routerLink="/register">
+        <span class="register-options__icon">
+          <i class="bi bi-person-heart" aria-hidden="true"></i>
+        </span>
+        <span class="register-options__card-copy">
+          <strong>Sou responsável</strong>
+          <small>Para familiares ou cuidadores que acompanham uma criança.</small>
+        </span>
+        <i class="bi bi-arrow-right register-options__arrow" aria-hidden="true"></i>
+      </a>
+
+      <a class="register-options__card" routerLink="/link-clinic">
+        <span class="register-options__icon">
+          <i class="bi bi-hospital" aria-hidden="true"></i>
+        </span>
+        <span class="register-options__card-copy">
+          <strong>Represento uma clínica</strong>
+          <small>Para clínicas organizarem equipes, registros e acompanhamentos.</small>
+        </span>
+        <i class="bi bi-arrow-right register-options__arrow" aria-hidden="true"></i>
+      </a>
+
+      <a class="register-options__card" routerLink="/link-school">
+        <span class="register-options__icon">
+          <i class="bi bi-building-add" aria-hidden="true"></i>
+        </span>
+        <span class="register-options__card-copy">
+          <strong>Represento uma escola</strong>
+          <small>Para escolas colaborarem com famílias e profissionais.</small>
+        </span>
+        <i class="bi bi-arrow-right register-options__arrow" aria-hidden="true"></i>
+      </a>
+
+      <a class="register-options__card" routerLink="/link-therapist">
+        <span class="register-options__icon">
+          <i class="bi bi-person-badge" aria-hidden="true"></i>
+        </span>
+        <span class="register-options__card-copy">
+          <strong>Sou terapeuta</strong>
+          <small>Para terapeutas registrarem evoluções, condutas e orientações.</small>
+        </span>
+        <i class="bi bi-arrow-right register-options__arrow" aria-hidden="true"></i>
+      </a>
+
+      <a class="register-options__card" routerLink="/link-professional">
+        <span class="register-options__icon">
+          <i class="bi bi-clipboard2-pulse" aria-hidden="true"></i>
+        </span>
+        <span class="register-options__card-copy">
+          <strong>Sou profissional da saúde</strong>
+          <small>Para fisioterapeutas, professores e áreas relacionadas.</small>
+        </span>
+        <i class="bi bi-arrow-right register-options__arrow" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <p class="register-options__login">
+      Já tem uma conta?
+      <a routerLink="/login">Entrar</a>
+    </p>
+  </main>
+</section>

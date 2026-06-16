@@ -1,41 +1,40 @@
 <nav class="navbar navbar-expand-lg navbar-light border-bottom">
   <div class="container">
-    <a class="navbar-brand fw-semibold" routerLink="/">Mindway</a>
+    <a class="navbar-brand fw-semibold" routerLink="/" (click)="closeMenu()">Mindway</a>
 
     <button
       class="navbar-toggler"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#mindwayNavbar"
       aria-controls="mindwayNavbar"
-      aria-expanded="false"
+      [attr.aria-expanded]="isMenuOpen"
       aria-label="Alternar navegação"
+      (click)="toggleMenu()"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="mindwayNavbar">
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="mindwayNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Início</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Início</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-semibold" routerLink="/social-network" routerLinkActive="active">Rede social</a>
+          <a class="nav-link fw-semibold" routerLink="/social-network" routerLinkActive="active" (click)="closeMenu()">Rede de Apoio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-semibold" routerLink="/dashboard" routerLinkActive="active">Painel</a>
+          <a class="nav-link fw-semibold" routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Painel</a>
         </li>
       </ul>
 
-      <div class="d-flex gap-2">
+      <div class="navbar-actions d-flex gap-2">
         <ng-container *ngIf="isAuthenticated$ | async; else loggedOut">
-          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/profile">Perfil</a>
+          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/profile" (click)="closeMenu()">Perfil</a>
           <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="logout()">Sair</button>
         </ng-container>
 
         <ng-template #loggedOut>
-          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/login">Entrar</a>
-          <a class="btn-ui btn-ui--green btn-ui--sm" routerLink="/register-options">Criar conta</a>
+          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/login" (click)="closeMenu()">Entrar</a>
+          <a class="btn-ui btn-ui--green btn-ui--sm" routerLink="/register-options" (click)="closeMenu()">Criar conta</a>
         </ng-template>
       </div>
     </div>

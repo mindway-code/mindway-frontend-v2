@@ -57,6 +57,7 @@ import { ReportsChildEmptyStateComponent } from './pages/reports-child/component
 import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
+import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
 
 registerLocaleData(localePt);
@@ -106,6 +107,7 @@ registerLocaleData(localePt);
     ReportsChildFormComponent,
     ReportsChildEmptyStateComponent,
     LinkSchoolComponent,
+    LinkClinicComponent,
     LinkProfessionalComponent,
     LinkTherapistComponent,
     DashboradComponent

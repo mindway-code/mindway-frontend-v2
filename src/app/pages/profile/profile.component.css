@@ -67,6 +67,79 @@
   align-items: start;
 }
 
+.profile-page__section-title {
+  margin: 0.15rem 0 0;
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  font-weight: var(--fw-xlg);
+}
+
+.profile-page__invites {
+  gap: var(--gap-md);
+}
+
+.profile-page__invites-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.profile-page__invite-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-md);
+}
+
+.profile-page__invite-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-md);
+  padding: var(--padding-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-md);
+  background-color: var(--bg-light);
+}
+
+.profile-page__invite-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-md);
+  background-color: var(--bg-green-light);
+  color: var(--bg-green);
+}
+
+.profile-page__invite-copy {
+  min-width: 0;
+}
+
+.profile-page__invite-copy h3 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: var(--fw-xlg);
+}
+
+.profile-page__invite-copy p {
+  margin: 0.25rem 0;
+  color: var(--text-muted);
+}
+
+.profile-page__invite-copy a {
+  display: block;
+  overflow: hidden;
+  color: var(--bg-green);
+  font-size: 0.85rem;
+  font-weight: var(--fw-lg);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .profile-page__tip {
   grid-column: 1 / -1;
 }
@@ -88,5 +161,18 @@
 
   .profile-page__grid {
     grid-template-columns: 1fr;
+  }
+
+  .profile-page__invite-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-page__invite-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .profile-page__invite-card .btn-ui {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }

@@ -4,7 +4,7 @@
   background-color: var(--bg-light);
 }
 
-.link-therapist {
+.link-clinic {
   max-width: 1280px;
   min-height: 100dvh;
   margin: 0 auto;
@@ -15,7 +15,7 @@
   padding: var(--padding-lg) var(--padding-md);
 }
 
-.link-therapist__visual {
+.link-clinic__visual {
   position: relative;
   min-height: 620px;
   max-width: 50%;
@@ -28,16 +28,28 @@
   filter: drop-shadow(0 28px 32px rgba(0, 45, 48, 0.24));
 }
 
-.link-therapist__image {
+.link-clinic__image {
   position: relative;
   z-index: 1;
   max-width: 350px;
-    border-radius: var(--border-md);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-sm);
+  border-radius: var(--border-md);
   height: auto;
 }
 
-.link-therapist__content {
+.link-clinic__note {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  gap: 0.35rem;
+  padding: var(--padding-md);
+  border-radius: var(--border-sm);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+}
+
+.link-clinic__content {
   display: flex;
   flex-direction: column;
   max-width: 50%;
@@ -45,7 +57,7 @@
   gap: clamp(1.2rem, 3vw, 2rem);
 }
 
-.link-therapist__brand {
+.link-clinic__brand {
   width: max-content;
   display: inline-flex;
   align-items: center;
@@ -55,7 +67,7 @@
   text-decoration: none;
 }
 
-.link-therapist__brand-mark {
+.link-clinic__brand-mark {
   width: 2.4rem;
   height: 2.4rem;
   display: inline-flex;
@@ -64,15 +76,15 @@
   border-radius: 0.9rem;
   background: var(--bg-green);
   color: var(--text-light);
-  box-shadow: 0 12px 30px rgba(0, 108, 112, 0.18);
+  box-shadow: 0 12px 30px rgba(0, 108, 112, 0.2);
 }
 
-.link-therapist__intro,
-.link-therapist__form {
+.link-clinic__intro,
+.link-clinic__form {
   max-width: 620px;
 }
 
-.link-therapist__eyebrow {
+.link-clinic__eyebrow {
   margin: 0 0 0.65rem;
   color: var(--text-accent);
   font-weight: var(--fw-xlg);
@@ -80,7 +92,16 @@
   text-transform: uppercase;
 }
 
-.link-therapist__intro p {
+.link-clinic__intro h1 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: clamp(2.2rem, 6vw, 4.35rem);
+  font-weight: var(--fw-xlg);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.link-clinic__intro p {
   margin: 1rem 0 0;
   max-width: 56ch;
   color: var(--text-muted);
@@ -88,7 +109,7 @@
   line-height: 1.7;
 }
 
-.link-therapist__benefits {
+.link-clinic__benefits {
   display: flex;
   gap: 0.75rem;
   margin: 0;
@@ -96,7 +117,7 @@
   list-style: none;
 }
 
-.link-therapist__benefits li {
+.link-clinic__benefits li {
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
@@ -106,13 +127,13 @@
   line-height: 1.35;
 }
 
-.link-therapist__benefits i {
+.link-clinic__benefits i {
   color: var(--bg-green);
   font-size: 1.1rem;
   line-height: 1;
 }
 
-.link-therapist__form {
+.link-clinic__form {
   display: grid;
   gap: 1rem;
   padding: 0;
@@ -121,83 +142,85 @@
   box-shadow: none;
 }
 
-.link-therapist__form-header {
+.link-clinic__form-header {
   margin-bottom: 0.25rem;
 }
 
-.link-therapist__form-header h2 {
+.link-clinic__form-header h2 {
   margin: 0;
   color: var(--bg-green);
   font-size: clamp(1.25rem, 3vw, 1.55rem);
   font-weight: var(--fw-xlg);
 }
 
-.link-therapist__form-header p {
+.link-clinic__form-header p {
   margin: 0.35rem 0 0;
   color: var(--text-muted);
 }
 
-.link-therapist__form-grid {
+.link-clinic__form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
 }
 
-.link-therapist__error {
+.link-clinic__error {
   margin: 0;
   color: rgba(170, 44, 54, 0.95);
   font-size: 0.9rem;
   font-weight: var(--fw-lg);
 }
 
-.link-therapist__submit {
+.link-clinic__submit {
   width: 100%;
   min-height: 52px;
   margin-top: 0.25rem;
   border-radius: var(--border-pill);
 }
 
-.link-therapist__login {
+.link-clinic__login {
   margin: 0;
   color: var(--text-muted);
   text-align: center;
 }
 
-.link-therapist__login a {
+.link-clinic__login a {
   color: var(--bg-green);
   font-weight: var(--fw-xlg);
   text-decoration: none;
 }
 
+
+
 @media (max-width: 980px) {
-  .link-therapist {
+  .link-clinic {
     width: 100%;
     gap: var(--gap-xlg);
     align-items: stretch;
   }
 
-  .link-therapist__visual {
+  .link-clinic__visual {
     min-height: 240px;
     max-height: 400px;
     max-width: inherit;
     border-radius: var(--border-md);
   }
 
-  .link-therapist__image {
+  .link-clinic__image {
     width: 100%;
   }
 
-  .link-therapist__content {
+  .link-clinic__content {
     max-width: inherit;
     min-width: 300px;
     gap: clamp(1.2rem, 3vw, 2rem);
   }
 
-  .link-therapist__benefits {
+  .link-clinic__benefits {
     flex-wrap: wrap;
   }
 
-  .link-therapist__form-grid {
+  .link-clinic__form-grid {
     grid-template-columns: 1fr;
   }
 }

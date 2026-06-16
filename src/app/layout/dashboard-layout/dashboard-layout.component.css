@@ -256,6 +256,18 @@
 }
 
 @media (max-width: 900px) {
+
+  .dashboard-layout__menu-button {
+    display: flex;
+    width: fit-content;
+    width: 100%;
+    position: sticky;
+    top: 2px;
+    justify-content: center;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-medium);
+  }
+  
   .dashboard-layout {
     grid-template-columns: 1fr;
   }
@@ -291,17 +303,6 @@
 @media (max-width: 640px) {
   .dashboard-layout__main {
     padding: 0.25rem;
-  }
-
-  .dashboard-layout__menu-button {
-    display: flex;
-    width: fit-content;
-    width: 100%;
-    position: sticky;
-    top: 2px;
-    justify-content: center;
-    z-index: 100;
-    border-bottom: 1px solid var(--border-medium);
   }
 
   .dashboard-layout__toolbar-text {

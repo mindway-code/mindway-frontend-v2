@@ -3,22 +3,42 @@
     <div>
       <p class="children-section__eyebrow">Família</p>
       <h2 class="children-section__title">Crianças</h2>
-      <p class="children-section__subtitle">Gerencie os perfis dos seus filhos.</p>
+      <p class="children-section__subtitle" *ngIf="canCreateChild; else connectSubtitle">
+        Gerencie os perfis dos seus filhos.
+      </p>
+      <ng-template #connectSubtitle>
+        <p class="children-section__subtitle">Conecte uma criança usando o código compartilhado pelo responsável.</p>
+      </ng-template>
     </div>
 
-    <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="toggleCreate.emit()">
+    <button *ngIf="canCreateChild" class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="toggleCreate.emit()">
       <ng-container *ngIf="!showCreate; else hideTpl">Adicionar criança</ng-container>
       <ng-template #hideTpl>Ocultar formulário</ng-template>
     </button>
   </header>
 
   <app-child-create-form
-    *ngIf="showCreate"
+    *ngIf="canCreateChild && showCreate"
     [saving]="saving"
     [error]="error"
     (create)="createChild.emit($event)"
     (cancel)="closeCreate.emit()"
   ></app-child-create-form>
+
+  <section *ngIf="!canCreateChild" class="card-ui card-ui--md children-section__connect">
+    <div class="card-ui__body">
+      <h3 class="children-section__empty-title">Conectar criança</h3>
+      <p class="children-section__empty-subtitle">
+        Use o código de acesso recebido para visualizar e acompanhar a criança associada.
+      </p>
+
+      <app-child-access-code-form
+        [loading]="associationLoading"
+        [error]="associationError"
+        (associate)="associateChild.emit($event)"
+      ></app-child-access-code-form>
+    </div>
+  </section>
 
   <section *ngIf="loading" class="card-ui card-ui--md children-section__loading">
     <div class="card-ui__body loading-ui">
@@ -36,10 +56,13 @@
     <div *ngIf="children.length === 0" class="children-section__empty card-ui card-ui--md">
       <div class="card-ui__body card-ui__body--center">
         <h3 class="children-section__empty-title">Nenhuma criança cadastrada ainda</h3>
-        <p class="children-section__empty-subtitle">
+        <p class="children-section__empty-subtitle" *ngIf="canCreateChild; else noAssociatedChildrenTpl">
           Crie um perfil infantil para começar a organizar anamnese e informações de desenvolvimento.
         </p>
-        <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="toggleCreate.emit()">
+        <ng-template #noAssociatedChildrenTpl>
+          Quando uma criança for conectada por código, ela aparecerá aqui.
+        </ng-template>
+        <button *ngIf="canCreateChild" class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="toggleCreate.emit()">
           Adicionar criança
         </button>
       </div>

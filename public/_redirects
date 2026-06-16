@@ -1,2 +1,2 @@
-/api/* https://mindway-api-production.up.railway.app/api/:splat 200
+/api/* https://mindway-api.onrender.com/api/:splat 200
 /* /index.html 200

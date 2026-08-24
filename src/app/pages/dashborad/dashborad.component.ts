@@ -1,7 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { map } from "rxjs";
+import { catchError, map, of, take } from "rxjs";
+import type { AppointmentRecord } from "../../api/interfaces/appointment.interface";
 import type { UserRole } from "../../api/interfaces/user.interface";
+import { AppointmentService } from "../../services/appointment.service";
 import { AuthService } from "../../services/auth.service";
 
 interface DashboardAction {
@@ -32,6 +34,12 @@ interface DashboardProfile {
 
 interface DashboardViewModel extends DashboardProfile {
   displayName: string;
+}
+
+interface DashboardAppointment {
+  title: string;
+  professional: string;
+  startsAt: string | Date;
 }
 
 const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
@@ -337,19 +345,11 @@ const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
   templateUrl: "./dashborad.component.html",
   styleUrl: "./dashborad.component.css",
 })
-export class DashboradComponent {
+export class DashboradComponent implements OnInit {
   readonly familyChild = {
     name: "Laura Martins",
     age: "7 anos",
     level: "TEA Nível 1",
-  };
-
-  readonly nextAppointment = {
-    type: "Consulta - Neuropediatra",
-    professional: "Dr. Carlos Henrique",
-    date: "Sábado, 24 de maio",
-    time: "09:00",
-    location: "Clínica Neuro Vida",
   };
 
   readonly latestUpdate = {
@@ -369,12 +369,55 @@ export class DashboradComponent {
     })
   );
 
+  readonly appointments$ = this.appointmentService.items$;
+  readonly appointmentsLoading$ = this.appointmentService.loading$;
+  readonly appointmentsError$ = this.appointmentService.error$;
+  readonly nextAppointment$ = this.appointments$.pipe(
+    map((appointments) => this.getNextAppointment(appointments))
+  );
+
   constructor(
     private readonly authService: AuthService,
+    private readonly appointmentService: AppointmentService,
     private readonly router: Router
   ) {}
 
+  ngOnInit(): void {
+    this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
+      const request = user?.role === "therapist"
+        ? this.appointmentService.listMyTherapistAppointments()
+        : this.appointmentService.listMyAppointments();
+
+      request.pipe(catchError(() => of([]))).subscribe();
+    });
+  }
+
   navigateTo(route: string): void {
     void this.router.navigate([route]);
+  }
+
+  reloadAppointments(): void {
+    this.ngOnInit();
+  }
+
+  private getNextAppointment(appointments: AppointmentRecord[]): DashboardAppointment | null {
+    const now = Date.now();
+
+    const next = appointments
+      .filter((appointment) => {
+        const startsAt = new Date(appointment.startsAt).getTime();
+        return startsAt >= now && ["scheduled", "confirmed"].includes(appointment.status);
+      })
+      .sort((first, second) =>
+        new Date(first.startsAt).getTime() - new Date(second.startsAt).getTime()
+      )[0];
+
+    if (!next) return null;
+
+    return {
+      title: next.title?.trim() || "Atendimento agendado",
+      professional: next.therapist?.name || "Profissional não informado",
+      startsAt: next.startsAt,
+    };
   }
 }

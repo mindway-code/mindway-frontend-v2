@@ -46,11 +46,39 @@
   <div class="dashborad-page__updates">
     <section class="dashborad-page__info-card card-ui" aria-labelledby="appointment-title">
       <h2 id="appointment-title"><i class="bi bi-calendar-event" aria-hidden="true"></i> Próximo compromisso</h2>
-      <div class="dashborad-page__appointment">
-        <time datetime="2026-05-24"><strong>24</strong><span>MAI</span></time>
-        <div><h3>{{ nextAppointment.type }}</h3><p>{{ nextAppointment.professional }}</p><p><i class="bi bi-calendar3"></i> {{ nextAppointment.date }} <i class="bi bi-clock"></i> {{ nextAppointment.time }}</p><p><i class="bi bi-geo-alt"></i> {{ nextAppointment.location }}</p></div>
-      </div>
-      <button class="dashborad-page__text-action" type="button" (click)="navigateTo('/reports-child')">Ver todos os compromissos <i class="bi bi-chevron-right"></i></button>
+      <ng-container *ngIf="appointmentsLoading$ | async; else appointmentContent">
+        <div class="dashborad-page__appointment-state" role="status">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+          <p>Carregando compromissos...</p>
+        </div>
+      </ng-container>
+
+      <ng-template #appointmentContent>
+        <ng-container *ngIf="appointmentsError$ | async; else appointmentData">
+          <div class="dashborad-page__appointment-state">
+            <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+            <p>Não foi possível carregar seus compromissos.</p>
+            <button class="dashborad-page__text-action" type="button" (click)="reloadAppointments()">Tentar novamente</button>
+          </div>
+        </ng-container>
+
+        <ng-template #appointmentData>
+          <ng-container *ngIf="nextAppointment$ | async as nextAppointment; else emptyAppointments">
+            <div class="dashborad-page__appointment">
+              <time [attr.datetime]="nextAppointment.startsAt | date:'yyyy-MM-dd'"><strong>{{ nextAppointment.startsAt | date:'dd' }}</strong><span>{{ nextAppointment.startsAt | date:'MMM' | uppercase }}</span></time>
+              <div><h3>{{ nextAppointment.title }}</h3><p>{{ nextAppointment.professional }}</p><p><i class="bi bi-calendar3"></i> {{ nextAppointment.startsAt | date:'EEEE, d \'de\' MMMM' }} <i class="bi bi-clock"></i> {{ nextAppointment.startsAt | date:'HH:mm' }}</p></div>
+            </div>
+          </ng-container>
+        </ng-template>
+      </ng-template>
+
+      <ng-template #emptyAppointments>
+        <div class="dashborad-page__appointment-state dashborad-page__appointment-state--empty">
+          <i class="bi bi-calendar-plus" aria-hidden="true"></i>
+          <div><h3>Nenhum compromisso próximo</h3><p>Quando um atendimento for agendado, ele aparecerá aqui.</p></div>
+          <button class="dashborad-page__text-action" type="button" (click)="navigateTo('/social-network')">Solicitar agendamento <i class="bi bi-chevron-right"></i></button>
+        </div>
+      </ng-template>
     </section>
 
     <section class="dashborad-page__info-card card-ui" aria-labelledby="update-title">

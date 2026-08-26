@@ -1,7 +1,6 @@
 <section class="profile-page">
   <header class="profile-page__hero">
     <div class="profile-page__hero-content">
-      <p class="profile-page__eyebrow">Conta</p>
       <h1 class="profile-page__title">Meu perfil</h1>
       <p class="profile-page__subtitle">
         Gerencie suas informações pessoais e os perfis de seus filhos em um só lugar.
@@ -38,7 +37,7 @@
 
   <div class="profile-page__grid">
     <ng-container *ngIf="user$ | async as user; else profileLoadingCards">
-      <app-profile-summary-card [user]="user"></app-profile-summary-card>
+      <app-profile-summary-card *ngIf="!editMode" [user]="user"></app-profile-summary-card>
 
       <app-profile-edit-form
         *ngIf="editMode"
@@ -90,10 +89,11 @@
   <section class="profile-page__invites card-ui card-ui--md">
     <header class="profile-page__invites-header">
       <div>
-        <p class="profile-page__eyebrow">Convites</p>
-        <h2 class="profile-page__section-title">Compartilhar acesso</h2>
+        <h2 class="profile-page__section-title">
+          <i class="bi bi-people"></i>
+          Compartilhar acesso
+        </h2>
         <p class="profile-page__subtitle">
-          Envie o link adequado para cada pessoa ou instituição entrar no MindWay.
         </p>
       </div>
     </header>

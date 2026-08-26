@@ -62,7 +62,7 @@
 
 .profile-page__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--gap-md);
   align-items: start;
 }
@@ -87,22 +87,24 @@
 
 .profile-page__invite-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--gap-md);
+  align-items: stretch;
 }
 
 .profile-page__invite-card {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
+  grid-template-columns: auto 1fr;
   gap: var(--gap-md);
   padding: var(--padding-md);
   border: 1px solid var(--border-light);
   border-radius: var(--border-md);
-  background-color: var(--bg-light);
+  background-color: var(--bg-white);
+  text-align: left;
 }
 
 .profile-page__invite-icon {
+  grid-column: 1;
   width: 2.5rem;
   height: 2.5rem;
   display: inline-flex;
@@ -111,10 +113,15 @@
   border-radius: var(--border-md);
   background-color: var(--bg-green-light);
   color: var(--bg-green);
+  font-size: 1.25rem;
 }
 
 .profile-page__invite-copy {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+  width: 100%;
 }
 
 .profile-page__invite-copy h3 {
@@ -125,12 +132,13 @@
 }
 
 .profile-page__invite-copy p {
-  margin: 0.25rem 0;
+  margin: 0.25rem 0 0.5rem;
   color: var(--text-muted);
+  font-size: 0.85rem;
+  flex: 1;
 }
 
 .profile-page__invite-copy a {
-  display: block;
   overflow: hidden;
   color: var(--bg-green);
   font-size: 0.85rem;
@@ -138,6 +146,13 @@
   text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: var(--gap-md);
+}
+
+.profile-page__invite-card .btn-ui {
+  grid-column: 1 / -1;
+  width: 100%;
+  align-self: end;
 }
 
 .profile-page__tip {

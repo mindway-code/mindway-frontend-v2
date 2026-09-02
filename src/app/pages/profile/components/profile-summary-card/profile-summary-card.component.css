@@ -19,8 +19,8 @@
 }
 
 .profile-summary__avatar {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: var(--border-pill);
   object-fit: cover;
   border: 1px solid var(--border-light);
@@ -39,7 +39,7 @@
 
 .profile-summary__title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: var(--fw-xlg);
   color: var(--text-dark);
   overflow: hidden;

@@ -8,9 +8,11 @@
       />
 
       <div class="profile-summary__text">
-        <p class="profile-summary__eyebrow">Conta</p>
-        <h2 class="profile-summary__title">{{ user?.name || "Usuário" }}</h2>
-        <p class="profile-summary__subtitle">{{ user?.email || "—" }}</p>
+        <h2 class="profile-summary__title">{{ (user?.name || "Usuário") | titlecase }}</h2>
+        <p class="profile-summary__subtitle">
+          <i class="bi bi-envelope"></i>
+          {{ user?.email || "—" }}
+        </p>
       </div>
     </div>
   </header>

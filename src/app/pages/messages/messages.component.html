@@ -1,0 +1,113 @@
+<section class="messages-page">
+  <header class="messages-page__header">
+    <div>
+      <p class="messages-page__eyebrow">Comunicação</p>
+      <h1>Mensagens</h1>
+      <p>Converse com as pessoas conectadas à sua rede de apoio.</p>
+    </div>
+    <i class="bi bi-chat-square-text messages-page__header-icon" aria-hidden="true"></i>
+  </header>
+
+  <div class="messages-page__workspace">
+    <aside class="messages-page__contacts" aria-label="Contatos">
+      <div class="messages-page__section-heading">
+        <div>
+          <span>Rede de apoio</span>
+          <strong>Contatos</strong>
+        </div>
+        <span class="messages-page__count" *ngIf="!loadingContacts">{{ contacts.length }}</span>
+      </div>
+
+      <div class="messages-page__loading" *ngIf="loadingContacts" aria-label="Carregando contatos">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="messages-page__state messages-page__state--small" *ngIf="!loadingContacts && contactsError">
+        <i class="bi bi-wifi-off" aria-hidden="true"></i>
+        <p>{{ contactsError }}</p>
+        <button type="button" (click)="retryContacts()">Tentar novamente</button>
+      </div>
+
+      <div class="messages-page__state messages-page__state--small" *ngIf="!loadingContacts && !contactsError && contacts.length === 0">
+        <i class="bi bi-people" aria-hidden="true"></i>
+        <p>Nenhum contato disponível no momento.</p>
+      </div>
+
+      <button
+        class="messages-page__contact"
+        type="button"
+        *ngFor="let contact of contacts"
+        [class.is-selected]="selectedContact?.id === contact.id"
+        (click)="selectContact(contact)"
+      >
+        <span class="messages-page__avatar">{{ contactInitial(contact) }}</span>
+        <span class="messages-page__contact-copy">
+          <strong>{{ contactName(contact) }}</strong>
+          <small>{{ contact.role || "Membro da rede" }}</small>
+        </span>
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </aside>
+
+    <main class="messages-page__conversation" *ngIf="selectedContact as contact; else noConversation">
+      <header class="messages-page__conversation-header">
+        <span class="messages-page__avatar messages-page__avatar--large">{{ contactInitial(contact) }}</span>
+        <div>
+          <h2>{{ contactName(contact) }}</h2>
+          <span>{{ contact.email || "Contato da rede de apoio" }}</span>
+        </div>
+      </header>
+
+      <div class="messages-page__thread">
+        <div class="messages-page__state" *ngIf="loadingMessages" aria-label="Carregando mensagens">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+          <p>Carregando conversa...</p>
+        </div>
+
+        <div class="messages-page__state" *ngIf="!loadingMessages && messagesError">
+          <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+          <p>{{ messagesError }}</p>
+          <button type="button" (click)="retryMessages()">Tentar novamente</button>
+        </div>
+
+        <div class="messages-page__state" *ngIf="!loadingMessages && !messagesError && messages.length === 0">
+          <i class="bi bi-chat-dots" aria-hidden="true"></i>
+          <h3>Conversa sem mensagens</h3>
+          <p>Envie a primeira mensagem para iniciar esta conversa.</p>
+        </div>
+
+        <article
+          class="messages-page__bubble"
+          *ngFor="let message of orderedMessages()"
+          [class.messages-page__bubble--own]="isOwnMessage(message)"
+        >
+          <p>{{ message.content }}</p>
+          <time>{{ messageDate(message.createdAt) }}</time>
+        </article>
+      </div>
+
+      <form class="messages-page__composer" (ngSubmit)="sendMessage()">
+        <label for="message-content" class="visually-hidden">Mensagem</label>
+        <textarea
+          id="message-content"
+          [formControl]="messageControl"
+          rows="1"
+          maxlength="2000"
+          placeholder="Escreva uma mensagem..."
+          [disabled]="sending"
+        ></textarea>
+        <button type="submit" aria-label="Enviar mensagem" [disabled]="messageControl.invalid || sending">
+          <i class="bi" [ngClass]="sending ? 'bi-hourglass-split' : 'bi-send'" aria-hidden="true"></i>
+        </button>
+      </form>
+    </main>
+
+    <ng-template #noConversation>
+      <main class="messages-page__conversation messages-page__conversation--empty">
+        <i class="bi bi-chat-square-text" aria-hidden="true"></i>
+        <h2>Selecione um contato</h2>
+        <p>As conversas carregadas pela API aparecerão aqui.</p>
+      </main>
+    </ng-template>
+  </div>
+</section>

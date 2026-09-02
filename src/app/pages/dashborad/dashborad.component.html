@@ -13,16 +13,25 @@
 
   <section class="dashborad-page__child card-ui" aria-labelledby="child-title">
     <h2 id="child-title">Escolha a criança</h2>
-    <div class="dashborad-page__child-row">
-      <div class="dashborad-page__child-avatar"><i class="bi bi-person"></i></div>
-      <div class="dashborad-page__child-info">
-        <h3>{{ familyChild.name }}</h3>
-        <p>{{ familyChild.age }} <span aria-hidden="true">•</span> {{ familyChild.level }} <strong>Ativa</strong></p>
+    <ng-container *ngIf="selectedChild$ | async as child; else noChildSelected">
+      <div class="dashborad-page__child-row">
+        <div class="dashborad-page__child-avatar">{{ child.name.charAt(0) }}</div>
+        <div class="dashborad-page__child-info">
+          <h3>{{ child.name }}</h3>
+          <p>{{ child.age }} anos <span aria-hidden="true">•</span> <strong>Ativa</strong></p>
+        </div>
+        <select [ngModel]="child.id" (ngModelChange)="onSelectChild($event)" aria-label="Selecionar criança">
+          <option *ngFor="let item of (children$ | async) ?? []" [value]="item.id">{{ item.name }}</option>
+        </select>
+        <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/child-profile')">
+          Entrar no perfil <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
       </div>
-      <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/child-profile')">
-        Entrar no perfil <i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
-    </div>
+    </ng-container>
+    <ng-template #noChildSelected>
+      <p *ngIf="childrenLoading$ | async">Carregando crianças...</p>
+      <p *ngIf="!(childrenLoading$ | async)">Nenhuma criança vinculada à sua conta.</p>
+    </ng-template>
   </section>
 
   <section class="dashborad-page__actions" aria-labelledby="dashboard-actions-title">
@@ -83,17 +92,20 @@
 
     <section class="dashborad-page__info-card card-ui" aria-labelledby="update-title">
       <h2 id="update-title"><i class="bi bi-bell" aria-hidden="true"></i> Última atualização</h2>
-      <div class="dashborad-page__update">
-        <div class="dashborad-page__update-avatar"><i class="bi bi-person"></i></div>
-        <p>{{ latestUpdate.author }}<br>{{ latestUpdate.text }}<br><span>{{ latestUpdate.time }}</span></p>
-        <button class="dashborad-page__small-action" type="button" (click)="navigateTo('/reports-child')">Ver</button>
-      </div>
+      <ng-container *ngIf="latestUpdate$ | async as latestUpdate; else noLatestUpdate">
+        <div class="dashborad-page__update">
+          <div class="dashborad-page__update-avatar">{{ latestUpdate.user?.name?.charAt(0) || 'R' }}</div>
+          <p>{{ latestUpdate.user?.name || latestUpdate.user?.email || 'Usuário' }}<br>criou o relatório “{{ latestUpdate.title }}”<br><span>{{ latestUpdate.createdAt | date:'dd/MM/yyyy HH:mm' }}</span></p>
+          <button class="dashborad-page__small-action" type="button" (click)="navigateTo('/reports-child')">Ver</button>
+        </div>
+      </ng-container>
+      <ng-template #noLatestUpdate><p>Nenhum relatório criado para esta criança.</p></ng-template>
     </section>
   </div>
 
   <section class="dashborad-page__share" aria-labelledby="share-title">
     <div class="dashborad-page__share-icon"><i class="bi bi-people"></i></div>
-    <div><h2 id="share-title">Compartilhar acesso</h2><p>Convide profissionais, escola ou familiares para acompanhar o desenvolvimento de {{ familyChild.name }}.</p></div>
+    <div><h2 id="share-title">Compartilhar acesso</h2><p>Convide profissionais, escola ou familiares para acompanhar o desenvolvimento de {{ (selectedChild$ | async)?.name || 'uma criança vinculada' }}.</p></div>
     <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/profile')">Compartilhar acesso <i class="bi bi-chevron-right"></i></button>
   </section>
 </section>

@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { catchError, map, of, take } from "rxjs";
+import { catchError, distinctUntilChanged, map, of, switchMap, take } from "rxjs";
 import type { AppointmentRecord } from "../../api/interfaces/appointment.interface";
 import type { UserRole } from "../../api/interfaces/user.interface";
 import { AppointmentService } from "../../services/appointment.service";
 import { AuthService } from "../../services/auth.service";
+import { ChildService } from "../../services/child.service";
+import { LatestUpdateService } from "../../services/latest-update.service";
 
 interface DashboardAction {
   icon: string;
@@ -346,18 +348,6 @@ const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
   styleUrl: "./dashborad.component.css",
 })
 export class DashboradComponent implements OnInit {
-  readonly familyChild = {
-    name: "Laura Martins",
-    age: "7 anos",
-    level: "TEA Nível 1",
-  };
-
-  readonly latestUpdate = {
-    author: "A professora Maria",
-    text: "adicionou uma observação",
-    time: "Hoje às 10:32",
-  };
-
   readonly viewModel$ = this.authService.currentUser$.pipe(
     map((user): DashboardViewModel => {
       const profile = dashboardProfiles[user?.role ?? "default"] ?? dashboardProfiles.default;
@@ -372,6 +362,16 @@ export class DashboradComponent implements OnInit {
   readonly appointments$ = this.appointmentService.items$;
   readonly appointmentsLoading$ = this.appointmentService.loading$;
   readonly appointmentsError$ = this.appointmentService.error$;
+  readonly children$ = this.childService.children$;
+  readonly childrenLoading$ = this.childService.loading$;
+  readonly selectedChild$ = this.childService.selectedChild$;
+  readonly latestUpdate$ = this.selectedChild$.pipe(
+    map((child) => child?.id ?? null),
+    distinctUntilChanged(),
+    switchMap((childId) =>
+      childId ? this.latestUpdateService.getLatestReport(childId).pipe(catchError(() => of(null))) : of(null)
+    )
+  );
   readonly nextAppointment$ = this.appointments$.pipe(
     map((appointments) => this.getNextAppointment(appointments))
   );
@@ -379,10 +379,24 @@ export class DashboradComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly appointmentService: AppointmentService,
+    private readonly childService: ChildService,
+    private readonly latestUpdateService: LatestUpdateService,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this.childService
+      .loadAccessibleChildren({ page: 1, pageSize: 50 })
+      .pipe(take(1))
+      .subscribe({
+        next: (children) => {
+          const selected = this.childService.getSelectedChildSnapshot();
+          const child = selected && children.some((item) => item.id === selected.id) ? selected : children[0] ?? null;
+          this.childService.selectChild(child);
+        },
+        error: () => this.childService.selectChild(null),
+      });
+
     this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
       const request = user?.role === "therapist"
         ? this.appointmentService.listMyTherapistAppointments()
@@ -394,6 +408,10 @@ export class DashboradComponent implements OnInit {
 
   navigateTo(route: string): void {
     void this.router.navigate([route]);
+  }
+
+  onSelectChild(childId: string): void {
+    this.childService.selectChildById(childId);
   }
 
   reloadAppointments(): void {

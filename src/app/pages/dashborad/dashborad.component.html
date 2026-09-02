@@ -6,7 +6,6 @@
       <p class="dashborad-page__subtitle">Bem-vinda ao MindWay.</p>
     </div>
     <div class="dashborad-page__header-actions" aria-label="Ações rápidas">
-      <button type="button" aria-label="Notificações"><i class="bi bi-bell"></i><span>2</span></button>
       <button type="button" aria-label="Ajuda"><i class="bi bi-question-circle"></i></button>
     </div>
   </header>
@@ -18,7 +17,7 @@
         <div class="dashborad-page__child-avatar">{{ child.name.charAt(0) }}</div>
         <div class="dashborad-page__child-info">
           <h3>{{ child.name }}</h3>
-          <p>{{ child.age }} anos <span aria-hidden="true">•</span> <strong>Ativa</strong></p>
+          <p>{{ child.age }} anos</p>
         </div>
         <select [ngModel]="child.id" (ngModelChange)="onSelectChild($event)" aria-label="Selecionar criança">
           <option *ngFor="let item of (children$ | async) ?? []" [value]="item.id">{{ item.name }}</option>

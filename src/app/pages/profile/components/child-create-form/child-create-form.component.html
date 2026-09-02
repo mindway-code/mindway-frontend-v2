@@ -4,17 +4,6 @@
       <h3 class="child-create__title">Adicionar criança</h3>
       <p class="child-create__subtitle">Crie um perfil infantil vinculado à sua conta.</p>
     </div>
-
-    <div class="child-create__actions">
-      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancel.emit()" [disabled]="saving">
-        Fechar
-      </button>
-
-      <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="submit()" [disabled]="saving">
-        <ng-container *ngIf="!saving; else savingTpl">Criar perfil infantil</ng-container>
-        <ng-template #savingTpl>Criando...</ng-template>
-      </button>
-    </div>
   </header>
 
   <div *ngIf="error" class="child-create__error" role="alert">
@@ -63,5 +52,16 @@
         </div>
       </div>
     </div>
+
+    <footer class="child-create__footer">
+      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancel.emit()" [disabled]="saving">
+        Cancelar
+      </button>
+
+      <button class="btn-ui btn-ui--green btn-ui--sm" type="submit" [disabled]="saving">
+        <ng-container *ngIf="!saving; else savingTpl">Salvar perfil</ng-container>
+        <ng-template #savingTpl>Salvando...</ng-template>
+      </button>
+    </footer>
   </form>
 </section>

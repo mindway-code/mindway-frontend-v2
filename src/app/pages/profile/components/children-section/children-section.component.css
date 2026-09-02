@@ -24,6 +24,12 @@
   font-weight: var(--fw-xlg);
 }
 
+.children-section__title-icon {
+  color: #ffc107;
+  margin-right: 0.35rem;
+  font-size: 1.15rem;
+}
+
 .children-section__subtitle {
   margin: 0.25rem 0 0;
   color: var(--text-muted);

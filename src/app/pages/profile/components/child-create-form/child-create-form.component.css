@@ -23,10 +23,24 @@
   color: var(--text-muted);
 }
 
-.child-create__actions {
+.child-create__form {
+  margin-top: var(--gap-sm);
+}
+
+.child-create__footer {
   display: flex;
+  justify-content: flex-end;
   gap: var(--gap-sm);
-  flex-wrap: wrap;
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-light);
+}
+
+@media (max-width: 768px) {
+  .child-create__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .child-create__error {

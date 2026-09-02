@@ -94,6 +94,7 @@
           Compartilhar acesso
         </h2>
         <p class="profile-page__subtitle">
+          Convide instituições e profissionais para acessar informações de forma segura e colaborativa.
         </p>
       </div>
     </header>
@@ -107,13 +108,10 @@
         <div class="profile-page__invite-copy">
           <h3>{{ invite.label }}</h3>
           <p>{{ invite.description }}</p>
-          <a [href]="getInviteUrl(invite.path)" target="_blank" rel="noopener">
-            {{ getInviteUrl(invite.path) }}
-          </a>
         </div>
 
         <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="copyInviteLink(invite.path)">
-          Copiar
+          Copiar código
         </button>
       </article>
     </div>

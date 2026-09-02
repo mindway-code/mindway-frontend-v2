@@ -5,20 +5,365 @@
 .dashborad-page {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xlg);
-  color: var(--text-dark);
+  gap: 1.25rem;
+  color: #172333;
 }
 
 .dashborad-page__welcome {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--gap-lg);
-  padding: clamp(1.1rem, 3vw, 2rem);
-  background-color: var(--bg-light);
-  border-color: var(--border-light);
-  box-shadow: none;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+.dashborad-page__eyebrow {
+  display: none;
+}
+
+.dashborad-page__welcome h1 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.dashborad-page__welcome h1 span {
+  font-size: 1.4rem;
+}
+
+.dashborad-page__subtitle {
+  margin: 0.35rem 0 0;
+  color: #64758a;
+  font-size: 0.95rem;
+}
+
+.dashborad-page__header-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.dashborad-page__header-actions button {
+  position: relative;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #243247;
+  font-size: 1.15rem;
+}
+
+.dashborad-page__header-actions span {
+  position: absolute;
+  top: -0.15rem;
+  right: -0.1rem;
+  min-width: 1rem;
+  padding: 0.1rem 0.25rem;
+  border-radius: 50%;
+  background: #f2a51a;
+  color: #fff;
+  font-size: 0.65rem;
+}
+
+.dashborad-page__child,
+.dashborad-page__info-card {
+  border: 1px solid #e2e9eb;
+  border-radius: 0.7rem;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(33, 62, 74, 0.04);
+}
+
+.dashborad-page__child {
+  padding: 1.15rem 1.35rem;
+}
+
+.dashborad-page h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.dashborad-page__child-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+
+.dashborad-page__child-avatar,
+.dashborad-page__update-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #eef2f3;
+  color: #087f83;
+}
+
+.dashborad-page__child-avatar {
+  width: 4.3rem;
+  height: 4.3rem;
+  font-size: 2rem;
+}
+
+.dashborad-page__child-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.dashborad-page__child-info h3,
+.dashborad-page__appointment h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.dashborad-page__child-info p,
+.dashborad-page__appointment p,
+.dashborad-page__update p,
+.dashborad-page__share p {
+  margin: 0.25rem 0 0;
+  color: #63758a;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.dashborad-page__child-info strong {
+  margin-left: 0.45rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #e2f4ee;
+  color: #238267;
+  font-size: 0.7rem;
+}
+
+.dashborad-page__primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 2.6rem;
+  padding: 0.65rem 1.25rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: #087f83;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dashborad-page__primary-action:hover,
+.dashborad-page__small-action:hover {
+  filter: brightness(0.94);
+}
+
+.dashborad-page__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.dashborad-page__action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.dashborad-page__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  min-height: 7.8rem;
+  padding: 1rem 0.75rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  color: #243247;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.dashborad-page__action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(33, 62, 74, 0.1);
+}
+
+.dashborad-page__action-icon {
+  display: grid;
+  place-items: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 5px rgba(38, 67, 74, 0.06);
+  font-size: 1.45rem;
+}
+
+.dashborad-page__action strong {
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.dashborad-page__action > i:last-child {
+  margin-top: auto;
+  font-size: 1rem;
+}
+
+.dashborad-page__action--mint { background: #eaf7f4; color: #188c86; }
+.dashborad-page__action--lilac { background: #f1edfb; color: #7b5bc5; }
+.dashborad-page__action--yellow { background: #fff6e5; color: #ecaa25; }
+.dashborad-page__action--blue { background: #eaf3fc; color: #3187d4; }
+
+.dashborad-page__updates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.dashborad-page__info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.dashborad-page__info-card h2 {
+  color: #354356;
+}
+
+.dashborad-page__info-card h2 i {
+  margin-right: 0.45rem;
+  color: #268f86;
+}
+
+.dashborad-page__appointment,
+.dashborad-page__update {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.dashborad-page__appointment-state {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 5.25rem;
+  color: #63758a;
+}
+
+.dashborad-page__appointment-state > i {
+  color: #198b80;
+  font-size: 1.55rem;
+}
+
+.dashborad-page__appointment-state p {
+  margin: 0;
+  color: #63758a;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.dashborad-page__appointment-state h3 {
+  margin: 0;
+  color: #34465a;
+  font-size: 0.9rem;
+}
+
+.dashborad-page__appointment-state--empty {
+  flex-wrap: wrap;
+}
+
+.dashborad-page__appointment-state--empty > div {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.dashborad-page__appointment-state .dashborad-page__text-action {
+  width: auto;
+  margin-left: auto;
+}
+
+.dashborad-page__appointment time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  min-width: 3.4rem;
+  height: 3.7rem;
+  border-radius: 0.5rem;
+  background: #edf8f5;
+  color: #198b80;
+}
+
+.dashborad-page__appointment time strong { font-size: 1.35rem; }
+.dashborad-page__appointment time span { font-size: 0.67rem; font-weight: 700; }
+.dashborad-page__appointment p i { margin-right: 0.2rem; }
+.dashborad-page__appointment p i ~ i { margin-left: 0.65rem; }
+
+.dashborad-page__text-action,
+.dashborad-page__small-action {
+  border: 0;
+  border-radius: 0.4rem;
+  background: #edf8f5;
+  color: #167c75;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dashborad-page__text-action {
+  width: 100%;
+  padding: 0.55rem;
+}
+
+.dashborad-page__text-action i { float: right; }
+.dashborad-page__update-avatar { width: 2.7rem; height: 2.7rem; font-size: 1.25rem; }
+.dashborad-page__update p { flex: 1; margin: 0; color: #34465a; }
+.dashborad-page__update p span { color: #64758a; }
+.dashborad-page__small-action { padding: 0.6rem 1rem; }
+
+.dashborad-page__share {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.7rem;
+  background: #eaf7f4;
+}
+
+.dashborad-page__share-icon {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: #c8eee7;
+  color: #087f83;
+  font-size: 1.25rem;
+}
+
+.dashborad-page__share div:nth-child(2) { flex: 1; }
+.dashborad-page__share h2 { color: #177c78; }
+
+@media (max-width: 850px) {
+  .dashborad-page__action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .dashborad-page__welcome { padding-inline: 0; }
+  .dashborad-page__header-actions { display: none; }
+  .dashborad-page__child-row { align-items: flex-start; flex-wrap: wrap; }
+  .dashborad-page__primary-action { width: 100%; }
+  .dashborad-page__updates { grid-template-columns: 1fr; }
+  .dashborad-page__share { align-items: flex-start; flex-wrap: wrap; }
+  .dashborad-page__share .dashborad-page__primary-action { margin-left: 3.65rem; width: calc(100% - 3.65rem); }
 }
 
 .dashborad-page__welcome-copy {

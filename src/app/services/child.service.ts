@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError, timeout } from "rxjs";
 import { environment } from "../../environments/environment";
 import type { SuccessResponse, PaginationMeta } from "../api/interfaces/api-response.interface";
 import type { ChildRecord, CreateChildDTO } from "../api/interfaces/child.interface";
@@ -45,6 +45,7 @@ export class ChildService {
     if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
 
     return this.http.get<SuccessResponse<ChildRecord[]>>(this.myChildrenUrl, { params }).pipe(
+      timeout(12_000),
       tap((res) => {
         this.childrenSubject.next(res.data);
         this.paginationSubject.next(res.meta?.pagination ?? null);
@@ -72,6 +73,7 @@ export class ChildService {
     if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
 
     return this.http.get<SuccessResponse<ChildRecord[]>>(this.childrenUrl, { params }).pipe(
+      timeout(12_000),
       tap((res) => {
         this.childrenSubject.next(res.data);
         this.paginationSubject.next(res.meta?.pagination ?? null);

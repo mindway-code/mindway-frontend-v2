@@ -13,6 +13,7 @@ import type {
 import type { UserRecord } from "../../api/interfaces/user.interface";
 
 type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean };
+type ReportFilter = "all" | "school" | "therapist" | "professional";
 
 @Component({
   selector: "app-reports-child",
@@ -52,10 +53,16 @@ export class ReportsChildComponent implements OnInit {
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
             ?.createdAt ?? null
         : null;
+      const now = new Date();
+      const currentMonthReports = reports.filter((report) => {
+        const createdAt = new Date(report.createdAt);
+        return createdAt.getMonth() === now.getMonth() && createdAt.getFullYear() === now.getFullYear();
+      }).length;
 
       return {
         child,
         totalReports: reports.length,
+        currentMonthReports,
         manageableReports: reports.filter((report) => report.canManage).length,
         latestCreatedAt,
       };
@@ -65,6 +72,9 @@ export class ReportsChildComponent implements OnInit {
   selectedChildId: string | null = null;
   editingReport: ReportsChildRecord | null = null;
   showCreateForm = false;
+  searchTerm = "";
+  activeFilter: ReportFilter = "all";
+  sortOrder: "recent" | "oldest" = "recent";
 
   constructor(
     private readonly authService: AuthService,
@@ -73,17 +83,7 @@ export class ReportsChildComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.childService
-      .loadAccessibleChildren({ page: 1, pageSize: 50 })
-      .pipe(take(1))
-      .subscribe({
-        next: (children) => {
-          if (children.length) this.onSelectChild(children[0].id);
-        },
-        error: () => {
-          // Service already exposes a user-friendly error message.
-        },
-      });
+    this.loadChildren();
 
     this.selectedChildId$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -96,6 +96,24 @@ export class ReportsChildComponent implements OnInit {
 
         this.reportsChildService.clearState();
         this.reportsChildService.loadByChildId(normalized, { page: 1, pageSize: 20 }).subscribe();
+      });
+  }
+
+  retryLoadChildren(): void {
+    this.loadChildren();
+  }
+
+  private loadChildren(): void {
+    this.childService
+      .loadAccessibleChildren({ page: 1, pageSize: 50 })
+      .pipe(take(1))
+      .subscribe({
+        next: (children) => {
+          if (children.length) this.onSelectChild(children[0].id);
+        },
+        error: () => {
+          // Service already exposes a user-friendly error message.
+        },
       });
   }
 
@@ -164,6 +182,80 @@ export class ReportsChildComponent implements OnInit {
           // Service already exposes a user-friendly error message.
         },
       });
+  }
+
+  visibleReports(reports: ReportWithPermissions[] | null): ReportWithPermissions[] {
+    const normalizedSearch = this.searchTerm.trim().toLowerCase();
+
+    return [...(reports ?? [])]
+      .filter((report) => this.matchesFilter(report))
+      .filter((report) => {
+        if (!normalizedSearch) return true;
+
+        return [report.title, report.behavior, report.difficulty, report.recommendation, report.user?.name, report.user?.email]
+          .filter(Boolean)
+          .some((value) => value!.toLowerCase().includes(normalizedSearch));
+      })
+      .sort((a, b) => {
+        const difference = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return this.sortOrder === "recent" ? difference : -difference;
+      });
+  }
+
+  reportType(report: ReportsChildRecord): string {
+    const labels: Record<string, string> = {
+      enterprise: "Escola",
+      therapist: "Terapeuta",
+      professional: "Profissional",
+      common: "Responsável",
+      admin: "Administração",
+    };
+
+    return labels[report.userRole] ?? "Relatório";
+  }
+
+  reportDescription(report: ReportsChildRecord): string {
+    return report.behavior || report.difficulty || report.recommendation || "Relatório compartilhado para acompanhamento.";
+  }
+
+  reportAuthor(report: ReportsChildRecord): string {
+    return report.user?.name || report.user?.email || "Profissional não identificado";
+  }
+
+  reportInitial(report: ReportsChildRecord): string {
+    return this.reportType(report).charAt(0);
+  }
+
+  downloadReport(report: ReportsChildRecord): void {
+    const content = [
+      report.title,
+      "",
+      `Profissional: ${this.reportAuthor(report)}`,
+      `Data: ${new Date(report.createdAt).toLocaleDateString("pt-BR")}`,
+      report.behavior ? `Comportamento: ${report.behavior}` : "",
+      report.difficulty ? `Dificuldade: ${report.difficulty}` : "",
+      report.recommendation ? `Recomendação: ${report.recommendation}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${report.title.replace(/[^a-z0-9]/gi, "-").toLowerCase() || "relatorio"}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  clearFilters(): void {
+    this.searchTerm = "";
+    this.activeFilter = "all";
+    this.sortOrder = "recent";
+  }
+
+  private matchesFilter(report: ReportsChildRecord): boolean {
+    if (this.activeFilter === "all") return true;
+    if (this.activeFilter === "school") return report.userRole === "enterprise";
+    return report.userRole === this.activeFilter;
   }
 
   private canManageReport(user: UserRecord | null, child: ChildRecord | null, report: ReportsChildRecord): boolean {

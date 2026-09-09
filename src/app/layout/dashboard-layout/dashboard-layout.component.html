@@ -56,6 +56,7 @@
         [routerLink]="item.route"
         routerLinkActive="dashboard-aside__link--active"
         (click)="closeMobileSidebar()"
+        [title]="!isDesktopSidebarExpanded && !isMobileViewport ? item.label : ''"
       >
         <i class="bi dashboard-aside__link-icon" [ngClass]="item.icon" aria-hidden="true"></i>
         <span class="dashboard-aside__link-text" *ngIf="isDesktopSidebarExpanded || isMobileViewport">{{ item.label }}</span>

@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
 
 interface DashboardNavItem {
@@ -13,7 +13,7 @@ interface DashboardNavItem {
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
 })
-export class DashboardLayoutComponent {
+export class DashboardLayoutComponent implements OnInit {
   readonly currentUser$ = this.authService.currentUser$;
   readonly navItems: DashboardNavItem[] = [
     // { label: "Perfil", route: "/profile", icon: "bi-person" },
@@ -30,6 +30,15 @@ export class DashboardLayoutComponent {
 
   constructor(private readonly authService: AuthService) {}
 
+  ngOnInit(): void {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("mindway-sidebar-state");
+      if (savedState !== null) {
+        this.isDesktopSidebarExpanded = savedState === "true";
+      }
+    }
+  }
+
   get isMobileViewport(): boolean {
     return this.viewportWidth <= 900;
   }
@@ -41,6 +50,9 @@ export class DashboardLayoutComponent {
     }
 
     this.isDesktopSidebarExpanded = !this.isDesktopSidebarExpanded;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mindway-sidebar-state", String(this.isDesktopSidebarExpanded));
+    }
   }
 
   closeMobileSidebar(): void {

@@ -1,6 +1,17 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import type { AnamnesisBirthRecord, UpsertAnamnesisBirthDTO } from "../../../../api/interfaces/anamnesis.interface";
+
+import type {
+  AnamnesisBirthRecord,
+  UpsertAnamnesisBirthDTO,
+} from "../../../../api/interfaces/anamnesis.interface";
 
 @Component({
   selector: "app-birth-section",
@@ -10,9 +21,11 @@ import type { AnamnesisBirthRecord, UpsertAnamnesisBirthDTO } from "../../../../
 })
 export class BirthSectionComponent implements OnChanges {
   @Input() data: AnamnesisBirthRecord | null | undefined = null;
+
   @Input() saving = false;
 
   @Output() save = new EventEmitter<UpsertAnamnesisBirthDTO>();
+
   @Output() delete = new EventEmitter<void>();
 
   editing = false;
@@ -31,9 +44,19 @@ export class BirthSectionComponent implements OnChanges {
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
-      this.patchFormFromData();
-      if (this.editing) this.editing = false;
+    if (!changes["data"]) {
+      return;
+    }
+
+    this.patchFormFromData();
+
+    if (this.data && !this.hasFilledData()) {
+      this.editing = true;
+      return;
+    }
+
+    if (this.editing && !this.saving) {
+      this.editing = false;
     }
   }
 
@@ -48,7 +71,12 @@ export class BirthSectionComponent implements OnChanges {
   }
 
   onSubmit(): void {
-    const value = this.form.value;
+    if (this.saving) {
+      return;
+    }
+
+    const value = this.form.getRawValue();
+
     const payload: UpsertAnamnesisBirthDTO = {
       gestationalWeeks: value.gestationalWeeks ?? null,
       birthType: this.toNullableString(value.birthType),
@@ -56,32 +84,86 @@ export class BirthSectionComponent implements OnChanges {
       birthHeightCentimeters: value.birthHeightCentimeters ?? null,
       apgarOneMinute: value.apgarOneMinute ?? null,
       apgarFiveMinutes: value.apgarFiveMinutes ?? null,
-      birthComplication: this.toNullableString(value.birthComplication),
+      birthComplication: this.toNullableString(
+        value.birthComplication
+      ),
       hospitalizationDays: value.hospitalizationDays ?? null,
     };
 
     this.save.emit(payload);
   }
 
+  private hasFilledData(): boolean {
+    if (!this.data) {
+      return false;
+    }
+
+    return (
+      this.data.gestationalWeeks !== null &&
+      this.data.gestationalWeeks !== undefined
+    ) ||
+      Boolean(this.data.birthType?.trim()) ||
+      (
+        this.data.birthWeightGrams !== null &&
+        this.data.birthWeightGrams !== undefined
+      ) ||
+      (
+        this.data.birthHeightCentimeters !== null &&
+        this.data.birthHeightCentimeters !== undefined
+      ) ||
+      (
+        this.data.apgarOneMinute !== null &&
+        this.data.apgarOneMinute !== undefined
+      ) ||
+      (
+        this.data.apgarFiveMinutes !== null &&
+        this.data.apgarFiveMinutes !== undefined
+      ) ||
+      Boolean(this.data.birthComplication?.trim()) ||
+      (
+        this.data.hospitalizationDays !== null &&
+        this.data.hospitalizationDays !== undefined
+      );
+  }
+
   private patchFormFromData(): void {
     this.form.patchValue(
       {
-        gestationalWeeks: this.data?.gestationalWeeks ?? null,
-        birthType: this.data?.birthType ?? "",
-        birthWeightGrams: this.data?.birthWeightGrams ?? null,
-        birthHeightCentimeters: this.data?.birthHeightCentimeters ?? null,
-        apgarOneMinute: this.data?.apgarOneMinute ?? null,
-        apgarFiveMinutes: this.data?.apgarFiveMinutes ?? null,
-        birthComplication: this.data?.birthComplication ?? "",
-        hospitalizationDays: this.data?.hospitalizationDays ?? null,
+        gestationalWeeks:
+          this.data?.gestationalWeeks ?? null,
+
+        birthType:
+          this.data?.birthType ?? "",
+
+        birthWeightGrams:
+          this.data?.birthWeightGrams ?? null,
+
+        birthHeightCentimeters:
+          this.data?.birthHeightCentimeters ?? null,
+
+        apgarOneMinute:
+          this.data?.apgarOneMinute ?? null,
+
+        apgarFiveMinutes:
+          this.data?.apgarFiveMinutes ?? null,
+
+        birthComplication:
+          this.data?.birthComplication ?? "",
+
+        hospitalizationDays:
+          this.data?.hospitalizationDays ?? null,
       },
-      { emitEvent: false }
+      {
+        emitEvent: false,
+      }
     );
   }
 
-  private toNullableString(value: string | null | undefined): string | null {
+  private toNullableString(
+    value: string | null | undefined
+  ): string | null {
     const trimmed = value?.trim();
+
     return trimmed ? trimmed : null;
   }
 }
-

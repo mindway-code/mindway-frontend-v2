@@ -1,20 +1,12 @@
 <section class="card-ui--sm child-selector">
+
   <div class="child-selector-body">
 
-    <div class="child-selector__search">
-      <label class="child-selector__label" for="anamnesis-child-search">Pesquisar criança</label>
-      <input
-        id="anamnesis-child-search"
-        class="child-selector__search-input"
-        type="search"
-        [(ngModel)]="searchTerm"
-        placeholder="Ex: Enzo"
-        autocomplete="off"
-      />
-    </div>
-
+    <!-- Seleção da criança -->
     <div class="select-ui select-ui--lg">
+
       <div class="select-ui__field">
+
         <select
           id="child-selector__select"
           class="select-ui__control"
@@ -22,22 +14,71 @@
           (ngModelChange)="onSelect($event)"
           [disabled]="loading"
         >
-          <option value="">Clique aqui</option>
-          <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
+
+          <option value="">
+            Selecione uma criança
+          </option>
+
+          <option
+            *ngFor="let child of children || []; trackBy: trackById"
+            [value]="child.id"
+          >
             {{ child.name }} - {{ child.age }} anos
           </option>
+
         </select>
 
-        <label class="select-ui__label" for="child-selector__select">Crianças associadas</label>
+        <label
+          class="select-ui__label"
+          for="child-selector__select"
+        >
+          Crianças cadastradas
+        </label>
+
       </div>
+
+      <!-- Quantidade de crianças -->
       <div class="child-selector__count">
-        {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span> nesta visualização.
+
+        {{ children?.length || 0 }}
+
+        criança<span
+          *ngIf="(children?.length || 0) !== 1"
+        >
+          s
+        </span>
+
+        cadastrada<span
+          *ngIf="(children?.length || 0) !== 1"
+        >
+          s
+        </span>
+
       </div>
+
     </div>
 
-    <p *ngIf="loading" class="child-selector__hint">Carregando crianças...</p>
-    <p *ngIf="!loading && filteredChildren.length === 0" class="child-selector__hint">
-      Nenhuma criança encontrada com esta pesquisa.
+
+    <!-- Carregando -->
+    <p
+      *ngIf="loading"
+      class="child-selector__hint"
+    >
+      Carregando crianças...
     </p>
+
+
+    <!-- Nenhuma criança cadastrada -->
+    <p
+      *ngIf="
+        !loading &&
+        (children?.length || 0) === 0
+      "
+      class="child-selector__hint"
+    >
+      Nenhuma criança cadastrada.
+    </p>
+
   </div>
+
 </section>

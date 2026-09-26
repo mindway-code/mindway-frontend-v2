@@ -1,183 +1,1225 @@
+/* =========================================================
+   ANAMNESE — PÁGINA
+   ========================================================= */
+
 .anamnesis-page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 28px 40px;
+  box-sizing: border-box;
 }
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
 
 .anamnesis-page__hero {
+  width: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top right, rgba(244, 179, 19, 0.18), transparent 28%),
-    linear-gradient(135deg, rgba(0, 108, 112, 0.08), rgba(255, 255, 255, 0.96));
+
+  background: #ffffff;
+  border: 1px solid #dce5ea;
+  border-radius: 14px;
+
+  box-sizing: border-box;
 }
 
-.anamnesis-page__hero-body {
+.anamnesis-page__hero-content {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+
+  min-height: 170px;
+
+  padding: 28px 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fcfd 100%
+    );
+
+  box-sizing: border-box;
 }
 
-.anamnesis-page__hero-copy {
-  max-width: 550px;
+.anamnesis-page__hero-text {
+  min-width: 0;
+  max-width: 690px;
 }
 
 .anamnesis-page__eyebrow {
-  margin: 0;
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #087f8c;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  font-size: 0.82rem;
 }
 
 .anamnesis-page__title {
-  margin: 0.2rem 0 0;
-  color: var(--text-dark);
-  font-weight: var(--fw-xlg);
+  margin: 0;
+
+  color: #102f56;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .anamnesis-page__subtitle {
-  margin: 0.5rem 0 0;
-  color: var(--text-muted);
-}
+  max-width: 650px;
 
-.anamnesis-page__hero-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1rem;
-}
+  margin: 8px 0 0;
 
-.anamnesis-page__hero-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.5rem;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid rgba(0, 108, 112, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--text-green, #006c70);
-  font-weight: 600;
-}
+  color: #718096;
 
-.anamnesis-page__top-grid {
-  gap: 1rem;
-  align-items: start;
-}
-
-.anamnesis-page__overview {
-  border: 1px solid rgba(223, 229, 228, 0.9);
-}
-
-.anamnesis-page__overview-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.anamnesis-page__overview-badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.3rem;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  background: rgba(108, 117, 125, 0.12);
-  color: var(--text-muted, #6c757d);
-  font-weight: 600;
-}
-
-.anamnesis-page__overview-badge--active {
-  background: rgba(0, 108, 112, 0.12);
-  color: var(--text-green, #006c70);
-}
-
-.anamnesis-page__overview-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
-}
-
-.anamnesis-page__overview-card {
-  display: grid;
-  gap: 0.35rem;
-  padding: 1rem;
-  border: 1px solid rgba(0, 108, 112, 0.08);
-  border-radius: 1rem;
-  background: linear-gradient(180deg, rgba(244, 247, 246, 0.7), rgba(255, 255, 255, 1));
-}
-
-.anamnesis-page__overview-label {
-  color: var(--text-muted, #6c757d);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.anamnesis-page__overview-value {
-  color: var(--text-dark, #212529);
-  font-size: 1rem;
-}
-
-.anamnesis-page__overview-value--wrap {
+  font-size: 13px;
   line-height: 1.55;
 }
 
-.anamnesis-page__overview-empty {
-  min-height: 12rem;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  color: var(--text-muted, #6c757d);
+
+/* =========================================================
+   ILUSTRAÇÃO
+   ========================================================= */
+
+.anamnesis-page__hero-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 130px;
+  height: 120px;
+
+  flex-shrink: 0;
+
+  margin-left: 24px;
 }
 
-.anamnesis-page__state,
-.anamnesis-page__error {
-  border: 1px solid rgba(223, 229, 228, 0.9);
+.anamnesis-page__hero-image img {
+  display: block;
+
+  width: 115px;
+  height: 115px;
+
+  object-fit: contain;
 }
+
+
+/* =========================================================
+   SELETOR — PÁGINA 1
+   ========================================================= */
+
+.anamnesis-page__selection-card {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 16px;
+
+  margin: 0 20px 22px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e0e8ec;
+  border-radius: 12px;
+
+  box-shadow:
+    0 3px 12px rgba(30, 70, 90, 0.04);
+
+  box-sizing: border-box;
+}
+
+.anamnesis-page__selection-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #e8f7f7;
+  color: #078b92;
+
+  font-size: 19px;
+}
+
+.anamnesis-page__selection-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.anamnesis-page__selection-content h2 {
+  margin: 1px 0 4px;
+
+  color: #102f56;
+
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.anamnesis-page__selection-content p {
+  margin: 0 0 14px;
+
+  color: #718096;
+
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+
+/*
+ * O componente app-child-selector possui
+ * sua própria estrutura.
+ *
+ * Aqui somente garantimos que ele ocupe
+ * a largura disponível.
+ */
+
+.anamnesis-page__selection-content app-child-selector {
+  display: block;
+  width: 100%;
+}
+
+
+/* =========================================================
+   PÁGINA 2 — HERO DA CRIANÇA
+   ========================================================= */
+
+.anamnesis-page__hero--child {
+  margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   ETAPAS DA ANAMNESE
+   ========================================================= */
+
+.anamnesis-page__steps {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  position: relative;
+
+  padding: 16px 28px 18px;
+
+  border-top: 1px solid #edf1f4;
+
+  box-sizing: border-box;
+}
+
+
+/*
+ * Linha que passa por trás dos números.
+ */
+
+.anamnesis-page__steps::before {
+  content: "";
+
+  position: absolute;
+
+  top: 30px;
+  left: 9%;
+  right: 9%;
+
+  height: 1px;
+
+  background: #d7e2e7;
+
+  z-index: 0;
+}
+
+
+/* =========================================================
+   CADA ETAPA
+   ========================================================= */
+
+.anamnesis-page__step {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-width: 0;
+
+  text-align: center;
+
+  z-index: 1;
+}
+
+.anamnesis-page__step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26px;
+  height: 26px;
+
+  border-radius: 50%;
+
+  background: #e8edf1;
+  color: #425466;
+
+  border: 2px solid #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  box-sizing: border-box;
+}
+
+.anamnesis-page__step-label {
+  max-width: 100px;
+
+  margin-top: 6px;
+
+  color: #64748b;
+
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   ETAPA ATIVA
+   ========================================================= */
+
+.anamnesis-page__step--active
+  .anamnesis-page__step-number {
+  background: #078b92;
+  color: #ffffff;
+}
+
+.anamnesis-page__step--active
+  .anamnesis-page__step-label {
+  color: #078b92;
+}
+
+
+/* =========================================================
+   ETAPA CONCLUÍDA
+   ========================================================= */
+
+.anamnesis-page__step--complete
+  .anamnesis-page__step-number {
+  background: #d9f3e8;
+  color: #17845f;
+}
+
+.anamnesis-page__step--complete
+  .anamnesis-page__step-label {
+  color: #357a65;
+}
+
+
+/*
+ * Se estiver ativa e concluída,
+ * damos prioridade ao estado ativo.
+ */
+
+.anamnesis-page__step--active
+  .anamnesis-page__step-number {
+  background: #078b92;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   ERROS
+   ========================================================= */
+
+.anamnesis-page__error {
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.anamnesis-page__loading {
+  margin-top: 18px;
+}
+
+.loading-ui {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  padding: 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #e0e8ec;
+  border-radius: 12px;
+}
+
+.loading-ui__line {
+  display: block;
+
+  height: 11px;
+
+  border-radius: 6px;
+
+  background: #edf2f4;
+}
+
+.loading-ui__line--sm {
+  width: 24%;
+}
+
+.loading-ui__line--lg {
+  width: 55%;
+}
+
+.loading-ui__block {
+  display: block;
+
+  width: 100%;
+  height: 120px;
+
+  margin-top: 5px;
+
+  border-radius: 9px;
+
+  background: #f3f6f7;
+}
+
+
+/* =========================================================
+   CARD DA CRIANÇA
+   ========================================================= */
+
+.anamnesis-page__child-card {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  width: 100%;
+
+  margin-bottom: 20px;
+
+  padding: 13px 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe7eb;
+  border-radius: 10px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 2px 8px rgba(30, 70, 90, 0.035);
+}
+
+.anamnesis-page__child-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #e5f4fb;
+  color: #14558b;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.anamnesis-page__child-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.anamnesis-page__child-copy h2 {
+  margin: 0 0 3px;
+
+  color: #102f56;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.anamnesis-page__child-copy p {
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.anamnesis-page__child-status {
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border-radius: 7px;
+
+  background: #fff4df;
+  color: #a56800;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.anamnesis-page__child-status--complete {
+  background: #e5f6ed;
+  color: #247653;
+}
+
+
+/* =========================================================
+   CABEÇALHO DAS SEÇÕES
+   ========================================================= */
 
 .anamnesis-page__section-header {
+  margin-bottom: 10px;
+}
+
+.anamnesis-page__section-heading {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.anamnesis-page__section-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #e5f7f6;
+  color: #078b92;
+
+  font-size: 17px;
 }
 
 .anamnesis-page__section-title {
   margin: 0;
-  color: var(--text-dark, #212529);
+
+  color: #102f56;
+
+  font-size: 18px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .anamnesis-page__section-copy {
-  margin: 0.4rem 0 0;
-  color: var(--text-muted, #6c757d);
-  max-width: 64ch;
+  margin: 3px 0 0;
+
+  color: #718096;
+
+  font-size: 11px;
+  line-height: 1.4;
 }
 
-.anamnesis-page__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: start;
+
+/* =========================================================
+   LISTA DAS SEÇÕES
+   ========================================================= */
+
+.anamnesis-page__section-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
 }
 
-.anamnesis-page__grid app-general-notes-section {
-  grid-column: 1 / -1;
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+
+.anamnesis-page__section-item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 62px;
+
+  gap: 12px;
+
+  padding: 9px 12px;
+
+  appearance: none;
+
+  border: 1px solid #dfe7eb;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.15s ease;
 }
 
-@media (max-width: 980px) {
-  .anamnesis-page__grid,
-  .anamnesis-page__overview-grid {
-    grid-template-columns: 1fr;
+.anamnesis-page__section-item:hover {
+  background: #fbfdfe;
+
+  border-color: #b9d7dc;
+
+  box-shadow:
+    0 3px 9px rgba(30, 70, 90, 0.05);
+
+  transform: translateY(-1px);
+}
+
+.anamnesis-page__section-item:active {
+  transform: translateY(0);
+}
+
+.anamnesis-page__section-item:focus-visible {
+  outline: 2px solid #078b92;
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   ÍCONE DA SEÇÃO
+   ========================================================= */
+
+.anamnesis-page__section-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 16px;
+}
+
+
+/* Cores suaves por categoria */
+
+.anamnesis-page__section-item-icon--birth {
+  background: #ffe9ed;
+  color: #ef5262;
+}
+
+.anamnesis-page__section-item-icon--motor {
+  background: #e4f1ff;
+  color: #1677d2;
+}
+
+.anamnesis-page__section-item-icon--language {
+  background: #e4f7f5;
+  color: #07928c;
+}
+
+.anamnesis-page__section-item-icon--health {
+  background: #f1e8ff;
+  color: #923de0;
+}
+
+.anamnesis-page__section-item-icon--behavior {
+  background: #fff0dc;
+  color: #e58219;
+}
+
+.anamnesis-page__section-item-icon--routine {
+  background: #e5f1ff;
+  color: #1478d4;
+}
+
+.anamnesis-page__section-item-icon--notes {
+  background: #e5f7ef;
+  color: #24986a;
+}
+
+
+/* =========================================================
+   TEXTO DA SEÇÃO
+   ========================================================= */
+
+.anamnesis-page__section-item-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.anamnesis-page__section-item-content h3 {
+  margin: 0 0 2px;
+
+  color: #102f56;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.anamnesis-page__section-item-content p {
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.anamnesis-page__section-item-status {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.anamnesis-page__section-item-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 5px 8px;
+
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.anamnesis-page__section-item-badge i {
+  font-size: 9px;
+}
+
+.anamnesis-page__section-item-badge--complete {
+  background: #ddf4e9;
+  color: #187653;
+}
+
+.anamnesis-page__section-item-badge--pending {
+  background: #f1f4f6;
+  color: #64748b;
+}
+
+.anamnesis-page__section-item-status
+  > .bi-chevron-right {
+  color: #8ca0ad;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   SEÇÃO ABERTA
+   ========================================================= */
+
+.anamnesis-page__opened-section {
+  width: 100%;
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   BOTÃO VOLTAR
+   ========================================================= */
+
+.anamnesis-page__back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin: 0 0 14px;
+  padding: 8px 12px;
+
+  border: 1px solid #d6e2e7;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #426174;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.anamnesis-page__back-button:hover {
+  background: #f7fafb;
+
+  border-color: #b9d7dc;
+
+  color: #078b92;
+
+  box-shadow:
+    0 2px 7px rgba(30, 70, 90, 0.05);
+}
+
+.anamnesis-page__back-button:focus-visible {
+  outline: 2px solid #078b92;
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO APÓS SALVAR
+   ========================================================= */
+
+.anamnesis-page__section-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  margin-top: 20px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e5ecef;
+}
+
+.anamnesis-page__navigation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 40px;
+  min-width: 120px;
+
+  padding: 0 16px;
+
+  border: 1px solid #078b92;
+  border-radius: 8px;
+
+  background: #078b92;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.anamnesis-page__navigation-button:hover {
+  background: #06757b;
+
+  border-color: #06757b;
+
+  box-shadow:
+    0 3px 8px rgba(7, 139, 146, 0.18);
+
+  transform: translateY(-1px);
+}
+
+.anamnesis-page__navigation-button:active {
+  transform: translateY(0);
+}
+
+.anamnesis-page__navigation-button:focus-visible {
+  outline: 2px solid #078b92;
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .anamnesis-page {
+    padding: 20px;
   }
+
+  .anamnesis-page__hero-content {
+    padding: 24px;
+  }
+
+  .anamnesis-page__steps {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .anamnesis-page__step-label {
+    font-size: 8px;
+  }
+
 }
 
-@media (max-width: 640px) {
-  .anamnesis-page__hero-chip {
+
+/* =========================================================
+   RESPONSIVIDADE — MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .anamnesis-page {
+    padding: 14px;
+  }
+
+  .anamnesis-page__hero-content {
+    min-height: auto;
+
+    padding: 20px;
+  }
+
+  .anamnesis-page__hero-image {
+    width: 90px;
+    height: 90px;
+
+    margin-left: 10px;
+  }
+
+  .anamnesis-page__hero-image img {
+    width: 82px;
+    height: 82px;
+  }
+
+  .anamnesis-page__title {
+    font-size: 24px;
+  }
+
+  .anamnesis-page__subtitle {
+    font-size: 12px;
+  }
+
+
+  /* Seleção */
+
+  .anamnesis-page__selection-card {
+    margin: 0 12px 18px;
+    padding: 16px;
+  }
+
+
+  /* Etapas */
+
+  .anamnesis-page__steps {
+    overflow-x: auto;
+
+    display: flex;
+
+    gap: 18px;
+
+    padding: 14px 16px 16px;
+
+    scrollbar-width: thin;
+  }
+
+  .anamnesis-page__steps::before {
+    display: none;
+  }
+
+  .anamnesis-page__step {
+    width: 70px;
+    min-width: 70px;
+  }
+
+
+  /* Criança */
+
+  .anamnesis-page__child-card {
+    align-items: flex-start;
+  }
+
+  .anamnesis-page__child-status {
+    margin-left: auto;
+  }
+
+
+  /* Seções */
+
+  .anamnesis-page__section-item {
+    min-height: 60px;
+  }
+
+  .anamnesis-page__section-item-content p {
+    font-size: 9px;
+  }
+
+
+  .anamnesis-page__section-navigation {
+    justify-content: stretch;
+  }
+
+  .anamnesis-page__navigation-button {
     width: 100%;
-    justify-content: center;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE — CELULAR PEQUENO
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+  .anamnesis-page {
+    padding: 10px;
+  }
+
+  .anamnesis-page__hero-content {
+    align-items: flex-start;
+
+    padding: 18px;
+  }
+
+  .anamnesis-page__hero-image {
+    width: 65px;
+    height: 65px;
+  }
+
+  .anamnesis-page__hero-image img {
+    width: 62px;
+    height: 62px;
+  }
+
+  .anamnesis-page__eyebrow {
+    font-size: 9px;
+  }
+
+  .anamnesis-page__title {
+    font-size: 21px;
+  }
+
+  .anamnesis-page__subtitle {
+    font-size: 11px;
+  }
+
+
+  /* Seleção */
+
+  .anamnesis-page__selection-card {
+    flex-direction: column;
+
+    margin: 0 8px 16px;
+  }
+
+  .anamnesis-page__selection-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+
+  /* Criança */
+
+  .anamnesis-page__child-card {
+    flex-wrap: wrap;
+  }
+
+  .anamnesis-page__child-status {
+    width: 100%;
+    margin-left: 53px;
+
+    text-align: center;
+  }
+
+
+  /* Seções */
+
+  .anamnesis-page__section-heading {
+    align-items: flex-start;
+  }
+
+  .anamnesis-page__section-title {
+    font-size: 16px;
+  }
+
+  .anamnesis-page__section-copy {
+    font-size: 10px;
+  }
+
+  .anamnesis-page__section-item {
+    padding: 9px;
+    gap: 9px;
+  }
+
+  .anamnesis-page__section-item-icon {
+    width: 32px;
+    height: 32px;
+
+    font-size: 14px;
+  }
+
+  .anamnesis-page__section-item-content h3 {
+    font-size: 11px;
+  }
+
+  .anamnesis-page__section-item-content p {
+    display: none;
+  }
+
+  .anamnesis-page__section-item-badge {
+    display: none;
+  }
+
+  .anamnesis-page__section-item-status
+    > .bi-chevron-right {
+    font-size: 12px;
+  }
+
+}
+
+/* =========================================================
+   SELETOR DE CRIANÇA — SETA
+   ========================================================= */
+
+.anamnesis-page__child-selector {
+  position: relative;
+  display: inline-block;
+  width: min(100%, 250px);
+}
+
+.anamnesis-page__child-selector app-child-selector {
+  display: block;
+  width: 100%;
+}
+
+.anamnesis-page__child-selector-arrow {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  z-index: 20;
+  transform: translateY(-50%);
+  color: #078b92;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO — ANTERIOR / VOLTAR / PRÓXIMO
+   ========================================================= */
+
+.anamnesis-page__section-navigation {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #e5ecef;
+}
+
+.anamnesis-page__navigation-button {
+  min-height: 40px;
+}
+
+.anamnesis-page__navigation-button--secondary,
+.anamnesis-page__navigation-button--sections {
+  background: #ffffff;
+  border-color: #d6e2e7;
+  color: #426174;
+}
+
+.anamnesis-page__navigation-button--secondary {
+  justify-self: start;
+}
+
+.anamnesis-page__navigation-button--sections {
+  justify-self: center;
+}
+
+.anamnesis-page__section-navigation
+.anamnesis-page__navigation-button:last-child {
+  justify-self: end;
+}
+
+.anamnesis-page__navigation-button--secondary:hover:not(:disabled),
+.anamnesis-page__navigation-button--sections:hover:not(:disabled) {
+  background: #f7fafb;
+  border-color: #b9d7dc;
+  color: #078b92;
+}
+
+/* Remove somente o botão Excluir da interface. */
+.anamnesis-page
+.anamnesis-section-shell__actions
+.btn-ui--accent {
+  display: none !important;
+}
+
+@media (max-width: 650px) {
+  .anamnesis-page__section-navigation {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .anamnesis-page__navigation-button--sections {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .anamnesis-page__section-navigation
+  .anamnesis-page__navigation-button:last-child {
+    justify-self: end;
   }
 }

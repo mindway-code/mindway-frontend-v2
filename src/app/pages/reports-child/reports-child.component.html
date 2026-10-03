@@ -1,91 +1,73 @@
-<section class="reports-child">
-  <header class="reports-child__hero card-ui--md">
-    <div class=" reports-child__hero-body">
-      <div class="reports-child__hero-copy">
-        <p class="reports-child__eyebrow">Relatórios infantis</p>
-        <h1 class="reports-child__title">Área de relatórios</h1>
-        <p class="reports-child__subtitle">
-          Selecione uma criança, revise o histórico de relatórios com clareza e crie ou atualize notas em um layout mais tranquilo.
-        </p>
-        <ng-container *ngIf="reportSummary$ | async as summary">
-          <div class="reports-child__hero-summary">
-            <div class="reports-child__hero-chip">
-              {{ summary.totalReports }} relatório<span *ngIf="summary.totalReports !== 1">s</span>
-            </div>
-            <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
-              {{ summary.child.name }} - {{ summary.child.age }} anos
-            </div>
-            <ng-template #noChildChip>
-              <div class="reports-child__hero-chip">Selecione uma criança para começar</div>
-            </ng-template>
-          </div>
-        </ng-container>
+<main class="reports-page">
+  <header class="reports-hero">
+    <div class="reports-hero__main">
+      <div class="reports-hero__copy">
+        <p class="reports-eyebrow">RELAT&Oacute;RIOS INFANTIS</p>
+        <h1>Relat&oacute;rios da crian&ccedil;a</h1>
+        <p class="reports-hero__description">Acompanhe os registros enviados pela escola, terapeutas e profissionais de sa&uacute;de.</p>
       </div>
-
-      <ng-container *ngIf="children$ | async as children">
-          <app-reports-child-selector
-            [children]="children"
-            [selectedChildId]="selectedChildId"
-            [loading]="(childrenLoading$ | async) ?? false"
-            (selectedChildIdChange)="onSelectChild($event)"
-          />
-      </ng-container>
+      <aside class="reports-privacy"><i class="bi bi-lock-fill" aria-hidden="true"></i><div><strong>Visualiza&ccedil;&atilde;o de relat&oacute;rios compartilhados</strong><p>Voc&ecirc; pode apenas visualizar os relat&oacute;rios enviados pela escola, terapeutas e profissionais de sa&uacute;de.</p></div></aside>
+    </div>
+    <div class="reports-child-picker" *ngIf="children$ | async as children">
+      <button class="reports-child-pill" *ngFor="let child of children; let i = index" type="button" [class.reports-child-pill--active]="child.id === selectedChildId" (click)="onSelectChild(child.id)">
+        <span class="reports-child-pill__avatar" [class.reports-child-pill__avatar--alt]="i % 2 === 1">{{ child.name?.charAt(0)?.toUpperCase() || 'C' }}</span>
+        <span><strong>{{ child.name }}</strong><small>{{ child.age }} anos</small></span>
+      </button>
+      <span class="reports-child-picker__loading" *ngIf="(childrenLoading$ | async) && !children.length">Carregando crian&ccedil;as...</span>
     </div>
   </header>
 
   <ng-container *ngIf="children$ | async as children">
-
-    <section *ngIf="(childrenLoading$ | async) && children.length === 0" class="card-ui card-ui--md reports-child__loading">
-      <div class="card-ui__body loading-ui">
-        <span class="loading-ui__line loading-ui__line--sm"></span>
-        <span class="loading-ui__line loading-ui__line--lg"></span>
-        <span class="loading-ui__block"></span>
-      </div>
-    </section>
-
-    <app-reports-child-empty-state
-      *ngIf="!(childrenLoading$ | async) && children.length === 0"
-      variant="no-children"
-    />
+    <app-reports-child-empty-state *ngIf="!(childrenLoading$ | async) && children.length === 0" variant="no-children" />
 
     <ng-container *ngIf="children.length > 0">
-      <app-reports-child-form
-        *ngIf="showCreateForm"
-        mode="create"
-        [saving]="(saving$ | async) ?? false"
-        (submitReport)="onCreateReport($event)"
-        (cancel)="onCancelForm()"
-      />
+      <app-reports-child-form *ngIf="showCreateForm" mode="create" [saving]="(saving$ | async) ?? false" (submitReport)="onCreateReport($event)" (cancel)="onCancelForm()" />
+      <app-reports-child-form *ngIf="editingReport" mode="edit" [saving]="(saving$ | async) ?? false" [report]="editingReport" (submitReport)="onUpdateReport($event)" (cancel)="onCancelForm()" />
 
-      <app-reports-child-form
-        *ngIf="editingReport"
-        mode="edit"
-        [saving]="(saving$ | async) ?? false"
-        [report]="editingReport"
-        (submitReport)="onUpdateReport($event)"
-        (cancel)="onCancelForm()"
-      />
-
-      <div class="reports-child__section-header">
-        <div>
-          <h2 class="reports-child__section-title">Histórico de relatórios</h2>
-          <p class="reports-child__section-copy">
-            Leia os relatórios em cartões e edite apenas quando necessário, mantendo a visualização principal mais simples.
-          </p>
-        </div>
+      <div class="reports-toolbar" *ngIf="reportsWithPermissions$ | async as allReports">
+        <nav class="reports-filters" aria-label="Filtrar relat&oacute;rios">
+          <button *ngFor="let category of reportCategories" type="button" class="reports-filter" [class.reports-filter--active]="(activeCategory$ | async) === category.id" (click)="onSelectCategory(category.id)">
+            <i class="bi" [ngClass]="category.icon" aria-hidden="true"></i>{{ category.label }} <span>({{ countCategory(allReports, category.id) }})</span>
+          </button>
+        </nav>
+        <button *ngIf="canCreateReport$ | async" class="reports-create" type="button" (click)="onOpenCreate()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Novo relat&oacute;rio</button>
+        <span class="reports-range"><i class="bi bi-calendar3" aria-hidden="true"></i> Todos os per&iacute;odos</span>
       </div>
 
-      <app-reports-child-list
-        [reports]="reportsWithPermissions$ | async"
-        [loading]="(reportsLoading$ | async) ?? false"
-        [selectedChildId]="selectedChildId"
-        (create)="onOpenCreate()"
-        (edit)="onEditReport($event)"
-        (delete)="onDeleteReport($event)"
-      />
-    </ng-container>
+      <p class="reports-error" *ngIf="reportsError$ | async as error" role="alert">{{ error }}</p>
+      <section class="reports-workspace">
+        <div class="reports-list-panel">
+          <ng-container *ngIf="visibleReports$ | async as reports">
+            <div class="reports-loading" *ngIf="reportsLoading$ | async">Carregando relat&oacute;rios...</div>
+            <p class="reports-no-results" *ngIf="!(reportsLoading$ | async) && reports.length === 0">N&atilde;o h&aacute; relat&oacute;rios nesta categoria para esta crian&ccedil;a.</p>
+            <button class="report-row" *ngFor="let report of reports" type="button" [class.report-row--active]="(selectedReport$ | async)?.id === report.id" (click)="onSelectReport(report)">
+              <span class="report-row__icon" [ngClass]="'report-row__icon--' + getCategory(report)"><i class="bi" [ngClass]="getCategory(report) === 'school' ? 'bi-house-heart-fill' : (getCategory(report) === 'health' ? 'bi-heart-pulse-fill' : 'bi-person-hearts')" aria-hidden="true"></i></span>
+              <span class="report-row__copy"><strong>{{ report.title }}</strong><small>{{ report.user?.name || report.user?.email || 'Profissional da rede de apoio' }}</small><small><i class="bi bi-calendar3" aria-hidden="true"></i> {{ report.createdAt | date:'dd/MM/yyyy':'':'pt-BR' }}</small><span class="report-row__summary">{{ report.behavior || report.difficulty || report.recommendation || 'Relat&oacute;rio compartilhado para acompanhamento.' }}</span></span>
+              <span class="report-category" [ngClass]="'report-category--' + getCategory(report)">{{ categoryLabel(getCategory(report)) }}</span>
+              <i class="bi bi-chevron-right report-row__chevron" aria-hidden="true"></i>
+            </button>
+          </ng-container>
+        </div>
 
-    <p *ngIf="childrenError$ | async as err" class="reports-child__error">{{ err }}</p>
-    <p *ngIf="reportsError$ | async as err" class="reports-child__error">{{ err }}</p>
+        <section class="report-preview" *ngIf="selectedReport$ | async as report; else reportPreviewEmpty" aria-label="Pr&eacute;via do relat&oacute;rio">
+          <header class="report-preview__header">
+            <div><h2>{{ report.title }}</h2><p>{{ report.user?.name || report.user?.email || 'Profissional da rede de apoio' }} <span>&bull;</span> {{ report.createdAt | date:'dd/MM/yyyy':'':'pt-BR' }}</p></div>
+            <div class="report-preview__actions">
+              <button type="button" class="report-print" (click)="printSelectedReport()"><i class="bi bi-download" aria-hidden="true"></i> Salvar / imprimir</button>
+              <button *ngIf="report.canManage" type="button" class="report-edit" (click)="onEditReport(report)">Editar</button>
+              <button *ngIf="report.canManage" type="button" class="report-delete" (click)="onDeleteReport(report)">Excluir</button>
+            </div>
+          </header>
+          <article class="report-document">
+            <div class="report-document__brand"><i class="bi" [ngClass]="getCategory(report) === 'school' ? 'bi-book-half' : (getCategory(report) === 'health' ? 'bi-heart-pulse' : 'bi-person-hearts')" aria-hidden="true"></i><div><strong>{{ report.user?.name || 'Rede de apoio Mindway' }}</strong><span>{{ categoryLabel(getCategory(report)) }} &bull; {{ report.createdAt | date:'MMMM yyyy':'':'pt-BR' }}</span></div></div>
+            <section *ngIf="report.behavior"><h3>Comportamento e observa&ccedil;&otilde;es</h3><p>{{ report.behavior }}</p></section>
+            <section *ngIf="report.difficulty"><h3>Dificuldades identificadas</h3><p>{{ report.difficulty }}</p></section>
+            <section *ngIf="report.recommendation"><h3>Recomenda&ccedil;&otilde;es</h3><p>{{ report.recommendation }}</p></section>
+            <p class="report-document__empty" *ngIf="!report.behavior && !report.difficulty && !report.recommendation">Este relat&oacute;rio n&atilde;o possui detalhes adicionais.</p>
+          </article>
+        </section>
+        <ng-template #reportPreviewEmpty><section class="report-preview report-preview--empty"><i class="bi bi-file-earmark-text" aria-hidden="true"></i><p>Selecione um relat&oacute;rio para visualizar os detalhes.</p></section></ng-template>
+      </section>
+    </ng-container>
   </ng-container>
-</section>
+</main>

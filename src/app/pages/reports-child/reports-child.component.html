@@ -1,54 +1,55 @@
 <section class="reports-child">
-  <header class="reports-child__hero card-ui--md">
-    <div class=" reports-child__hero-body">
-      <div class="reports-child__hero-copy">
-        <p class="reports-child__eyebrow">Relatórios infantis</p>
-        <h1 class="reports-child__title">Área de relatórios</h1>
-        <p class="reports-child__subtitle">
-          Selecione uma criança, revise o histórico de relatórios com clareza e crie ou atualize notas em um layout mais tranquilo.
-        </p>
-        <ng-container *ngIf="reportSummary$ | async as summary">
-          <div class="reports-child__hero-summary">
-            <div class="reports-child__hero-chip">
-              {{ summary.totalReports }} relatório<span *ngIf="summary.totalReports !== 1">s</span>
-            </div>
-            <div class="reports-child__hero-chip" *ngIf="summary.child; else noChildChip">
-              {{ summary.child.name }} - {{ summary.child.age }} anos
-            </div>
-            <ng-template #noChildChip>
-              <div class="reports-child__hero-chip">Selecione uma criança para começar</div>
-            </ng-template>
-          </div>
-        </ng-container>
-      </div>
-
-      <ng-container *ngIf="children$ | async as children">
-          <app-reports-child-selector
-            [children]="children"
-            [selectedChildId]="selectedChildId"
-            [loading]="(childrenLoading$ | async) ?? false"
-            (selectedChildIdChange)="onSelectChild($event)"
-          />
-      </ng-container>
+  <header class="reports-child__header">
+    <div>
+      <h1>Relatórios</h1>
+      <p>Acompanhe os relatórios compartilhados por escola, terapeutas e profissionais da saúde.</p>
+    </div>
+    <div class="reports-child__header-actions">
+      <label class="reports-child__search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="search" [(ngModel)]="searchTerm" placeholder="Buscar relatórios..." aria-label="Buscar relatórios" />
+      </label>
+      <button class="reports-child__new" type="button" [disabled]="!selectedChildId" (click)="onOpenCreate()">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Novo relatório
+      </button>
     </div>
   </header>
 
   <ng-container *ngIf="children$ | async as children">
-
-    <section *ngIf="(childrenLoading$ | async) && children.length === 0" class="card-ui card-ui--md reports-child__loading">
-      <div class="card-ui__body loading-ui">
-        <span class="loading-ui__line loading-ui__line--sm"></span>
-        <span class="loading-ui__line loading-ui__line--lg"></span>
-        <span class="loading-ui__block"></span>
-      </div>
+    <section *ngIf="(childrenLoading$ | async) && children.length === 0" class="reports-child__loading loading-ui">
+      <span class="loading-ui__line loading-ui__line--sm"></span><span class="loading-ui__line loading-ui__line--lg"></span><span class="loading-ui__block"></span>
     </section>
 
-    <app-reports-child-empty-state
-      *ngIf="!(childrenLoading$ | async) && children.length === 0"
-      variant="no-children"
-    />
+    <section class="reports-child__empty reports-child__empty--error" *ngIf="!(childrenLoading$ | async) && (childrenError$ | async) as error">
+      <div class="reports-child__empty-icon"><i class="bi bi-wifi-off"></i></div>
+      <h2>Não foi possível carregar as crianças</h2>
+      <p>{{ error }} Verifique se a API está em execução e tente novamente.</p>
+      <div class="reports-child__empty-actions"><button type="button" class="reports-child__secondary" (click)="retryLoadChildren()"><i class="bi bi-arrow-repeat"></i> Tentar novamente</button></div>
+    </section>
+
+    <app-reports-child-empty-state *ngIf="!(childrenLoading$ | async) && !(childrenError$ | async) && children.length === 0" variant="no-children" />
 
     <ng-container *ngIf="children.length > 0">
+      <ng-container *ngIf="reportSummary$ | async as summary">
+        <section class="reports-child__overview">
+          <div class="reports-child__child-card">
+            <div class="reports-child__child-avatar">{{ summary.child?.name?.charAt(0) || 'C' }}</div>
+            <div>
+              <strong>{{ summary.child?.name || 'Selecione uma criança' }}</strong>
+              <span *ngIf="summary.child">{{ summary.child.age }} anos · Perfil acompanhado</span>
+              <span *ngIf="!summary.child">Escolha uma criança para visualizar os relatórios</span>
+            </div>
+            <select [ngModel]="selectedChildId" (ngModelChange)="onSelectChild($event)" aria-label="Selecionar criança">
+              <option *ngFor="let child of children" [value]="child.id">{{ child.name }}</option>
+            </select>
+          </div>
+          <div class="reports-child__stat"><i class="bi bi-file-earmark-text"></i><span>Total de relatórios</span><strong>{{ summary.totalReports }}</strong></div>
+          <div class="reports-child__stat reports-child__stat--green"><i class="bi bi-calendar-check"></i><span>Este mês</span><strong>{{ summary.currentMonthReports }}</strong></div>
+          <div class="reports-child__stat reports-child__stat--orange"><i class="bi bi-shield-check"></i><span>Gerenciáveis</span><strong>{{ summary.manageableReports }}</strong></div>
+          <div class="reports-child__stat reports-child__stat--blue"><i class="bi bi-clock-history"></i><span>Última atualização</span><strong>{{ summary.latestCreatedAt ? (summary.latestCreatedAt | date:'dd/MM/yyyy') : '—' }}</strong></div>
+        </section>
+      </ng-container>
+
       <app-reports-child-form
         *ngIf="showCreateForm"
         mode="create"
@@ -66,26 +67,46 @@
         (cancel)="onCancelForm()"
       />
 
-      <div class="reports-child__section-header">
-        <div>
-          <h2 class="reports-child__section-title">Histórico de relatórios</h2>
-          <p class="reports-child__section-copy">
-            Leia os relatórios em cartões e edite apenas quando necessário, mantendo a visualização principal mais simples.
-          </p>
+      <section class="reports-child__table-card">
+        <div class="reports-child__tabs">
+          <button type="button" [class.is-active]="activeFilter === 'all'" (click)="activeFilter = 'all'">Todos</button>
+          <button type="button" [class.is-active]="activeFilter === 'school'" (click)="activeFilter = 'school'">Escola</button>
+          <button type="button" [class.is-active]="activeFilter === 'therapist'" (click)="activeFilter = 'therapist'">Terapeutas</button>
+          <button type="button" [class.is-active]="activeFilter === 'professional'" (click)="activeFilter = 'professional'">Profissionais</button>
+          <label>Ordenar por
+            <select [(ngModel)]="sortOrder"><option value="recent">Mais recentes</option><option value="oldest">Mais antigos</option></select>
+          </label>
         </div>
-      </div>
 
-      <app-reports-child-list
-        [reports]="reportsWithPermissions$ | async"
-        [loading]="(reportsLoading$ | async) ?? false"
-        [selectedChildId]="selectedChildId"
-        (create)="onOpenCreate()"
-        (edit)="onEditReport($event)"
-        (delete)="onDeleteReport($event)"
-      />
+        <div *ngIf="reportsLoading$ | async" class="reports-child__loading loading-ui"><span class="loading-ui__line loading-ui__line--lg"></span><span class="loading-ui__block"></span></div>
+
+        <ng-container *ngIf="!(reportsLoading$ | async)">
+          <ng-container *ngIf="reportsWithPermissions$ | async as reports">
+            <ng-container *ngIf="visibleReports(reports) as filteredReports">
+              <div class="reports-child__table-head" *ngIf="filteredReports.length"><span>Relatório</span><span>Tipo</span><span>Profissional</span><span>Data</span><span>Ações</span></div>
+              <article class="reports-child__row" *ngFor="let report of filteredReports">
+                <div class="reports-child__report"><span class="reports-child__report-icon">{{ reportInitial(report) }}</span><div><strong>{{ report.title }}</strong><p>{{ reportDescription(report) }}</p></div></div>
+                <span class="reports-child__badge" [class.reports-child__badge--school]="report.userRole === 'enterprise'">{{ reportType(report) }}</span>
+                <div class="reports-child__author"><strong>{{ reportAuthor(report) }}</strong><span>{{ report.user?.email || reportType(report) }}</span></div>
+                <div class="reports-child__date"><strong>{{ report.createdAt | date:'dd/MM/yyyy' }}</strong><span>{{ report.createdAt | date:'shortTime' }}</span></div>
+                <div class="reports-child__actions"><button type="button" (click)="onEditReport(report)"><i class="bi bi-eye"></i> Visualizar</button><button type="button" class="icon" (click)="downloadReport(report)" aria-label="Baixar relatório"><i class="bi bi-download"></i></button><button *ngIf="report.canManage" type="button" class="icon danger" (click)="onDeleteReport(report)" aria-label="Excluir relatório"><i class="bi bi-trash"></i></button></div>
+              </article>
+
+              <section class="reports-child__empty" *ngIf="filteredReports.length === 0">
+                <div class="reports-child__empty-icon"><i class="bi" [ngClass]="selectedChildId ? 'bi-file-earmark-text' : 'bi-people'"></i></div>
+                <h2>{{ selectedChildId ? (reports.length ? 'Nenhum resultado encontrado' : 'Ainda não há relatórios') : 'Selecione uma criança' }}</h2>
+                <p>{{ selectedChildId ? (reports.length ? 'Tente remover a busca ou alterar os filtros para encontrar outros relatórios.' : 'Quando um relatório for compartilhado, ele aparecerá organizado neste painel.') : 'Escolha uma criança acima para acessar os relatórios compartilhados.' }}</p>
+                <div class="reports-child__empty-actions">
+                  <button *ngIf="selectedChildId && reports.length === 0" type="button" class="reports-child__new" (click)="onOpenCreate()"><i class="bi bi-plus-lg"></i> Criar relatório</button>
+                  <button *ngIf="selectedChildId && reports.length > 0" type="button" class="reports-child__secondary" (click)="clearFilters()"><i class="bi bi-arrow-counterclockwise"></i> Limpar filtros</button>
+                </div>
+              </section>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </section>
     </ng-container>
 
-    <p *ngIf="childrenError$ | async as err" class="reports-child__error">{{ err }}</p>
     <p *ngIf="reportsError$ | async as err" class="reports-child__error">{{ err }}</p>
   </ng-container>
 </section>

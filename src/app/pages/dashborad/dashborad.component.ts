@@ -338,6 +338,26 @@ const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
   styleUrl: "./dashborad.component.css",
 })
 export class DashboradComponent {
+  readonly familyChild = {
+    name: "Laura Martins",
+    age: "7 anos",
+    level: "TEA Nível 1",
+  };
+
+  readonly nextAppointment = {
+    type: "Consulta - Neuropediatra",
+    professional: "Dr. Carlos Henrique",
+    date: "Sábado, 24 de maio",
+    time: "09:00",
+    location: "Clínica Neuro Vida",
+  };
+
+  readonly latestUpdate = {
+    author: "A professora Maria",
+    text: "adicionou uma observação",
+    time: "Hoje às 10:32",
+  };
+
   readonly viewModel$ = this.authService.currentUser$.pipe(
     map((user): DashboardViewModel => {
       const profile = dashboardProfiles[user?.role ?? "default"] ?? dashboardProfiles.default;

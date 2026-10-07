@@ -1,51 +1,71 @@
 <section class="dashborad-page" *ngIf="viewModel$ | async as vm">
-  <header class="dashborad-page__welcome card-ui card-ui--accent">
-    <div class="dashborad-page__welcome-copy">
+  <header class="dashborad-page__welcome">
+    <div>
       <p class="dashborad-page__eyebrow">{{ vm.eyebrow }}</p>
-      <h1>Olá, {{ vm.displayName }}.</h1>
-      <span>{{ vm.description }}</span>
+      <h1>Olá, {{ vm.displayName }}! <span aria-hidden="true">👋</span></h1>
+      <p class="dashborad-page__subtitle">Bem-vinda ao MindWay.</p>
+    </div>
+    <div class="dashborad-page__header-actions" aria-label="Ações rápidas">
+      <button type="button" aria-label="Notificações"><i class="bi bi-bell"></i><span>2</span></button>
+      <button type="button" aria-label="Ajuda"><i class="bi bi-question-circle"></i></button>
     </div>
   </header>
 
-  <div class="dashborad-page__content">
-
-    <section class="dashborad-page__actions" aria-labelledby="dashboard-actions-title">
-      <div class="dashborad-page__section-header">
-        <div>
-          <p class="dashborad-page__section-label">Atalhos</p>
-          <h2 id="dashboard-actions-title">Acesse o que importa agora</h2>
-        </div>
-        <span>Escolha uma ação para continuar.</span>
+  <section class="dashborad-page__child card-ui" aria-labelledby="child-title">
+    <h2 id="child-title">Escolha a criança</h2>
+    <div class="dashborad-page__child-row">
+      <div class="dashborad-page__child-avatar"><i class="bi bi-person"></i></div>
+      <div class="dashborad-page__child-info">
+        <h3>{{ familyChild.name }}</h3>
+        <p>{{ familyChild.age }} <span aria-hidden="true">•</span> {{ familyChild.level }} <strong>Ativa</strong></p>
       </div>
+      <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/child-profile')">
+        Entrar no perfil <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </section>
 
-      <div class="dashborad-page__action-grid">
-        <button class="dashborad-page__action card-ui" type="button" *ngFor="let action of vm.actions" (click)="navigateTo(action.route)">
-          <i class="bi dashborad-page__action-icon {{ action.icon }}" aria-hidden="true"></i>
-          <div>
-            <h3>{{ action.label }}</h3>
-            <p>{{ action.description }}</p>
-          </div>
-        </button>
+  <section class="dashborad-page__actions" aria-labelledby="dashboard-actions-title">
+    <h2 id="dashboard-actions-title">Acesso rápido</h2>
+    <div class="dashborad-page__action-grid">
+      <button class="dashborad-page__action dashborad-page__action--mint" type="button" (click)="navigateTo('/child-profile')">
+        <span class="dashborad-page__action-icon"><i class="bi bi-person" aria-hidden="true"></i></span><strong>Perfil da criança</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      <button class="dashborad-page__action dashborad-page__action--lilac" type="button" (click)="navigateTo('/anamnesis')">
+        <span class="dashborad-page__action-icon"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i></span><strong>Anamnese</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      <button class="dashborad-page__action dashborad-page__action--yellow" type="button" (click)="navigateTo('/reports-child')">
+        <span class="dashborad-page__action-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></span><strong>Relatórios</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      <button class="dashborad-page__action dashborad-page__action--blue" type="button" (click)="navigateTo('/social-network')">
+        <span class="dashborad-page__action-icon"><i class="bi bi-chat" aria-hidden="true"></i></span><strong>Mensagens</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </section>
+
+  <div class="dashborad-page__updates">
+    <section class="dashborad-page__info-card card-ui" aria-labelledby="appointment-title">
+      <h2 id="appointment-title"><i class="bi bi-calendar-event" aria-hidden="true"></i> Próximo compromisso</h2>
+      <div class="dashborad-page__appointment">
+        <time datetime="2026-05-24"><strong>24</strong><span>MAI</span></time>
+        <div><h3>{{ nextAppointment.type }}</h3><p>{{ nextAppointment.professional }}</p><p><i class="bi bi-calendar3"></i> {{ nextAppointment.date }} <i class="bi bi-clock"></i> {{ nextAppointment.time }}</p><p><i class="bi bi-geo-alt"></i> {{ nextAppointment.location }}</p></div>
       </div>
+      <button class="dashborad-page__text-action" type="button" (click)="navigateTo('/reports-child')">Ver todos os compromissos <i class="bi bi-chevron-right"></i></button>
     </section>
 
-    <section class="dashborad-page__tips" aria-labelledby="dashboard-tips-title">
-      <div class="dashborad-page__section-header">
-        <div>
-          <p class="dashborad-page__section-label">Boas práticas</p>
-          <h2 id="dashboard-tips-title">Dicas para usar melhor o MindWay</h2>
-        </div>
-      </div>
-
-      <div class="dashborad-page__tips-grid">
-        <article class="dashborad-page__tip" *ngFor="let tip of vm.tips">
-          <i class="bi dashborad-page__tip-icon {{ tip.icon }}" aria-hidden="true"></i>
-          <div>
-            <h3>{{ tip.title }}</h3>
-            <p>{{ tip.description }}</p>
-          </div>
-        </article>
+    <section class="dashborad-page__info-card card-ui" aria-labelledby="update-title">
+      <h2 id="update-title"><i class="bi bi-bell" aria-hidden="true"></i> Última atualização</h2>
+      <div class="dashborad-page__update">
+        <div class="dashborad-page__update-avatar"><i class="bi bi-person"></i></div>
+        <p>{{ latestUpdate.author }}<br>{{ latestUpdate.text }}<br><span>{{ latestUpdate.time }}</span></p>
+        <button class="dashborad-page__small-action" type="button" (click)="navigateTo('/reports-child')">Ver</button>
       </div>
     </section>
   </div>
+
+  <section class="dashborad-page__share" aria-labelledby="share-title">
+    <div class="dashborad-page__share-icon"><i class="bi bi-people"></i></div>
+    <div><h2 id="share-title">Compartilhar acesso</h2><p>Convide profissionais, escola ou familiares para acompanhar o desenvolvimento de {{ familyChild.name }}.</p></div>
+    <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/profile')">Compartilhar acesso <i class="bi bi-chevron-right"></i></button>
+  </section>
 </section>

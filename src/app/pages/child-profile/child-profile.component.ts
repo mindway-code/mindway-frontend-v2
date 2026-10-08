@@ -1,9 +1,11 @@
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { distinctUntilChanged, map, switchMap, take, tap } from "rxjs";
+import { catchError, distinctUntilChanged, forkJoin, map, of, switchMap, take, tap } from "rxjs";
 import { AssociationChildService } from "../../services/association-child.service";
+import { AnamnesisService } from "../../services/anamnesis.service";
 import { ChildService } from "../../services/child.service";
+import { ReportsChildService } from "../../services/reports-child.service";
 import type { CreateAssociationChildDTO } from "../../api/interfaces/association-child.interface";
 import type { ChildRecord } from "../../api/interfaces/child.interface";
 
@@ -22,17 +24,39 @@ export class ChildProfileComponent implements OnInit {
   readonly childrenError$ = this.childService.error$;
   readonly associationLoading$ = this.associationChildService.loading$;
   readonly associationError$ = this.associationChildService.error$;
+  readonly anamnesis$ = this.anamnesisService.anamnesis$;
+  readonly reports$ = this.reportsChildService.reports$;
 
   readonly selectedChildId$ = this.selectedChild$.pipe(map((child) => child?.id ?? null));
 
   constructor(
     private readonly childService: ChildService,
     private readonly associationChildService: AssociationChildService,
+    private readonly anamnesisService: AnamnesisService,
+    private readonly reportsChildService: ReportsChildService,
     private readonly route: ActivatedRoute,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this.selectedChild$
+      .pipe(
+        map((child) => child?.id ?? null),
+        distinctUntilChanged(),
+        switchMap((childId) => {
+          this.anamnesisService.clearState();
+          this.reportsChildService.clearState();
+
+          if (!childId) return of(null);
+
+          return forkJoin({
+            anamnesis: this.anamnesisService.loadByChildId(childId).pipe(catchError(() => of(null))),
+            reports: this.reportsChildService.loadByChildId(childId, { page: 1, pageSize: 4 }).pipe(catchError(() => of([]))),
+          });
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
     this.route.queryParamMap
       .pipe(
         map((params) => params.get("childId")),
@@ -64,6 +88,10 @@ export class ChildProfileComponent implements OnInit {
     this.syncRouteSelection(child?.id ?? null);
   }
 
+  findChildById(children: ChildRecord[], childId: string): ChildRecord | null {
+    return children.find((child) => child.id === childId) ?? null;
+  }
+
   onAssociateByAccessCode(payload: CreateAssociationChildDTO): void {
     this.associationChildService
       .associateByAccessCode(payload)
@@ -89,6 +117,10 @@ export class ChildProfileComponent implements OnInit {
 
   onOpenAnamnesis(child: ChildRecord): void {
     this.router.navigate(["/anamnesis"], { queryParams: { childId: child.id } });
+  }
+
+  onOpenReports(child: ChildRecord): void {
+    this.router.navigate(["/reports-child"], { queryParams: { childId: child.id } });
   }
 
   private applySelection(childId: string | null, children: ChildRecord[]): void {

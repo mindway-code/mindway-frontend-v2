@@ -17,6 +17,7 @@ import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
 import { ChildProfileComponent } from './pages/child-profile/child-profile.component';
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
+import { MessagesComponent } from './pages/messages/messages.component';
 import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
@@ -87,6 +88,12 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [{ path: '', component: ReportsChildComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'messages',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: MessagesComponent, pathMatch: 'full' }],
   },
   { path: 'children/:childId/anamnesis', redirectTo: 'anamnesis', pathMatch: 'full' },
 

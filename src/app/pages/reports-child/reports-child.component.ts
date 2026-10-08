@@ -38,13 +38,25 @@ export class ReportsChildComponent implements OnInit {
 
   private readonly selectedChildIdSubject = new BehaviorSubject<string | null>(null);
   readonly selectedChildId$ = this.selectedChildIdSubject.asObservable();
+  private readonly activeCategorySubject = new BehaviorSubject<string>("all");
+  readonly activeCategory$ = this.activeCategorySubject.asObservable();
+  private readonly selectedReportIdSubject = new BehaviorSubject<string | null>(null);
 
   readonly selectedChild$ = combineLatest([this.children$, this.selectedChildId$]).pipe(
     map(([children, selectedId]) => children.find((c) => c.id === selectedId) ?? null)
   );
+  readonly canCreateReport$ = combineLatest([this.selectedChild$, this.currentUser$]).pipe(
+    map(([child, user]) => !!user && (user.role === "admin" || user.role === "enterprise" || user.role === "professional" || user.role === "therapist") && !!child)
+  );
 
   readonly reportsWithPermissions$ = combineLatest([this.reports$, this.currentUser$, this.selectedChild$]).pipe(
     map(([reports, user, child]) => reports.map((r) => ({ ...r, canManage: this.canManageReport(user, child, r) })))
+  );
+  readonly visibleReports$ = combineLatest([this.reportsWithPermissions$, this.activeCategory$]).pipe(
+    map(([reports, category]) => category === "all" ? reports : reports.filter((report) => this.getCategory(report) === category))
+  );
+  readonly selectedReport$ = combineLatest([this.visibleReports$, this.selectedReportIdSubject]).pipe(
+    map(([reports, selectedId]) => reports.find((report) => report.id === selectedId) ?? reports[0] ?? null)
   );
   readonly reportSummary$ = combineLatest([this.selectedChild$, this.reportsWithPermissions$]).pipe(
     map(([child, reports]) => {
@@ -70,6 +82,12 @@ export class ReportsChildComponent implements OnInit {
   );
 
   selectedChildId: string | null = null;
+  readonly reportCategories = [
+    { id: "all", label: "Todos", icon: "bi-grid" },
+    { id: "school", label: "Escola", icon: "bi-house-heart" },
+    { id: "therapy", label: "Terapias", icon: "bi-person-arms-up" },
+    { id: "health", label: "Saúde", icon: "bi-heart-pulse" },
+  ];
   editingReport: ReportsChildRecord | null = null;
   showCreateForm = false;
   searchTerm = "";
@@ -123,6 +141,36 @@ export class ReportsChildComponent implements OnInit {
     this.editingReport = null;
     this.showCreateForm = false;
     this.selectedChildIdSubject.next(this.selectedChildId);
+    this.selectedReportIdSubject.next(null);
+    this.activeCategorySubject.next("all");
+  }
+
+  onSelectCategory(category: string): void {
+    this.activeCategorySubject.next(category);
+    this.selectedReportIdSubject.next(null);
+  }
+
+  onSelectReport(report: ReportsChildRecord): void {
+    this.selectedReportIdSubject.next(report.id);
+  }
+
+  getCategory(report: ReportsChildRecord): string {
+    const title = report.title.toLocaleLowerCase("pt-BR");
+    if (/m[eé]dic|sa[uú]de|cl[ií]nic/.test(title)) return "health";
+    if (report.userRole === "enterprise" || /escola|pedag[oó]gic/.test(title)) return "school";
+    return "therapy";
+  }
+
+  countCategory(reports: ReportsChildRecord[], category: string): number {
+    return category === "all" ? reports.length : reports.filter((report) => this.getCategory(report) === category).length;
+  }
+
+  categoryLabel(category: string): string {
+    return this.reportCategories.find((item) => item.id === category)?.label ?? "Relatório";
+  }
+
+  printSelectedReport(): void {
+    window.print();
   }
 
   onOpenCreate(): void {
@@ -263,11 +311,8 @@ export class ReportsChildComponent implements OnInit {
     const role = user?.role ?? null;
     if (!userId) return false;
     if (role === "admin") return true;
-
-    const isResponsible = child?.responsibleId === userId;
-    const isSecondaryResponsible = child?.secondaryResponsibleId === userId;
-    if (isResponsible || isSecondaryResponsible) return true;
-
-    return report.userId === userId;
+    const canAuthor = role === "enterprise" || role === "professional" || role === "therapist";
+    const isResponsible = child?.responsibleId === userId || child?.secondaryResponsibleId === userId;
+    return canAuthor && !isResponsible && report.userId === userId;
   }
 }

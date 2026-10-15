@@ -201,7 +201,7 @@ export class SettingsComponent implements OnInit {
     ).subscribe({
       next: () => {
         if (user) localStorage.setItem(`mindway-account-phone-${user.id}`, this.phoneNumber.trim());
-        this.accountMessage = "Dados da conta atualizados com sucesso!";
+        this.accountMessage = "Nome e e-mail atualizados no servidor. Telefone e foto ficam salvos apenas neste dispositivo.";
         this.accountMessageDismissed = false;
       },
       error: () => this.accountMessage = "Não foi possível salvar os dados. Confira as informações e tente novamente.",
@@ -366,7 +366,7 @@ export class SettingsComponent implements OnInit {
     this.persistConnectionInvites();
     this.connectionTab = "pending";
     this.showInviteDialog = false;
-    this.connectionMessage = "Convite gerado com sucesso! Compartilhe o link ou o código com o profissional.";
+    this.connectionMessage = "Rascunho de convite salvo neste navegador; a API atual ainda nao cria convites no servidor.";
   }
 
   async copyConnectionInvite(value: string): Promise<void> {

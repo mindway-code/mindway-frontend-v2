@@ -21,3 +21,11 @@ export interface CreateChildDTO {
   observation?: string | null;
   secondaryResponsibleId?: string | null;
 }
+
+export interface UpdateChildDTO {
+  name?: string;
+  age?: number;
+  birthDate?: string;
+  observation?: string | null;
+  secondaryResponsibleId?: string | null;
+}

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError, timeout } from "rxjs";
 import { environment } from "../../environments/environment";
 import type { SuccessResponse, PaginationMeta } from "../api/interfaces/api-response.interface";
-import type { ChildRecord, CreateChildDTO } from "../api/interfaces/child.interface";
+import type { ChildRecord, CreateChildDTO, UpdateChildDTO } from "../api/interfaces/child.interface";
 
 export interface ListChildrenQuery {
   page?: number;
@@ -108,6 +108,24 @@ export class ChildService {
 
   getSelectedChildSnapshot(): ChildRecord | null {
     return this.selectedChildSubject.value;
+  }
+
+  updateChild(childId: string, payload: UpdateChildDTO): Observable<ChildRecord> {
+    this.savingSubject.next(true);
+    this.errorSubject.next(null);
+
+    return this.http.patch<SuccessResponse<ChildRecord>>(`${this.childrenUrl}/${childId}`, payload).pipe(
+      map((res) => res.data),
+      tap((updated) => {
+        this.childrenSubject.next(this.childrenSubject.value.map((child) => child.id === childId ? updated : child));
+        if (this.selectedChildSubject.value?.id === childId) this.selectedChildSubject.next(updated);
+      }),
+      catchError((err) => {
+        this.errorSubject.next("Não foi possível atualizar o perfil da criança.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.savingSubject.next(false))
+    );
   }
 
   createChild(payload: CreateChildDTO): Observable<ChildRecord> {

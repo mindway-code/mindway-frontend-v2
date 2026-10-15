@@ -17,10 +17,12 @@ import {
 import {
   distinctUntilChanged,
   map,
+  of,
   switchMap,
   take,
   tap,
 } from "rxjs";
+import type { Observable } from "rxjs";
 
 import {
   AssociationChildService,
@@ -40,6 +42,7 @@ import type {
   ChildRecord,
   CreateChildDTO,
 } from "../../api/interfaces/child.interface";
+import type { AnamnesisRecord, UpsertAnamnesisHealthDTO, UpsertAnamnesisRoutineDTO } from "../../api/interfaces/anamnesis.interface";
 
 interface ChildCareProvider {
   type: string;
@@ -165,6 +168,7 @@ export class ChildProfileComponent implements OnInit {
   careProviders: ChildCareProvider[] = [this.createCareProvider()];
   weekRoutine: Record<string, RoutineActivity[]> = this.createWeekRoutine();
   savedMessage = "";
+  private currentAnamnesis: AnamnesisRecord | null = null;
   showCreateChild = false;
   isProfessionalView = false;
 
@@ -478,7 +482,17 @@ export class ChildProfileComponent implements OnInit {
         weekRoutine: this.weekRoutine,
         photo: this.childPhoto,
       }));
-      this.savedMessage = "Dados salvos neste dispositivo.";
+      const request$ = this.persistSectionToApi(child.id);
+      if (!request$) {
+        this.savedMessage = "Dados salvos neste dispositivo. Esta seção ainda não é salva no servidor.";
+        return true;
+      }
+
+      this.savedMessage = "Salvando alterações no servidor...";
+      request$.pipe(take(1)).subscribe({
+        next: () => this.savedMessage = "Dados salvos neste dispositivo; campos compativeis sincronizados com o servidor.",
+        error: () => this.savedMessage = "Rascunho salvo neste dispositivo, mas não foi possível sincronizar com o servidor.",
+      });
       return true;
     } catch {
       this.savedMessage = "Não foi possível salvar os dados neste navegador.";
@@ -486,11 +500,90 @@ export class ChildProfileComponent implements OnInit {
     }
   }
 
+  private persistSectionToApi(childId: string): Observable<unknown> | null {
+    const sectionIndex = this.activeSection;
+    if (sectionIndex === 0) {
+      const observation = this.sectionData[0]["observacoes"]?.trim() ?? "";
+      return this.childService.updateChild(childId, { observation: observation || null });
+    }
+
+    if (sectionIndex === 1 || sectionIndex === 2) {
+      return this.ensureAnamnesis(childId).pipe(
+        switchMap((anamnesis) => {
+          const health = anamnesis.health;
+          const payload: UpsertAnamnesisHealthDTO = sectionIndex === 1
+            ? {
+                diagnosis: this.sectionData[1]["Diagnóstico principal"]?.trim() || null,
+                medication: health?.medication ?? null,
+                allergies: health?.allergies ?? null,
+              }
+            : {
+                diagnosis: health?.diagnosis ?? null,
+                medication: this.sectionData[2]["Medicamentos"]?.trim() || null,
+                allergies: this.sectionData[2]["Alergias"]?.trim() || null,
+              };
+          return this.anamnesisService.upsertHealth(childId, payload, Boolean(health));
+        }),
+        tap((anamnesis) => this.currentAnamnesis = anamnesis),
+      );
+    }
+
+    if (sectionIndex >= 3 && sectionIndex <= 5) {
+      return this.ensureAnamnesis(childId).pipe(
+        switchMap((anamnesis) => {
+          const routine = anamnesis.routine;
+          const payload: UpsertAnamnesisRoutineDTO = {
+            wakesUpAt: routine?.wakesUpAt ?? null,
+            therapies: sectionIndex === 3
+              ? this.careProviders.map((provider) => [provider.type, provider.professional, provider.specialty, provider.clinic, provider.frequency, provider.schedule, provider.notes].filter(Boolean).join(" · ")).filter(Boolean).join("\n") || null
+              : routine?.therapies ?? null,
+            schoolPeriod: sectionIndex === 4
+              ? this.sectionData[4]["Série/ano"]?.trim() || null
+              : routine?.schoolPeriod ?? null,
+            extraActivity: routine?.extraActivity ?? null,
+            sleepsAt: routine?.sleepsAt ?? null,
+            routineObservation: sectionIndex === 5
+              ? [
+                  this.sectionData[5]["Observações sobre a rotina"]?.trim(),
+                  this.weekDays.map(({ key, label }) => {
+                    const activities = (this.weekRoutine[key] ?? []).map((item) => [item.time, item.activity].filter(Boolean).join(" ")).filter(Boolean);
+                    return activities.length ? `${label}: ${activities.join(", ")}` : "";
+                  }).filter(Boolean).join("\n"),
+                ].filter(Boolean).join("\n\n") || null
+              : routine?.routineObservation ?? null,
+          };
+          return this.anamnesisService.upsertRoutine(childId, payload, Boolean(routine));
+        }),
+        tap((anamnesis) => this.currentAnamnesis = anamnesis),
+      );
+    }
+
+    if (sectionIndex === 6) {
+      return this.ensureAnamnesis(childId).pipe(
+        switchMap((anamnesis) => this.anamnesisService.updateGeneralNotes(childId, {
+          generalNotes: this.sectionData[6]["Observações gerais"]?.trim() || null,
+        })),
+        tap((anamnesis) => this.currentAnamnesis = anamnesis),
+      );
+    }
+
+    return null;
+  }
+
+  private ensureAnamnesis(childId: string) {
+    return this.anamnesisService.loadByChildId(childId).pipe(
+      take(1),
+      switchMap((anamnesis) => anamnesis ? of(anamnesis) : this.anamnesisService.createAnamnesis(childId)),
+      tap((anamnesis) => this.currentAnamnesis = anamnesis),
+    );
+  }
+
   private loadSectionData(childId?: string): void {
     this.sectionData = Array.from({ length: 7 }, () => ({}));
     this.childPhoto = null;
     this.careProviders = [this.createCareProvider()];
     this.weekRoutine = this.createWeekRoutine();
+    this.currentAnamnesis = null;
     if (!childId) return;
     const selectedChild = this.childService.getSelectedChildSnapshot();
     if (selectedChild) {
@@ -547,19 +640,18 @@ export class ChildProfileComponent implements OnInit {
       this.careProviders = [this.createCareProvider()];
       this.weekRoutine = this.createWeekRoutine();
     }
-    if (this.isProfessionalView && selectedChild?.anamnesis) {
+    if (selectedChild?.anamnesis) {
+      this.currentAnamnesis = selectedChild.anamnesis;
       this.applyAnamnesisData(selectedChild.anamnesis);
     }
-    if (this.isProfessionalView) {
-      this.anamnesisService.loadByChildId(childId).pipe(take(1)).subscribe({
-        next: (anamnesis) => {
-          if (anamnesis && this.childService.getSelectedChildSnapshot()?.id === childId) {
-            this.applyAnamnesisData(anamnesis);
-          }
-        },
-        error: () => {},
-      });
-    }
+    this.anamnesisService.loadByChildId(childId).pipe(take(1)).subscribe({
+      next: (anamnesis) => {
+        if (this.childService.getSelectedChildSnapshot()?.id !== childId) return;
+        this.currentAnamnesis = anamnesis;
+        if (anamnesis) this.applyAnamnesisData(anamnesis);
+      },
+      error: () => {},
+    });
     if (selectedChild && !this.sectionData[0]["Gênero"]) {
       this.sectionData[0]["Gênero"] = this.normalizeGender(this.getChildGender(selectedChild));
     }

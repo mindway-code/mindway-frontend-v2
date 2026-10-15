@@ -1,12 +1,12 @@
 /* =========================================================
-   ANAMNESE — PÁGINA
+   ANAMNESE �?" PÁGINA
    ========================================================= */
 
 .anamnesis-page {
   width: 100%;
-  max-width: 1040px;
+  max-width: none;
   margin: 0 auto;
-  padding: 24px 28px 40px;
+  padding: 0 0 2rem;
   box-sizing: border-box;
 }
 
@@ -88,7 +88,7 @@
 
 
 /* =========================================================
-   ILUSTRAÇÃO
+   ILUSTRA�?�fO
    ========================================================= */
 
 .anamnesis-page__hero-image {
@@ -115,71 +115,18 @@
 
 
 /* =========================================================
-   SELETOR — PÁGINA 1
+   SELETOR �?" PÁGINA 1
    ========================================================= */
 
-.anamnesis-page__selection-card {
-  display: flex;
-  align-items: flex-start;
 
-  gap: 16px;
 
-  margin: 0 20px 22px;
 
-  padding: 20px;
 
-  background: #ffffff;
 
-  border: 1px solid #e0e8ec;
-  border-radius: 12px;
 
-  box-shadow:
-    0 3px 12px rgba(30, 70, 90, 0.04);
 
-  box-sizing: border-box;
-}
 
-.anamnesis-page__selection-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  width: 42px;
-  height: 42px;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background: #e8f7f7;
-  color: #078b92;
-
-  font-size: 19px;
-}
-
-.anamnesis-page__selection-content {
-  min-width: 0;
-  flex: 1;
-}
-
-.anamnesis-page__selection-content h2 {
-  margin: 1px 0 4px;
-
-  color: #102f56;
-
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-.anamnesis-page__selection-content p {
-  margin: 0 0 14px;
-
-  color: #718096;
-
-  font-size: 12px;
-  line-height: 1.45;
-}
 
 
 /*
@@ -190,14 +137,11 @@
  * a largura disponível.
  */
 
-.anamnesis-page__selection-content app-child-selector {
-  display: block;
-  width: 100%;
-}
+
 
 
 /* =========================================================
-   PÁGINA 2 — HERO DA CRIANÇA
+   PÁGINA 2 �?" HERO DA CRIAN�?A
    ========================================================= */
 
 .anamnesis-page__hero--child {
@@ -404,7 +348,7 @@
 
 
 /* =========================================================
-   CARD DA CRIANÇA
+   CARD DA CRIAN�?A
    ========================================================= */
 
 .anamnesis-page__child-card {
@@ -431,22 +375,39 @@
 }
 
 .anamnesis-page__child-avatar {
+  box-sizing: border-box;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
   width: 40px;
+  min-width: 40px;
   height: 40px;
+  min-height: 40px;
+  aspect-ratio: 1;
 
   flex-shrink: 0;
 
   border-radius: 50%;
+  overflow: hidden;
 
   background: #e5f4fb;
   color: #14558b;
 
   font-size: 16px;
   font-weight: 700;
+}
+
+.anamnesis-page__child-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: inherit;
+  object-fit: cover;
+  object-position: center;
 }
 
 .anamnesis-page__child-copy {
@@ -473,6 +434,30 @@
   line-height: 1.4;
 }
 
+.anamnesis-page__child-copy .anamnesis-page__child-meta,
+.anamnesis-page__child-copy .anamnesis-page__child-progress {
+  margin-top: 3px;
+}
+
+.anamnesis-page__diagnoses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.anamnesis-page__diagnoses > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #eef8ff;
+  color: #1766a8;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
 .anamnesis-page__child-status {
   flex-shrink: 0;
 
@@ -494,9 +479,152 @@
   color: #247653;
 }
 
+.anamnesis-page__children-loading {
+  padding: 1rem 1.25rem;
+  color: #718096;
+}
+
+.anamnesis-page__children {
+  margin-top: 1.1rem;
+}
+
+.anamnesis-page__children-heading {
+  margin-bottom: 1rem;
+}
+
+.anamnesis-page__children-heading h2 {
+  margin: 0;
+  color: #14253d;
+  font-size: 1.25rem;
+}
+
+.anamnesis-page__children-heading p {
+  margin: .35rem 0 0;
+  color: #718096;
+  font-size: .88rem;
+}
+
+.anamnesis-page__children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 260px));
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.anamnesis-page__child-option {
+  display: flex;
+  min-height: 285px;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.35rem;
+  border: 1px solid #e1e8e9;
+  border-radius: .8rem;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(22, 50, 67, .04);
+  text-align: center;
+}
+
+.anamnesis-page__child-option-avatar {
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  width: 88px;
+  min-width: 88px;
+  height: 88px;
+  min-height: 88px;
+  aspect-ratio: 1;
+  flex: 0 0 88px;
+  overflow: hidden;
+  place-items: center;
+  margin-bottom: .75rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d8f4f7, #eaf8fa);
+  color: #008b91;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.anamnesis-page__child-option-avatar--alt {
+  background: linear-gradient(145deg, #fae4f2, #fff1f8);
+  color: #ad5287;
+}
+
+.anamnesis-page__child-option-avatar img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: inherit;
+  object-fit: cover;
+  object-position: center;
+}
+
+.anamnesis-page__child-option h3 {
+  margin: .15rem 0 .45rem;
+  color: #14253d;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.anamnesis-page__child-option-meta {
+  margin: 0;
+  color: #718096;
+  font-size: .8rem;
+  line-height: 1.5;
+}
+
+.anamnesis-page__child-option-meta span {
+  padding: 0 .2rem;
+}
+
+.anamnesis-page__diagnoses {
+  display: flex;
+  min-height: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .35rem;
+  margin: .75rem 0;
+}
+
+.anamnesis-page__diagnoses span {
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  background: #eef8ff;
+  color: #1463b8;
+  font-size: .72rem;
+}
+
+.anamnesis-page__no-diagnosis {
+  margin: .75rem 0;
+  color: #8a9aaa;
+  font-size: .8rem;
+}
+
+.anamnesis-page__child-action {
+  width: 100%;
+  margin-top: auto;
+  border: 1px solid #008b91;
+  border-radius: .55rem;
+  padding: .65rem .9rem;
+  background: #008b91;
+  color: #fff;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.anamnesis-page__children-empty {
+  color: #718096;
+  font-size: .9rem;
+}
+
 
 /* =========================================================
-   CABEÇALHO DAS SEÇÕES
+   CABE�?ALHO DAS SE�?�.ES
    ========================================================= */
 
 .anamnesis-page__section-header {
@@ -549,7 +677,7 @@
 
 
 /* =========================================================
-   LISTA DAS SEÇÕES
+   LISTA DAS SE�?�.ES
    ========================================================= */
 
 .anamnesis-page__section-list {
@@ -619,7 +747,7 @@
 
 
 /* =========================================================
-   ÍCONE DA SEÇÃO
+   ÍCONE DA SE�?�fO
    ========================================================= */
 
 .anamnesis-page__section-item-icon {
@@ -677,7 +805,7 @@
 
 
 /* =========================================================
-   TEXTO DA SEÇÃO
+   TEXTO DA SE�?�fO
    ========================================================= */
 
 .anamnesis-page__section-item-content {
@@ -757,7 +885,7 @@
 
 
 /* =========================================================
-   SEÇÃO ABERTA
+   SE�?�fO ABERTA
    ========================================================= */
 
 .anamnesis-page__opened-section {
@@ -767,7 +895,7 @@
 
 
 /* =========================================================
-   BOTÃO VOLTAR
+   BOT�fO VOLTAR
    ========================================================= */
 
 .anamnesis-page__back-button {
@@ -819,7 +947,7 @@
 
 
 /* =========================================================
-   NAVEGAÇÃO APÓS SALVAR
+   NAVEGA�?�fO AP�"S SALVAR
    ========================================================= */
 
 .anamnesis-page__section-navigation {
@@ -889,13 +1017,13 @@
 
 
 /* =========================================================
-   RESPONSIVIDADE — TABLET
+   RESPONSIVIDADE �?" TABLET
    ========================================================= */
 
 @media (max-width: 900px) {
 
   .anamnesis-page {
-    padding: 20px;
+    padding-bottom: 1.5rem;
   }
 
   .anamnesis-page__hero-content {
@@ -915,13 +1043,13 @@
 
 
 /* =========================================================
-   RESPONSIVIDADE — MOBILE
+   RESPONSIVIDADE �?" MOBILE
    ========================================================= */
 
 @media (max-width: 700px) {
 
   .anamnesis-page {
-    padding: 14px;
+    padding-bottom: 1.5rem;
   }
 
   .anamnesis-page__hero-content {
@@ -953,10 +1081,7 @@
 
   /* Seleção */
 
-  .anamnesis-page__selection-card {
-    margin: 0 12px 18px;
-    padding: 16px;
-  }
+
 
 
   /* Etapas */
@@ -1017,13 +1142,13 @@
 
 
 /* =========================================================
-   RESPONSIVIDADE — CELULAR PEQUENO
+   RESPONSIVIDADE �?" CELULAR PEQUENO
    ========================================================= */
 
 @media (max-width: 500px) {
 
   .anamnesis-page {
-    padding: 10px;
+    padding-bottom: 1.5rem;
   }
 
   .anamnesis-page__hero-content {
@@ -1057,16 +1182,9 @@
 
   /* Seleção */
 
-  .anamnesis-page__selection-card {
-    flex-direction: column;
 
-    margin: 0 8px 16px;
-  }
 
-  .anamnesis-page__selection-icon {
-    width: 36px;
-    height: 36px;
-  }
+
 
 
   /* Criança */
@@ -1129,34 +1247,18 @@
 }
 
 /* =========================================================
-   SELETOR DE CRIANÇA — SETA
+   SELETOR DE CRIAN�?A �?" SETA
    ========================================================= */
 
-.anamnesis-page__child-selector {
-  position: relative;
-  display: inline-block;
-  width: min(100%, 250px);
-}
 
-.anamnesis-page__child-selector app-child-selector {
-  display: block;
-  width: 100%;
-}
 
-.anamnesis-page__child-selector-arrow {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  z-index: 20;
-  transform: translateY(-50%);
-  color: #078b92;
-  font-size: 15px;
-  pointer-events: none;
-}
+
+
+
 
 
 /* =========================================================
-   NAVEGAÇÃO — ANTERIOR / VOLTAR / PRÓXIMO
+   NAVEGA�?�fO �?" ANTERIOR / VOLTAR / PR�"XIMO
    ========================================================= */
 
 .anamnesis-page__section-navigation {

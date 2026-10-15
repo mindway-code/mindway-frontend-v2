@@ -22,6 +22,7 @@ import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
 import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -94,6 +95,12 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [{ path: '', component: MessagesComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'settings',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: SettingsComponent, pathMatch: 'full' }],
   },
   { path: 'children/:childId/anamnesis', redirectTo: 'anamnesis', pathMatch: 'full' },
 

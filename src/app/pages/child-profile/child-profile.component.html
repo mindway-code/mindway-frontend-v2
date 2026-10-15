@@ -1,61 +1,159 @@
-<section class="child-profile-page">
-  <header class="child-profile-page__top"><div><p>CRIANÇAS</p><h1>Perfil da criança</h1><span>Visualize informações essenciais e acompanhe seu desenvolvimento.</span></div><ng-container *ngIf="children$ | async as children"><select *ngIf="children.length" [ngModel]="(selectedChildId$ | async)" (ngModelChange)="onSelectChild(findChildById(children, $event))"><option *ngFor="let item of children" [value]="item.id">{{ item.name }}</option></select></ng-container></header>
-  <section *ngIf="childrenLoading$ | async" class="child-profile-page__loading loading-ui"><span class="loading-ui__line loading-ui__line--sm"></span><span class="loading-ui__block"></span></section>
-  <ng-container *ngIf="selectedChild$ | async as child; else emptyState">
-    <section class="child-profile-page__hero"><div class="child-profile-page__avatar">{{ child.name.charAt(0) }}</div><div><h2>{{ child.name }}</h2><p>{{ child.age }} anos · Nascimento: {{ child.birthDate | date:'dd/MM/yyyy' }}</p></div><button type="button" (click)="onOpenAnamnesis(child)"><i class="bi bi-pencil-square"></i> Abrir anamnese</button><div class="child-profile-page__note"><i class="bi bi-star-fill"></i><div><strong>Observação principal</strong><p>{{ child.observation || 'Nenhuma observação cadastrada para esta criança.' }}</p></div></div></section>
-    <ng-container *ngIf="anamnesis$ | async as anamnesis">
-      <div class="child-profile-page__grid">
-        <section class="child-profile-page__card"><h3><i class="bi bi-person-vcard"></i> Dados básicos</h3><dl><dt>Nome</dt><dd>{{ child.name }}</dd><dt>Nascimento</dt><dd>{{ child.birthDate | date:'dd/MM/yyyy' }}</dd><dt>Idade</dt><dd>{{ child.age }} anos</dd></dl></section>
-        <section class="child-profile-page__card"><h3><i class="bi bi-heart-pulse"></i> Saúde e diagnóstico</h3><dl><dt>Diagnóstico</dt><dd>{{ anamnesis.health?.diagnosis || 'Não informado' }}</dd><dt>Medicação</dt><dd>{{ anamnesis.health?.medication || 'Não informado' }}</dd><dt>Alergias</dt><dd>{{ anamnesis.health?.allergies || 'Não informado' }}</dd></dl></section>
-        <section class="child-profile-page__card"><h3><i class="bi bi-calendar2-week"></i> Rotina</h3><dl><dt>Escola / período</dt><dd>{{ anamnesis.routine?.schoolPeriod || 'Não informado' }}</dd><dt>Terapias</dt><dd>{{ anamnesis.routine?.therapies || 'Não informado' }}</dd><dt>Atividade extra</dt><dd>{{ anamnesis.routine?.extraActivity || 'Não informado' }}</dd></dl></section>
-      <section class="child-profile-page__card child-profile-page__card--wide">
-  <h3>
-    <i class="bi bi-signpost-split"></i>
-    Marcos do desenvolvimento
-  </h3>
-
-  <div class="child-profile-page__milestones">
+<main class="child-profile-page">
+  <header class="page-heading">
     <div>
-      <i class="bi bi-person-standing"></i>
-      <strong>Sentou</strong>
-      <span>
-        {{
-          anamnesis?.motorDevelopment?.sittingAgeMonths != null
-            ? anamnesis.motorDevelopment!.sittingAgeMonths + ' meses'
-            : 'Não informado'
-        }}
-      </span>
+      <p class="eyebrow">ANAMNESE INFANTIL</p>
+      <h1>{{ (selectedChild$ | async) ? 'Perfil da crian&#231;a' : 'Minhas crian&#231;as' }}</h1>
+      <p *ngIf="selectedChild$ | async">Consulte os dados e o acompanhamento desta crian&ccedil;a.</p>
+      <p *ngIf="!(selectedChild$ | async)">Registre e acompanhe informa&ccedil;&otilde;es importantes sobre o desenvolvimento e a rotina da crian&ccedil;a.</p>
     </div>
+    <div class="page-heading__illustration" *ngIf="!(selectedChild$ | async)" aria-hidden="true"><i class="bi bi-clipboard2-pulse"></i></div>
+    <div class="page-heading__actions">
+      <button *ngIf="selectedChild$ | async" class="back-button" type="button" (click)="onBackToChildren()">&#8592; Voltar para crian&#231;as</button>
+      <button *ngIf="!(selectedChild$ | async) && !isProfessionalView" class="primary-button" type="button" (click)="toggleCreateChild()">+ Adicionar crian&#231;a</button>
+    </div>
+  </header>
 
-    <div>
-      <i class="bi bi-person-walking"></i>
-      <strong>Primeiros passos</strong>
-      <span>
-        {{
-          anamnesis?.motorDevelopment?.firstStepsAgeMonths != null
-            ? anamnesis.motorDevelopment!.firstStepsAgeMonths + ' meses'
-            : 'Não informado'
-        }}
-      </span>
-    </div>
+  <app-child-create-form
+    *ngIf="showCreateChild && !isProfessionalView"
+    [saving]="(childrenSaving$ | async) ?? false"
+    [error]="(childrenError$ | async) ?? null"
+    (create)="createChild($event)"
+    (cancel)="closeCreateChild()"
+  ></app-child-create-form>
 
-    <div>
-      <i class="bi bi-chat-dots"></i>
-      <strong>Primeiras palavras</strong>
-      <span>
-        {{
-          anamnesis?.languageCommunication?.firstWordsAgeMonths != null
-            ? anamnesis.languageCommunication!.firstWordsAgeMonths + ' meses'
-            : 'Não informado'
-        }}
-      </span>
-    </div>
-  </div>
-</section>
-        <section class="child-profile-page__card child-profile-page__card--wide"><h3><i class="bi bi-file-earmark-text"></i> Relatórios recentes</h3><ng-container *ngIf="reports$ | async as reports"><div class="child-profile-page__reports" *ngIf="reports.length; else noReports"><article *ngFor="let report of reports"><i class="bi bi-file-earmark"></i><strong>{{ report.title }}</strong><span>{{ report.createdAt | date:'dd/MM/yyyy' }}</span></article></div><ng-template #noReports><p class="child-profile-page__muted">Nenhum relatório compartilhado ainda.</p></ng-template></ng-container></section>
-      </div>
+  <div *ngIf="childrenLoading$ | async" class="notice">Carregando crian&#231;as...</div>
+  <div *ngIf="childrenError$ | async as error" class="notice notice--error" role="alert">{{ error }}</div>
+
+  <ng-container *ngIf="!(childrenLoading$ | async)">
+    <ng-container *ngIf="!(selectedChild$ | async); else profileView">
+      <section class="children-grid" *ngIf="children$ | async as children">
+        <article class="child-card" *ngFor="let child of children; let i = index">
+          <div class="child-avatar child-avatar--card" [class.child-avatar--alt]="i % 2 === 1" aria-hidden="true">
+            <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="">
+            <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
+          </div>
+          <h2>{{ getChildName(child) }}</h2>
+          <p class="child-meta">{{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p>
+          <div class="diagnoses" *ngIf="getChildDiagnoses(child).length > 0; else noDiagnosis">
+            <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
+          </div>
+          <ng-template #noDiagnosis><p class="muted child-card__diagnosis-empty">Sem diagn&#243;stico informado</p></ng-template>
+          <button type="button" class="primary-button child-card__action" (click)="onSelectChild(child)">{{ isProfessionalView ? 'Visualizar perfil' : 'Editar perfil' }} &rarr;</button>
+        </article>
+        <div class="empty-state" *ngIf="children.length === 0">
+          <p>Nenhuma crian&#231;a cadastrada ainda. Use &#8220;Adicionar crian&#231;a&#8221; para criar o primeiro perfil.</p>
+        </div>
+      </section>
     </ng-container>
-    <footer class="child-profile-page__actions"><button type="button" class="outline" (click)="onOpenAnamnesis(child)"><i class="bi bi-clipboard2-pulse"></i> Abrir anamnese</button><button type="button" (click)="onOpenReports(child)"><i class="bi bi-bar-chart-line"></i> Ver relatórios</button></footer>
   </ng-container>
-  <ng-template #emptyState><section *ngIf="!(childrenLoading$ | async)" class="child-profile-page__empty"><i class="bi bi-people"></i><h2>Nenhuma criança selecionada</h2><p>Associe uma criança por código de acesso para acompanhar as informações dela.</p><app-child-access-code-form [loading]="(associationLoading$ | async) ?? false" [error]="(associationError$ | async) ?? null" (associate)="onAssociateByAccessCode($event)"></app-child-access-code-form></section></ng-template>
-</section>
+
+  <ng-template #profileView>
+    <ng-container *ngIf="selectedChild$ | async as child">
+      <div class="readonly-notice" *ngIf="isProfessionalView" role="status"><i class="bi bi-lock-fill" aria-hidden="true"></i><span><strong>Somente visualiza&#231;&#227;o</strong><small>Voc&#234; est&#225; visualizando informa&#231;&#245;es cadastradas pelo respons&#225;vel. N&#227;o &#233; poss&#237;vel editar os dados.</small></span></div>
+      <section class="child-banner">
+        <div class="child-banner__avatar-wrap">
+          <div class="child-avatar child-avatar--large"><img *ngIf="getChildPhoto(child) as photo; else childProfileInitial" [src]="photo" alt=""><ng-template #childProfileInitial>{{ getChildInitial(child) }}</ng-template></div>
+          <label *ngIf="!isProfessionalView" class="child-photo-button" [attr.for]="'child-photo-' + child.id"><i class="bi bi-camera" aria-hidden="true"></i> {{ getChildPhoto(child) ? 'Alterar foto' : 'Adicionar foto' }}</label>
+          <input *ngIf="!isProfessionalView" class="child-photo-input" [id]="'child-photo-' + child.id" type="file" accept="image/*" (change)="onChildPhotoSelected($event)">
+        </div>
+        <div><h2>{{ getChildName(child) }}</h2><p>{{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p><div class="diagnoses diagnoses--banner" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div></div>
+      </section>
+
+      <nav class="profile-steps" aria-label="Se&#231;&#245;es do perfil">
+          <button *ngFor="let section of profileSections; let i = index" type="button" class="profile-step" [class.profile-step--active]="activeSection === i" [attr.aria-current]="activeSection === i ? 'step' : null" (click)="selectSection(i)">
+          <span class="step-number">{{ i + 1 }}</span><span class="step-label">{{ section.title }}</span>
+        </button>
+      </nav>
+
+      <section class="section-card">
+        <header class="section-header"><div class="section-icon">{{ profileSections[activeSection].icon }}</div><div><h2>{{ profileSections[activeSection].title }}</h2><p>{{ profileSections[activeSection].description }}</p></div><span class="saved-message" *ngIf="savedMessage">{{ savedMessage }}</span></header>
+
+        <div class="profile-form" *ngIf="activeSection === 0">
+          <label class="field"><span>Nome completo</span><input [value]="getChildName(child)" readonly></label>
+          <label class="field"><span>Data de nascimento</span><input [value]="formatBirthDate(child)" readonly></label>
+          <label class="field">
+            <span>G&#234;nero</span>
+            <select [(ngModel)]="sectionData[0]['G&#234;nero']" [disabled]="isProfessionalView">
+              <option value="">Selecione uma op&#231;&#227;o</option>
+              <option *ngIf="sectionData[0]['G&#234;nero'] && !genderOptions.includes(sectionData[0]['G&#234;nero'])" [ngValue]="sectionData[0]['G&#234;nero']">{{ sectionData[0]['G&#234;nero'] }}</option>
+              <option *ngFor="let gender of genderOptions" [ngValue]="gender">{{ gender }}</option>
+            </select>
+          </label>
+          <label class="field" *ngIf="!isProfessionalView"><span>C&#243;digo de acesso</span><input [value]="getChildAccessCode(child)" readonly></label>
+          <label class="field field--wide"><span>Observa&#231;&#245;es adicionais</span><textarea [(ngModel)]="sectionData[0]['observacoes']" [readonly]="isProfessionalView" rows="4" maxlength="500" placeholder="Informa&#231;&#245;es importantes sobre a crian&#231;a"></textarea></label>
+        </div>
+        <div class="care-providers" *ngIf="activeSection === 3">
+          <p class="care-providers__intro">Cadastre cada terapia, cl&#237;nica ou profissional que acompanha a crian&#231;a.</p>
+
+          <article class="provider-card" *ngFor="let provider of careProviders; let i = index">
+            <header class="provider-card__header">
+              <h3>Acompanhamento {{ i + 1 }}</h3>
+              <button *ngIf="!isProfessionalView" class="remove-provider" type="button" (click)="removeCareProvider(i)" [attr.aria-label]="'Remover acompanhamento ' + (i + 1)">
+                Remover
+              </button>
+            </header>
+
+            <div class="profile-form provider-card__form">
+              <label class="field">
+                <span>Tipo de acompanhamento</span>
+                <select [(ngModel)]="provider.type" [disabled]="isProfessionalView">
+                  <option>Terapia</option>
+                  <option>Consulta m&#233;dica</option>
+                  <option>Outro acompanhamento</option>
+                </select>
+              </label>
+              <label class="field"><span>Cl&#237;nica ou local</span><input [(ngModel)]="provider.clinic" [readonly]="isProfessionalView" placeholder="Nome da cl&#237;nica ou consult&#243;rio"></label>
+              <label class="field"><span>Telefone da cl&#237;nica</span><input [(ngModel)]="provider.clinicPhone" [readonly]="isProfessionalView" type="tel" placeholder="Telefone para contato"></label>
+              <label class="field"><span>Profissional</span><input [(ngModel)]="provider.professional" [readonly]="isProfessionalView" placeholder="Nome do profissional"></label>
+              <label class="field"><span>Especialidade</span><input [(ngModel)]="provider.specialty" [readonly]="isProfessionalView" placeholder="Ex.: Fonoaudi&#243;loga, neuropediatra, geneticista, oftalmologista"></label>
+              <label class="field"><span>Frequ&#234;ncia</span><input [(ngModel)]="provider.frequency" [readonly]="isProfessionalView" placeholder="Ex.: 2 vezes por semana"></label>
+              <label class="field"><span>Dias e hor&#225;rios</span><input [(ngModel)]="provider.schedule" [readonly]="isProfessionalView" placeholder="Ex.: segunda e quarta &#224; tarde"></label>
+              <label class="field field--wide"><span>Observa&#231;&#245;es</span><textarea [(ngModel)]="provider.notes" [readonly]="isProfessionalView" rows="3" placeholder="Informa&#231;&#245;es importantes sobre este acompanhamento"></textarea></label>
+            </div>
+          </article>
+
+          <button *ngIf="!isProfessionalView" class="add-provider" type="button" (click)="addCareProvider()">
+            <span aria-hidden="true">&#65291;</span> Adicionar terapeuta, m&#233;dico ou cl&#237;nica
+          </button>
+        </div>
+
+        <div class="weekly-routine" *ngIf="activeSection === 5">
+          <p class="weekly-routine__intro">Organize os compromissos e atividades habituais da crian&#231;a ao longo da semana. Voc&#234; pode incluir v&#225;rios hor&#225;rios em cada dia.</p>
+
+          <div class="weekly-routine__grid">
+            <article class="routine-day" *ngFor="let day of weekDays">
+              <header class="routine-day__header">
+                <h3>{{ day.label }}</h3>
+                <button *ngIf="!isProfessionalView" class="add-routine-item" type="button" (click)="addRoutineActivity(day.key)" [attr.aria-label]="'Adicionar atividade para ' + day.label">+ Adicionar</button>
+              </header>
+
+              <div class="routine-empty" *ngIf="weekRoutine[day.key].length === 0">Nenhuma atividade planejada</div>
+
+              <div class="routine-item" *ngFor="let item of weekRoutine[day.key]; let i = index">
+                <label class="field routine-item__time"><span>Hor&#225;rio</span><input type="time" [(ngModel)]="item.time" [readonly]="isProfessionalView"></label>
+                <label class="field routine-item__activity"><span>Atividade</span><input [(ngModel)]="item.activity" [readonly]="isProfessionalView" placeholder="Ex.: escola, terapia, descanso"></label>
+                <button *ngIf="!isProfessionalView" class="remove-routine-item" type="button" (click)="removeRoutineActivity(day.key, i)" [attr.aria-label]="'Remover atividade de ' + day.label">Remover</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="profile-form weekly-routine__details">
+            <label class="field"><span>Atividades favoritas</span><input [(ngModel)]="sectionData[5]['Atividades favoritas']" [readonly]="isProfessionalView" placeholder="Brincadeiras, jogos, passeios..."></label>
+            <label class="field"><span>Interesses</span><input [(ngModel)]="sectionData[5]['Interesses']" [readonly]="isProfessionalView" placeholder="Assuntos e temas de interesse"></label>
+            <label class="field"><span>Prefer&#234;ncias</span><input [(ngModel)]="sectionData[5]['Prefer&#234;ncias']" [readonly]="isProfessionalView" placeholder="Prefer&#234;ncias e sensibilidades"></label>
+            <label class="field"><span>Observa&#231;&#245;es sobre a rotina</span><textarea [(ngModel)]="sectionData[5]['Observa&#231;&#245;es sobre a rotina']" [readonly]="isProfessionalView" rows="3" placeholder="Informa&#231;&#245;es que ajudam a compreender a semana da crian&#231;a"></textarea></label>
+          </div>
+        </div>
+
+        <div class="profile-form" *ngIf="activeSection > 0 && activeSection !== 3 && activeSection !== 5">
+          <label class="field" *ngFor="let field of sectionFields[activeSection]"><span>{{ field }}</span><textarea *ngIf="field.toLowerCase().includes('observa')" [(ngModel)]="sectionData[activeSection][field]" [readonly]="isProfessionalView" rows="3"></textarea><input *ngIf="!field.toLowerCase().includes('observa')" [(ngModel)]="sectionData[activeSection][field]" [readonly]="isProfessionalView" [placeholder]="field === 'Profissional que fez o diagn&#243;stico' ? 'Ex.: Dra. Ana, neuropediatra' : field"></label>
+        </div>
+
+        <footer class="section-footer">
+          <button type="button" class="back-button" [disabled]="activeSection === 0" (click)="previousSection()">&#8592; Anterior</button>
+          <div class="footer-actions"><ng-container *ngIf="!isProfessionalView; else readOnlyNavigation"><button type="button" class="back-button" (click)="saveSection()">Salvar rascunho</button><button type="button" class="back-button" (click)="saveAndChooseAnotherChild()">Salvar e escolher outra crian&#231;a</button><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === profileSections.length - 1 ? 'Concluir' : 'Salvar e continuar &#8594;' }}</button></ng-container><ng-template #readOnlyNavigation><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === profileSections.length - 1 ? 'Voltar para crian&#231;as' : 'Pr&#243;xima se&#231;&#227;o &#8594;' }}</button></ng-template></div>
+        </footer>
+      </section>
+    </ng-container>
+  </ng-template>
+</main>

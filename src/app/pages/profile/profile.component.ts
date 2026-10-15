@@ -1,12 +1,13 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { AssociationChildService } from "../../services/association-child.service";
 import { ChildService } from "../../services/child.service";
 import { UserService } from "../../services/user.service";
 import type { CreateAssociationChildDTO } from "../../api/interfaces/association-child.interface";
-import type { CreateChildDTO } from "../../api/interfaces/child.interface";
+import type { ChildRecord, CreateChildDTO } from "../../api/interfaces/child.interface";
 import type { UpdateUserDTO } from "../../api/interfaces/user.interface";
-import { switchMap, take } from "rxjs";
+import { map, switchMap, take } from "rxjs";
 
 interface InviteLink {
   label: string;
@@ -29,6 +30,8 @@ export class ProfileComponent implements OnInit {
   readonly profileError$ = this.userService.error$;
 
   readonly children$ = this.childService.children$;
+  readonly selectedChild$ = this.childService.selectedChild$;
+  readonly selectedChildId$ = this.selectedChild$.pipe(map((child) => child?.id ?? null));
   readonly childrenLoading$ = this.childService.loading$;
   readonly childrenSaving$ = this.childService.saving$;
   readonly childrenError$ = this.childService.error$;
@@ -77,7 +80,8 @@ export class ProfileComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly associationChildService: AssociationChildService,
     private readonly userService: UserService,
-    private readonly childService: ChildService
+    private readonly childService: ChildService,
+    private readonly router: Router
   ) {
   }
 
@@ -155,6 +159,18 @@ export class ProfileComponent implements OnInit {
           // Service exposes a user-friendly error message.
         },
       });
+  }
+
+  onAssociateByAccessCode(payload: CreateAssociationChildDTO): void {
+    this.associateChild(payload);
+  }
+
+  onSelectChild(child: ChildRecord | null): void {
+    this.childService.selectChild(child);
+  }
+
+  onOpenAnamnesis(child: ChildRecord): void {
+    this.router.navigate(["/anamnesis"], { queryParams: { childId: child.id } });
   }
 
   getInviteUrl(path: string): string {

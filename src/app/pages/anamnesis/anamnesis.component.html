@@ -1,7 +1,7 @@
 <div class="anamnesis-page">
 
   <!-- =========================================================
-       PÁGINA 1 — SELECIONAR CRIANÇA
+       P&#193;GINA 1 &#65533;?" SELECIONAR CRIAN&#65533;?A
        ========================================================= -->
 
   <ng-container *ngIf="!selectedChildId">
@@ -17,18 +17,21 @@
           </span>
 
           <h1 class="anamnesis-page__title">
-            Anamnese
+            Minhas crian&#231;as
           </h1>
 
-          <p class="anamnesis-page__subtitle">
-            Registre e acompanhe informações importantes sobre
-            o desenvolvimento e a rotina da criança.
+          <p class="anamnesis-page__subtitle" *ngIf="!isProfessionalView">
+            Registre e acompanhe informa&#231;&#245;es importantes sobre
+            o desenvolvimento e a rotina da crian&#231;a.
+          </p>
+          <p class="anamnesis-page__subtitle" *ngIf="isProfessionalView">
+            Consulte as informa&#231;&#245;es do desenvolvimento e da rotina da crian&#231;a.
           </p>
 
         </div>
 
 
-        <!-- Ilustração da anamnese -->
+        <!-- Ilustra&#231;&#227;o da anamnese -->
         <div
           class="anamnesis-page__hero-image"
           aria-hidden="true"
@@ -45,60 +48,43 @@
 
 
       <!-- =======================================================
-           SELEÇÃO DA CRIANÇA
+           SELE&#65533;?&#65533;fO DA CRIAN&#65533;?A
            ======================================================= -->
 
-      <div class="anamnesis-page__selection-card">
+      </header>
 
-        <div class="anamnesis-page__selection-icon">
+    <ng-container *ngIf="children$ | async as children">
+      <div class="anamnesis-page__children-loading" *ngIf="childrenLoading$ | async">Carregando crian&#231;as...</div>
 
-          <i
-            class="bi bi-people"
-            aria-hidden="true"
-          ></i>
+      <section class="anamnesis-page__children" *ngIf="!(childrenLoading$ | async)">
 
-        </div>
+        <div class="anamnesis-page__children-grid">
+          <article class="anamnesis-page__child-option" *ngFor="let child of children; let i = index">
+            <div class="anamnesis-page__child-option-avatar" [class.anamnesis-page__child-option-avatar--alt]="i % 2 === 1" aria-hidden="true">
+              <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="">
+              <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
+            </div>
+            <h3>{{ child.name }}</h3>
+            <p class="anamnesis-page__child-option-meta">
+              {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatChildBirthDate(child) }} <span aria-hidden="true">|</span> {{ getChildGender(child) }}
+            </p>
+            <div class="anamnesis-page__diagnoses" *ngIf="getChildDiagnoses(child).length; else noDiagnosis">
+              <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
+            </div>
+            <ng-template #noDiagnosis><p class="anamnesis-page__no-diagnosis">Sem diagn&#243;stico informado</p></ng-template>
+            <button type="button" class="anamnesis-page__child-action" (click)="onChildSelected(child.id)">Ver anamnese</button>
+          </article>
 
-
-        <div class="anamnesis-page__selection-content">
-
-          <h2>
-            Selecione a criança
-          </h2>
-
-          <p>
-            Escolha uma criança para visualizar a anamnese.
-          </p>
-
-
-          <!-- Seletor da criança -->
-          <div class="anamnesis-page__child-selector">
-
-            <app-child-selector
-              [children]="children$ | async"
-              [selectedChildId]="selectedChildId"
-              [loading]="(childrenLoading$ | async) ?? false"
-              (selectedChildIdChange)="onChildSelected($event)"
-            ></app-child-selector>
-
-
-            <!-- Seta dentro da área do seletor -->
-            <i
-              class="bi bi-chevron-down anamnesis-page__child-selector-arrow"
-              aria-hidden="true"
-            ></i>
-
+          <div class="anamnesis-page__children-empty" *ngIf="children.length === 0">
+            Nenhuma crian&#231;a cadastrada ainda. Cadastre uma crian&#231;a na p&#225;gina Crian&#231;a.
           </div>
-
         </div>
-
-      </div>
-
-    </header>
+      </section>
+    </ng-container>
 
 
     <!-- =======================================================
-         ERRO AO CARREGAR CRIANÇAS
+         ERRO AO CARREGAR CRIAN&#65533;?AS
          ======================================================= -->
 
     <section
@@ -117,7 +103,7 @@
 
 
   <!-- =========================================================
-       PÁGINA 2 — ANAMNESE DA CRIANÇA
+       P&#193;GINA 2 &#65533;?" ANAMNESE DA CRIAN&#65533;?A
        ========================================================= -->
 
   <ng-container *ngIf="selectedChildId">
@@ -177,15 +163,19 @@
 
 
       <!-- =====================================================
-           CASO AINDA NÃO EXISTA ANAMNESE
+           CASO AINDA N&#65533;fO EXISTA ANAMNESE
            ===================================================== -->
 
       <app-anamnesis-empty-state
-        *ngIf="!(anamnesis$ | async)"
+        *ngIf="!(anamnesis$ | async) && !isProfessionalView"
         [selectedChildId]="selectedChildId"
         [saving]="(saving$ | async) ?? false"
         (createAnamnesis)="onCreateAnamnesis()"
       ></app-anamnesis-empty-state>
+      <section class="anamnesis-readonly-empty" *ngIf="!(anamnesis$ | async) && isProfessionalView" role="status">
+        <i class="bi bi-lock-fill" aria-hidden="true"></i>
+        <div><strong>Anamnese ainda n&#227;o preenchida</strong><p>As informa&#231;&#245;es aparecer&#227;o aqui quando o respons&#225;vel preencher a anamnese.</p></div>
+      </section>
 
 
 
@@ -199,7 +189,7 @@
 
 
         <!-- ===================================================
-             CABEÇALHO DA PÁGINA 2
+             CABE&#65533;?ALHO DA P&#193;GINA 2
              =================================================== -->
 
         <header class="anamnesis-page__hero anamnesis-page__hero--child">
@@ -216,15 +206,18 @@
                 Anamnese
               </h1>
 
-              <p class="anamnesis-page__subtitle">
-                Registre e acompanhe informações importantes sobre
-                o desenvolvimento e a rotina da criança.
+              <p class="anamnesis-page__subtitle" *ngIf="!isProfessionalView">
+                Registre e acompanhe informa&#231;&#245;es importantes sobre
+                o desenvolvimento e a rotina da crian&#231;a.
+              </p>
+              <p class="anamnesis-page__subtitle" *ngIf="isProfessionalView">
+                Consulte as informa&#231;&#245;es do desenvolvimento e da rotina da crian&#231;a.
               </p>
 
             </div>
 
 
-            <!-- Ilustração -->
+            <!-- Ilustra&#231;&#227;o -->
             <div
               class="anamnesis-page__hero-image"
               aria-hidden="true"
@@ -263,7 +256,7 @@
               </span>
 
               <span class="anamnesis-page__step-label">
-                Gestação e<br />
+                Gesta&#231;&#227;o e<br />
                 nascimento
               </span>
 
@@ -312,7 +305,7 @@
 
               <span class="anamnesis-page__step-label">
                 Linguagem e<br />
-                comunicação
+                comunica&#231;&#227;o
               </span>
 
             </div>
@@ -335,7 +328,7 @@
               </span>
 
               <span class="anamnesis-page__step-label">
-                Saúde
+                Sa&#250;de
               </span>
 
             </div>
@@ -405,7 +398,7 @@
               </span>
 
               <span class="anamnesis-page__step-label">
-                Observações<br />
+                Observa&#231;&#245;es<br />
                 gerais
               </span>
 
@@ -418,20 +411,16 @@
 
 
         <!-- ===================================================
-             INFORMAÇÕES DA CRIANÇA
+             INFORMA&#65533;?&#65533;.ES DA CRIAN&#65533;?A
              =================================================== -->
 
         <section class="anamnesis-page__child-card">
 
-          <div
-            class="anamnesis-page__child-avatar"
-            aria-hidden="true"
-          >
-
-            {{
-              (selectedChild$ | async)?.name?.charAt(0)
-            }}
-
+          <div class="anamnesis-page__child-avatar">
+            <ng-container *ngIf="(selectedChild$ | async) as avatarChild">
+              <img *ngIf="getChildPhoto(avatarChild) as photo; else childInitial" [src]="photo" alt="Foto de {{ avatarChild.name }}">
+              <ng-template #childInitial aria-hidden="true">{{ avatarChild.name.charAt(0) }}</ng-template>
+            </ng-container>
           </div>
 
 
@@ -441,24 +430,18 @@
               {{ (selectedChild$ | async)?.name }}
             </h2>
 
-            <p>
-
-              {{ (selectedChild$ | async)?.age }} anos
-
-              <span aria-hidden="true">
-                ·
-              </span>
-
-              {{
-                (overview$ | async)?.completedSections ?? 0
-              }}/7 seções preenchidas
-
-            </p>
+            <ng-container *ngIf="(selectedChild$ | async) as child">
+              <p class="anamnesis-page__child-meta">{{ child.age }} anos <span aria-hidden="true">|</span> {{ formatChildBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p>
+              <div class="anamnesis-page__diagnoses" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div>
+            </ng-container>
+            <p class="anamnesis-page__child-progress" *ngIf="!isProfessionalView">{{ (overview$ | async)?.completedSections ?? 0 }}/7 se&#231;&#245;es preenchidas</p>
 
           </div>
 
+          <div class="anamnesis-readonly-badge" *ngIf="isProfessionalView"><i class="bi bi-lock-fill" aria-hidden="true"></i><span><strong>Somente visualiza&#231;&#227;o</strong><small>Estas informa&#231;&#245;es foram preenchidas pelo respons&#225;vel.</small></span></div>
 
-          <span
+
+          <span *ngIf="!isProfessionalView"
             class="anamnesis-page__child-status"
             [class.anamnesis-page__child-status--complete]="
               (overview$ | async)?.completedSections ===
@@ -469,7 +452,7 @@
             {{
               (overview$ | async)?.completedSections ===
               (overview$ | async)?.totalSections
-                ? "Concluída"
+                ? "Conclu&#237;da"
                 : "Em preenchimento"
             }}
 
@@ -477,13 +460,30 @@
 
         </section>
 
+        <ng-container *ngIf="isProfessionalView">
+          <section class="anamnesis-readonly-sections" aria-label="Informa&#231;&#245;es da anamnese">
+            <article class="anamnesis-readonly-section" *ngFor="let section of sectionOrder; let i = index" [class.is-open]="readOnlyOpenSection === section">
+              <button type="button" class="anamnesis-readonly-section__trigger" (click)="toggleReadOnlySection(section)" [attr.aria-expanded]="readOnlyOpenSection === section">
+                <span class="anamnesis-readonly-section__number">{{ i + 1 }}</span>
+                <span class="anamnesis-readonly-section__title"><strong>{{ sectionLabels[section] }}</strong><small>{{ sectionDescriptions[section] }}</small></span>
+                <span class="anamnesis-readonly-section__status" [class.is-complete]="isSectionCompleted(anamnesis, section)"><i class="bi" [ngClass]="isSectionCompleted(anamnesis, section) ? 'bi-check-circle-fill' : 'bi-circle'"></i>{{ isSectionCompleted(anamnesis, section) ? 'Preenchida' : 'N&#227;o preenchida' }}</span>
+                <i class="bi" [ngClass]="readOnlyOpenSection === section ? 'bi-chevron-up' : 'bi-chevron-right'" aria-hidden="true"></i>
+              </button>
+              <div class="anamnesis-readonly-section__body" *ngIf="readOnlyOpenSection === section">
+                <div class="anamnesis-readonly-field" *ngFor="let field of getReadOnlyFields(anamnesis, section)"><strong>{{ field.label }}</strong><span>{{ field.value }}</span></div>
+                <p class="anamnesis-readonly-section__empty" *ngIf="!getReadOnlyFields(anamnesis, section).length">Nenhuma informa&#231;&#227;o preenchida pelo respons&#225;vel nesta se&#231;&#227;o.</p>
+              </div>
+            </article>
+          </section>
+        </ng-container>
+
 
 
         <!-- ===================================================
-             LISTA DAS SEÇÕES
+             LISTA DAS SE&#65533;?&#65533;.ES
              =================================================== -->
 
-        <ng-container *ngIf="!activeSection">
+        <ng-container *ngIf="!isProfessionalView && !activeSection">
 
           <section class="anamnesis-page__section-header">
 
@@ -502,12 +502,12 @@
               <div>
 
                 <h2 class="anamnesis-page__section-title">
-                  Seções da anamnese
+                  Se&#231;&#245;es da anamnese
                 </h2>
 
                 <p class="anamnesis-page__section-copy">
-                  Selecione uma seção para visualizar ou preencher
-                  as informações.
+                  Selecione uma se&#231;&#227;o para visualizar ou preencher
+                  as informa&#231;&#245;es.
                 </p>
 
               </div>
@@ -522,7 +522,7 @@
 
 
             <!-- =================================================
-                 1 — GESTAÇÃO E NASCIMENTO
+                 1 &#65533;?" GESTA&#65533;?&#65533;fO E NASCIMENTO
                  ================================================= -->
 
             <button
@@ -546,11 +546,11 @@
               <div class="anamnesis-page__section-item-content">
 
                 <h3>
-                  Gestação e nascimento
+                  Gesta&#231;&#227;o e nascimento
                 </h3>
 
                 <p>
-                  Informações sobre gestação, parto e nascimento.
+                  Informa&#231;&#245;es sobre gesta&#231;&#227;o, parto e nascimento.
                 </p>
 
               </div>
@@ -587,7 +587,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -606,7 +606,7 @@
 
 
             <!-- =================================================
-                 2 — DESENVOLVIMENTO MOTOR
+                 2 &#65533;?" DESENVOLVIMENTO MOTOR
                  ================================================= -->
 
             <button
@@ -634,7 +634,7 @@
                 </h3>
 
                 <p>
-                  Marcos motores e coordenação da criança.
+                  Marcos motores e coordena&#231;&#227;o da crian&#231;a.
                 </p>
 
               </div>
@@ -671,7 +671,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -690,7 +690,7 @@
 
 
             <!-- =================================================
-                 3 — LINGUAGEM E COMUNICAÇÃO
+                 3 &#65533;?" LINGUAGEM E COMUNICA&#65533;?&#65533;fO
                  ================================================= -->
 
             <button
@@ -714,11 +714,11 @@
               <div class="anamnesis-page__section-item-content">
 
                 <h3>
-                  Linguagem e comunicação
+                  Linguagem e comunica&#231;&#227;o
                 </h3>
 
                 <p>
-                  Desenvolvimento da fala, compreensão e comunicação.
+                  Desenvolvimento da fala, compreens&#227;o e comunica&#231;&#227;o.
                 </p>
 
               </div>
@@ -755,7 +755,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -774,7 +774,7 @@
 
 
             <!-- =================================================
-                 4 — SAÚDE
+                 4 &#65533;?" SA&#65533;sDE
                  ================================================= -->
 
             <button
@@ -798,11 +798,11 @@
               <div class="anamnesis-page__section-item-content">
 
                 <h3>
-                  Saúde
+                  Sa&#250;de
                 </h3>
 
                 <p>
-                  Diagnósticos, medicamentos e alergias.
+                  Diagn&#243;sticos, medicamentos e alergias.
                 </p>
 
               </div>
@@ -839,7 +839,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -858,7 +858,7 @@
 
 
             <!-- =================================================
-                 5 — COMPORTAMENTO
+                 5 &#65533;?" COMPORTAMENTO
                  ================================================= -->
 
             <button
@@ -886,7 +886,7 @@
                 </h3>
 
                 <p>
-                  Concentração, interação, ansiedade e comportamento.
+                  Concentra&#231;&#227;o, intera&#231;&#227;o, ansiedade e comportamento.
                 </p>
 
               </div>
@@ -923,7 +923,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -942,7 +942,7 @@
 
 
             <!-- =================================================
-                 6 — ROTINA E ACOMPANHAMENTO
+                 6 &#65533;?" ROTINA E ACOMPANHAMENTO
                  ================================================= -->
 
             <button
@@ -970,7 +970,7 @@
                 </h3>
 
                 <p>
-                  Sono, escola, terapias e atividades da criança.
+                  Sono, escola, terapias e atividades da crian&#231;a.
                 </p>
 
               </div>
@@ -1007,7 +1007,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -1026,7 +1026,7 @@
 
 
             <!-- =================================================
-                 7 — OBSERVAÇÕES GERAIS
+                 7 &#65533;?" OBSERVA&#65533;?&#65533;.ES GERAIS
                  ================================================= -->
 
             <button
@@ -1050,11 +1050,11 @@
               <div class="anamnesis-page__section-item-content">
 
                 <h3>
-                  Observações gerais
+                  Observa&#231;&#245;es gerais
                 </h3>
 
                 <p>
-                  Outras informações importantes sobre a criança.
+                  Outras informa&#231;&#245;es importantes sobre a crian&#231;a.
                 </p>
 
               </div>
@@ -1091,7 +1091,7 @@
                       aria-hidden="true"
                     ></i>
 
-                    Não preenchida
+                    N&#227;o preenchida
 
                   </span>
 
@@ -1114,10 +1114,10 @@
 
 
         <!-- ===================================================
-             FORMULÁRIOS DAS ETAPAS
+             FORMUL&#193;RIOS DAS ETAPAS
              =================================================== -->
 
-        <ng-container *ngIf="activeSection">
+        <ng-container *ngIf="!isProfessionalView && activeSection">
 
           <div class="anamnesis-page__opened-section">
 
@@ -1134,7 +1134,7 @@
                 aria-hidden="true"
               ></i>
 
-              Voltar para as seções
+              Voltar para as se&#231;&#245;es
 
             </button>
 
@@ -1233,7 +1233,7 @@
 
 
             <!-- =================================================
-                 NAVEGAÇÃO ENTRE AS ETAPAS
+                 NAVEGA&#65533;?&#65533;fO ENTRE AS ETAPAS
                  ================================================= -->
 
             <div class="anamnesis-page__section-navigation">
@@ -1262,7 +1262,7 @@
                   aria-hidden="true"
                 ></i>
 
-                Voltar para as seções
+                Voltar para as se&#231;&#245;es
               </button>
 
               <button
@@ -1272,7 +1272,7 @@
                 [disabled]="(saving$ | async) ?? false"
               >
                 <ng-container *ngIf="!isLastSection">
-                  Próximo
+                  Pr&#243;ximo
 
                   <i
                     class="bi bi-arrow-right"

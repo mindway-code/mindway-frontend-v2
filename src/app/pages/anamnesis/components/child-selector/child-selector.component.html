@@ -39,21 +39,8 @@
 
       <!-- Quantidade de crianças -->
       <div class="child-selector__count">
-
         {{ children?.length || 0 }}
-
-        criança<span
-          *ngIf="(children?.length || 0) !== 1"
-        >
-          s
-        </span>
-
-        cadastrada<span
-          *ngIf="(children?.length || 0) !== 1"
-        >
-          s
-        </span>
-
+        {{ (children?.length || 0) === 1 ? 'criança cadastrada' : 'crianças cadastradas' }}
       </div>
 
     </div>

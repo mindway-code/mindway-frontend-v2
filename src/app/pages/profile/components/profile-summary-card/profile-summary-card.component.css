@@ -19,10 +19,18 @@
 }
 
 .profile-summary__avatar {
+  display: block;
+  box-sizing: border-box;
   width: 80px;
+  min-width: 80px;
   height: 80px;
-  border-radius: var(--border-pill);
+  min-height: 80px;
+  aspect-ratio: 1;
+  flex: 0 0 80px;
+  overflow: hidden;
+  border-radius: 50%;
   object-fit: cover;
+  object-position: center;
   border: 1px solid var(--border-light);
   background: var(--bg-white);
 }

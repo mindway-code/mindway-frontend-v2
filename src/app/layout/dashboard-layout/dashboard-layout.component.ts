@@ -16,12 +16,12 @@ interface DashboardNavItem {
 export class DashboardLayoutComponent {
   readonly currentUser$ = this.authService.currentUser$;
   readonly navItems: DashboardNavItem[] = [
-    // { label: "Perfil", route: "/profile", icon: "bi-person" },
+    { label: "Início", route: "/dashboard", icon: "bi-house-door" },
     { label: "Anamnese", route: "/anamnesis", icon: "bi-journal-text" },
-    { label: "Criança", route: "/child-profile", icon: "bi-person" },
+    { label: "Crianças", route: "/child-profile", icon: "bi-people" },
     { label: "Relatórios", route: "/reports-child", icon: "bi-clipboard-data" },
     { label: "Mensagens", route: "/messages", icon: "bi-chat" },
-    { label: "Configurações", route: "#", icon: "bi-gear" },
+    { label: "Configurações", route: "/settings", icon: "bi-gear" },
   ];
 
   isDesktopSidebarExpanded = true;
@@ -34,6 +34,10 @@ export class DashboardLayoutComponent {
     return this.viewportWidth <= 900;
   }
 
+  getProfilePhoto(userId: string): string | null {
+    if (typeof localStorage === "undefined") return null;
+    return localStorage.getItem(`mindway-account-photo-${userId}`);
+  }
   toggleSidebar(): void {
     if (this.isMobileViewport) {
       this.isMobileSidebarOpen = !this.isMobileSidebarOpen;

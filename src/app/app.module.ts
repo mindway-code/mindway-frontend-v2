@@ -60,6 +60,7 @@ import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.com
 import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
 import { MessagesComponent } from './pages/messages/messages.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 registerLocaleData(localePt);
 
@@ -112,7 +113,8 @@ registerLocaleData(localePt);
     LinkProfessionalComponent,
     LinkTherapistComponent,
     DashboradComponent,
-    MessagesComponent
+    MessagesComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

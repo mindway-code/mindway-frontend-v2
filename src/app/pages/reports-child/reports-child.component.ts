@@ -145,6 +145,23 @@ export class ReportsChildComponent implements OnInit {
     this.activeCategorySubject.next("all");
   }
 
+  getChildPhoto(child: ChildRecord): string | null {
+    const data = child as any;
+    const photo = data.photoUrl ?? data.avatarUrl ?? data.imageUrl ?? data.photo;
+    if (typeof photo === "string" && photo.trim()) return photo;
+    if (typeof localStorage !== "undefined") {
+      try {
+        const saved = localStorage.getItem(`mindway-child-profile-${child.id}`);
+        const profile = saved ? JSON.parse(saved) : null;
+        const savedPhoto = profile?.photo ?? profile?.photoUrl;
+        return typeof savedPhoto === "string" && savedPhoto.trim() ? savedPhoto : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
   onSelectCategory(category: string): void {
     this.activeCategorySubject.next(category);
     this.selectedReportIdSubject.next(null);

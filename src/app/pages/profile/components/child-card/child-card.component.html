@@ -1,7 +1,7 @@
 <article class="child-card card-ui card-ui--md">
   <header class="child-card__header">
     <div class="child-card__identity">
-      <div class="child-card__avatar" aria-hidden="true">{{ child.name.slice(0, 1) || "C" }}</div>
+      <div class="child-card__avatar"><img *ngIf="profilePhoto as photo; else childInitial" [src]="photo" [alt]="'Foto de ' + child.name"><ng-template #childInitial aria-hidden="true">{{ child.name.slice(0, 1) || "C" }}</ng-template></div>
       <div class="child-card__text">
         <h3 class="child-card__title">{{ child.name | titlecase }}</h3>
         <p class="child-card__subtitle">

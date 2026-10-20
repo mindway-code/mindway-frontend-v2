@@ -9,5 +9,10 @@ import type { UserRecord } from "../../../../api/interfaces/user.interface";
 })
 export class ProfileSummaryCardComponent {
   @Input() user: UserRecord | null = null;
+
+  get profilePhoto(): string | null {
+    if (!this.user?.id || typeof localStorage === "undefined") return null;
+    return localStorage.getItem(`mindway-account-photo-${this.user.id}`);
+  }
 }
 

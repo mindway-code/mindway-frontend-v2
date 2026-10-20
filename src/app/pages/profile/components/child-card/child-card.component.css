@@ -29,6 +29,16 @@
   color: var(--bg-green);
   font-weight: var(--fw-xlg);
   text-transform: uppercase;
+  flex: 0 0 44px;
+  overflow: hidden;
+}
+
+.child-card__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
 }
 
 .child-card__text {

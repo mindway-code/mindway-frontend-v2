@@ -10,7 +10,7 @@
     </div>
     <div class="reports-child-picker" *ngIf="children$ | async as children">
       <button class="reports-child-pill" *ngFor="let child of children; let i = index" type="button" [class.reports-child-pill--active]="child.id === selectedChildId" (click)="onSelectChild(child.id)">
-        <span class="reports-child-pill__avatar" [class.reports-child-pill__avatar--alt]="i % 2 === 1">{{ child.name?.charAt(0)?.toUpperCase() || 'C' }}</span>
+        <span class="reports-child-pill__avatar" [class.reports-child-pill__avatar--alt]="i % 2 === 1"><img *ngIf="getChildPhoto(child) as photo; else childPillInitial" [src]="photo" [alt]="'Foto de ' + child.name"><ng-template #childPillInitial aria-hidden="true">{{ child.name.charAt(0).toUpperCase() || 'C' }}</ng-template></span>
         <span><strong>{{ child.name }}</strong><small>{{ child.age }} anos</small></span>
       </button>
       <span class="reports-child-picker__loading" *ngIf="(childrenLoading$ | async) && !children.length">Carregando crian&ccedil;as...</span>

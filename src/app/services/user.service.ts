@@ -96,6 +96,19 @@ export class UserService {
     );
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    this.savingSubject.next(true);
+    this.errorSubject.next(null);
+    return this.http.patch<SuccessResponse<unknown>>(`${this.apiUrl}/users/me/password`, { currentPassword, newPassword }).pipe(
+      map(() => void 0),
+      catchError((err) => {
+        this.errorSubject.next("Não foi possível alterar a senha. Confira a senha atual e tente novamente.");
+        return throwError(() => err);
+      }),
+      finalize(() => this.savingSubject.next(false))
+    );
+  }
+
   deleteMe(): Observable<DeleteResult> {
     this.savingSubject.next(true);
     this.errorSubject.next(null);

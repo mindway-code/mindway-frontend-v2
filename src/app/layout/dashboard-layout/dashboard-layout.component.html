@@ -30,11 +30,12 @@
     </div>
 
     <div class="dashboard-aside__user">
-      <img
-        class="dashboard-aside__avatar"
-        src="assets/img/placeholder.PNG"
-        alt="Imagem padrão do perfil do usuário"
-      />
+      <ng-container *ngIf="currentUser$ | async as user">
+        <img *ngIf="getProfilePhoto(user.id) as photo; else defaultProfilePhoto" class="dashboard-aside__avatar" [src]="photo" alt="Foto de perfil">
+        <ng-template #defaultProfilePhoto>
+          <img class="dashboard-aside__avatar" src="assets/img/placeholder.PNG" alt="Imagem padrão do perfil do usuário">
+        </ng-template>
+      </ng-container>
 
       <div class="dashboard-aside__user-info" *ngIf="isDesktopSidebarExpanded || isMobileViewport">
         <p class="dashboard-aside__welcome">Bem vindo(a)!</p>

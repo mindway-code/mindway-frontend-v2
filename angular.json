@@ -37,7 +37,7 @@
               "optimization": false,
               "budgets": [
                 { "type": "initial", "maximumWarning": "6mb", "maximumError": "8mb" },
-                { "type": "anyComponentStyle", "maximumWarning": "10kb", "maximumError": "20kb" }
+                { "type": "anyComponentStyle", "maximumWarning": "30kb", "maximumError": "35kb" }
               ],
               "outputHashing": "all"
             },

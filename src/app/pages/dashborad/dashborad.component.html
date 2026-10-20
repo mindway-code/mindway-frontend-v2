@@ -1,110 +1,71 @@
 <section class="dashborad-page" *ngIf="viewModel$ | async as vm">
-  <header class="dashborad-page__welcome">
-    <div>
-      <p class="dashborad-page__eyebrow">{{ vm.eyebrow }}</p>
-      <h1>Olá, {{ vm.displayName }}! <span aria-hidden="true">👋</span></h1>
-      <p class="dashborad-page__subtitle">Bem-vinda ao MindWay.</p>
-    </div>
-    <div class="dashborad-page__header-actions" aria-label="Ações rápidas">
-      <button type="button" aria-label="Ajuda"><i class="bi bi-question-circle"></i></button>
-    </div>
-  </header>
-
-  <section class="dashborad-page__child card-ui" aria-labelledby="child-title">
-    <h2 id="child-title">Escolha a criança</h2>
-    <ng-container *ngIf="selectedChild$ | async as child; else noChildSelected">
-      <div class="dashborad-page__child-row">
-        <div class="dashborad-page__child-avatar">{{ child.name.charAt(0) }}</div>
-        <div class="dashborad-page__child-info">
-          <h3>{{ child.name }}</h3>
-          <p>{{ child.age }} anos</p>
-        </div>
-        <select [ngModel]="child.id" (ngModelChange)="onSelectChild($event)" aria-label="Selecionar criança">
-          <option *ngFor="let item of (children$ | async) ?? []" [value]="item.id">{{ item.name }}</option>
-        </select>
-        <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/child-profile')">
-          Entrar no perfil <i class="bi bi-chevron-right" aria-hidden="true"></i>
-        </button>
+  <ng-container *ngIf="vm.isProfessionalHome; else familyHome">
+    <header class="pro-home-heading">
+      <div>
+        <p class="pro-home-eyebrow">{{ vm.isInstitutionHome ? 'PAINEL DA INSTITUICAO' : 'PAINEL PROFISSIONAL' }}</p>
+        <h1>Ol&#225;, {{ vm.displayName }}!</h1>
+        <p>Aqui est&#225; um resumo das crian&#231;as que voc&#234; acompanha no MindWay.</p>
       </div>
+      <div class="pro-home-date"><i class="bi bi-calendar3" aria-hidden="true"></i><span>{{ today | date:"EEEE, d 'de' MMMM 'de' y":"":"pt-BR" }}</span></div>
+    </header>
+
+    <ng-container *ngIf="children$ | async as children">
+      <section class="pro-home-stats" aria-label="Resumo do acompanhamento">
+        <article class="pro-stat pro-stat--blue"><span><i class="bi bi-people" aria-hidden="true"></i></span><div><strong>{{ children.length }}</strong><p>Crian&#231;as acompanhadas</p><small>Crian&#231;as vinculadas ao seu perfil.</small></div></article>
+        <a class="pro-stat pro-stat--purple" routerLink="/reports-child"><span><i class="bi bi-file-earmark-text" aria-hidden="true"></i></span><div><strong><i class="bi bi-arrow-up-right" aria-hidden="true"></i></strong><p>Relat&#243;rios</p><small>Consulte ou registre acompanhamentos.</small></div></a>
+        <a class="pro-stat pro-stat--pink" routerLink="/messages"><span><i class="bi bi-chat-square-dots" aria-hidden="true"></i></span><div><strong><i class="bi bi-arrow-up-right" aria-hidden="true"></i></strong><p>Mensagens</p><small>Acesse as conversas da sua rede.</small></div></a>
+      </section>
+
+      <div class="pro-home-columns">
+        <section class="pro-children-panel" aria-labelledby="pro-children-title">
+          <header class="pro-panel-heading"><div><h2 id="pro-children-title">Crian&#231;as que voc&#234; acompanha</h2><p>Selecione uma crian&#231;a para acessar as informa&#231;&#245;es.</p></div><a routerLink="/child-profile">Ver todas <i class="bi bi-arrow-right" aria-hidden="true"></i></a></header>
+          <article class="pro-child-row" *ngFor="let child of children | slice:0:5">
+            <div class="pro-child-avatar">{{ getInitial(child) }}</div>
+            <div class="pro-child-info"><strong>{{ getName(child) }}</strong><small>{{ getAge(child) }}<ng-container *ngIf="getGender(child)"> &middot; {{ getGender(child) }}</ng-container></small><div class="pro-child-tags" *ngIf="getDiagnosisList(child).length"><span *ngFor="let diagnosis of getDiagnosisList(child) | slice:0:3">{{ diagnosis }}</span></div></div>
+            <nav class="pro-child-actions" [attr.aria-label]="'A&#231;&#245;es para ' + getName(child)">
+              <a [routerLink]="['/child-profile']" [queryParams]="{ childId: child.id }"><i class="bi bi-eye" aria-hidden="true"></i><span>Ver perfil</span></a>
+              <a [routerLink]="['/anamnesis']" [queryParams]="{ childId: child.id }"><i class="bi bi-file-earmark-text" aria-hidden="true"></i><span>Ver anamnese</span></a>
+              <a [routerLink]="['/reports-child']" [queryParams]="{ childId: child.id }"><i class="bi bi-clipboard-plus" aria-hidden="true"></i><span>Criar relat&#243;rio</span></a>
+            </nav>
+            <a class="pro-child-open" [routerLink]="['/child-profile']" [queryParams]="{ childId: child.id }" [attr.aria-label]="'Abrir perfil de ' + getName(child)"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+          </article>
+          <p class="pro-home-empty" *ngIf="!children.length">Nenhuma crian&#231;a vinculada ao seu perfil no momento.</p>
+        </section>
+
+        <aside class="pro-quick-panel" aria-labelledby="pro-quick-title"><h2 id="pro-quick-title">Acesso r&#225;pido</h2><p>Escolha o que deseja fazer.</p>
+          <a class="pro-quick-link pro-quick-link--teal" routerLink="/reports-child"><span><i class="bi bi-file-earmark-plus" aria-hidden="true"></i></span><div><strong>Criar relat&#243;rio</strong><small>Registre suas observa&#231;&#245;es e encaminhamentos.</small></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+          <a class="pro-quick-link pro-quick-link--purple" routerLink="/messages"><span><i class="bi bi-chat-square-dots" aria-hidden="true"></i></span><div><strong>Ver mensagens</strong><small>Converse com respons&#225;veis e profissionais.</small></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+          <a class="pro-quick-link pro-quick-link--blue" routerLink="/child-profile"><span><i class="bi bi-people" aria-hidden="true"></i></span><div><strong>Ver todas as crian&#231;as</strong><small>Acesse a lista completa das crian&#231;as vinculadas.</small></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+        </aside>
+      </div>
+      <section class="pro-home-note"><i class="bi bi-shield-check" aria-hidden="true"></i><span>As informa&#231;&#245;es da crian&#231;a s&#227;o somente para consulta. Os dados da anamnese s&#227;o preenchidos pelo respons&#225;vel.</span></section>
     </ng-container>
-    <ng-template #noChildSelected>
-      <p *ngIf="childrenLoading$ | async">Carregando crianças...</p>
-      <p *ngIf="!(childrenLoading$ | async)">Nenhuma criança vinculada à sua conta.</p>
-    </ng-template>
-  </section>
+  </ng-container>
 
-  <section class="dashborad-page__actions" aria-labelledby="dashboard-actions-title">
-    <h2 id="dashboard-actions-title">Acesso rápido</h2>
-    <div class="dashborad-page__action-grid">
-      <button class="dashborad-page__action dashborad-page__action--mint" type="button" (click)="navigateTo('/child-profile')">
-        <span class="dashborad-page__action-icon"><i class="bi bi-person" aria-hidden="true"></i></span><strong>Perfil da criança</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
-      <button class="dashborad-page__action dashborad-page__action--lilac" type="button" (click)="navigateTo('/anamnesis')">
-        <span class="dashborad-page__action-icon"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i></span><strong>Anamnese</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
-      <button class="dashborad-page__action dashborad-page__action--yellow" type="button" (click)="navigateTo('/reports-child')">
-        <span class="dashborad-page__action-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></span><strong>Relatórios</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
-      <button class="dashborad-page__action dashborad-page__action--blue" type="button" (click)="navigateTo('/social-network')">
-        <span class="dashborad-page__action-icon"><i class="bi bi-chat" aria-hidden="true"></i></span><strong>Mensagens</strong><i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </section>
-
-  <div class="dashborad-page__updates">
-    <section class="dashborad-page__info-card card-ui" aria-labelledby="appointment-title">
-      <h2 id="appointment-title"><i class="bi bi-calendar-event" aria-hidden="true"></i> Próximo compromisso</h2>
-      <ng-container *ngIf="appointmentsLoading$ | async; else appointmentContent">
-        <div class="dashborad-page__appointment-state" role="status">
-          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
-          <p>Carregando compromissos...</p>
-        </div>
-      </ng-container>
-
-      <ng-template #appointmentContent>
-        <ng-container *ngIf="appointmentsError$ | async; else appointmentData">
-          <div class="dashborad-page__appointment-state">
-            <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
-            <p>Não foi possível carregar seus compromissos.</p>
-            <button class="dashborad-page__text-action" type="button" (click)="reloadAppointments()">Tentar novamente</button>
-          </div>
-        </ng-container>
-
-        <ng-template #appointmentData>
-          <ng-container *ngIf="nextAppointment$ | async as nextAppointment; else emptyAppointments">
-            <div class="dashborad-page__appointment">
-              <time [attr.datetime]="nextAppointment.startsAt | date:'yyyy-MM-dd'"><strong>{{ nextAppointment.startsAt | date:'dd' }}</strong><span>{{ nextAppointment.startsAt | date:'MMM' | uppercase }}</span></time>
-              <div><h3>{{ nextAppointment.title }}</h3><p>{{ nextAppointment.professional }}</p><p><i class="bi bi-calendar3"></i> {{ nextAppointment.startsAt | date:'EEEE, d \'de\' MMMM' }} <i class="bi bi-clock"></i> {{ nextAppointment.startsAt | date:'HH:mm' }}</p></div>
-            </div>
-          </ng-container>
-        </ng-template>
-      </ng-template>
-
-      <ng-template #emptyAppointments>
-        <div class="dashborad-page__appointment-state dashborad-page__appointment-state--empty">
-          <i class="bi bi-calendar-plus" aria-hidden="true"></i>
-          <div><h3>Nenhum compromisso próximo</h3><p>Quando um atendimento for agendado, ele aparecerá aqui.</p></div>
-          <button class="dashborad-page__text-action" type="button" (click)="navigateTo('/social-network')">Solicitar agendamento <i class="bi bi-chevron-right"></i></button>
-        </div>
-      </ng-template>
+  <ng-template #familyHome>
+    <header class="dashboard-welcome">
+      <div><h1>Olá, {{ vm.displayName }}! <span aria-hidden="true">👋</span></h1><p>Aqui está um resumo das informações dos seus filhos.</p></div>
+      <div class="dashboard-date"><i class="bi bi-calendar3" aria-hidden="true"></i><div><strong>{{ today | date:"EEEE, d 'de' MMMM 'de' y":"":"pt-BR" }}</strong><span>Acompanhe o desenvolvimento de cada criança.</span></div></div>
+    </header>
+    <section class="dashboard-children" aria-labelledby="children-title">
+      <div class="dashboard-section-heading"><div><h2 id="children-title">Minhas crianças</h2><p>Acesse rapidamente as principais informações e acompanhe os relatórios.</p></div><a class="dashboard-add" routerLink="/child-profile"><i class="bi bi-plus-lg" aria-hidden="true"></i> Adicionar criança</a></div>
+      <div class="dashboard-child-grid" *ngIf="children$ | async as children">
+        <article class="dashboard-child" *ngFor="let child of children">
+          <div class="dashboard-child__identity"><div class="dashboard-child__avatar"><img *ngIf="getChildPhoto(child) as photo; else dashboardChildInitial" [src]="photo" alt="Foto de {{ getName(child) }}"><ng-template #dashboardChildInitial aria-hidden="true">{{ getInitial(child) }}</ng-template></div><div><h3>{{ getName(child) }}</h3><p>{{ getAge(child) }}<ng-container *ngIf="getDiagnoses(child)"> • {{ getDiagnoses(child) }}</ng-container></p></div></div>
+          <nav class="dashboard-child__links" [attr.aria-label]="'Atalhos para ' + getName(child)">
+            <a [routerLink]="['/child-profile']" [queryParams]="{ childId: child.id }"><i class="bi bi-person-vcard" aria-hidden="true"></i> Perfil</a>
+            <a [routerLink]="['/anamnesis']" [queryParams]="{ childId: child.id }"><i class="bi bi-clipboard2" aria-hidden="true"></i> Anamnese</a>
+            <a [routerLink]="['/reports-child']" [queryParams]="{ childId: child.id }"><i class="bi bi-bar-chart-line" aria-hidden="true"></i> Relatórios</a>
+            <a class="dashboard-child__arrow" [routerLink]="['/child-profile']" [queryParams]="{ childId: child.id }" [attr.aria-label]="'Abrir perfil de ' + getName(child)"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+          </nav>
+        </article>
+        <p class="dashboard-empty" *ngIf="!children.length">Ainda não há crianças cadastradas. Adicione uma para começar o acompanhamento.</p>
+      </div>
     </section>
-
-    <section class="dashborad-page__info-card card-ui" aria-labelledby="update-title">
-      <h2 id="update-title"><i class="bi bi-bell" aria-hidden="true"></i> Última atualização</h2>
-      <ng-container *ngIf="latestUpdate$ | async as latestUpdate; else noLatestUpdate">
-        <div class="dashborad-page__update">
-          <div class="dashborad-page__update-avatar">{{ latestUpdate.user?.name?.charAt(0) || 'R' }}</div>
-          <p>{{ latestUpdate.user?.name || latestUpdate.user?.email || 'Usuário' }}<br>criou o relatório “{{ latestUpdate.title }}”<br><span>{{ latestUpdate.createdAt | date:'dd/MM/yyyy HH:mm' }}</span></p>
-          <button class="dashborad-page__small-action" type="button" (click)="navigateTo('/reports-child')">Ver</button>
-        </div>
-      </ng-container>
-      <ng-template #noLatestUpdate><p>Nenhum relatório criado para esta criança.</p></ng-template>
+    <section class="dashboard-shortcuts" aria-label="Acessos rápidos">
+      <a class="dashboard-shortcut dashboard-shortcut--green" routerLink="/anamnesis"><span><i class="bi bi-journal-medical" aria-hidden="true"></i></span><div><h3>Anamnese</h3><p>Veja e atualize as informações da saúde e desenvolvimento.</p></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+      <a class="dashboard-shortcut dashboard-shortcut--blue" routerLink="/reports-child"><span><i class="bi bi-file-earmark-text" aria-hidden="true"></i></span><div><h3>Relatórios</h3><p>Acesse relatórios da escola, terapeutas e médicos.</p></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+      <a class="dashboard-shortcut dashboard-shortcut--purple" routerLink="/messages"><span><i class="bi bi-chat-square-dots" aria-hidden="true"></i></span><div><h3>Mensagens</h3><p>Acompanhe as comunicações dos profissionais.</p></div><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
     </section>
-  </div>
-
-  <section class="dashborad-page__share" aria-labelledby="share-title">
-    <div class="dashborad-page__share-icon"><i class="bi bi-people"></i></div>
-    <div><h2 id="share-title">Compartilhar acesso</h2><p>Convide profissionais, escola ou familiares para acompanhar o desenvolvimento de {{ (selectedChild$ | async)?.name || 'uma criança vinculada' }}.</p></div>
-    <button class="dashborad-page__primary-action" type="button" (click)="navigateTo('/profile')">Compartilhar acesso <i class="bi bi-chevron-right"></i></button>
-  </section>
+  </ng-template>
 </section>

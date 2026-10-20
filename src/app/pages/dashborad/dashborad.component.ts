@@ -1,12 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { catchError, distinctUntilChanged, map, of, switchMap, take } from "rxjs";
-import type { AppointmentRecord } from "../../api/interfaces/appointment.interface";
+import { map } from "rxjs";
 import type { UserRole } from "../../api/interfaces/user.interface";
-import { AppointmentService } from "../../services/appointment.service";
 import { AuthService } from "../../services/auth.service";
 import { ChildService } from "../../services/child.service";
-import { LatestUpdateService } from "../../services/latest-update.service";
+import type { ChildRecord } from "../../api/interfaces/child.interface";
 
 interface DashboardAction {
   icon: string;
@@ -36,12 +34,8 @@ interface DashboardProfile {
 
 interface DashboardViewModel extends DashboardProfile {
   displayName: string;
-}
-
-interface DashboardAppointment {
-  title: string;
-  professional: string;
-  startsAt: string | Date;
+  isProfessionalHome: boolean;
+  isInstitutionHome: boolean;
 }
 
 const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
@@ -348,6 +342,8 @@ const dashboardProfiles: Record<UserRole | "default", DashboardProfile> = {
   styleUrl: "./dashborad.component.css",
 })
 export class DashboradComponent implements OnInit {
+  readonly children$ = this.childService.children$;
+  readonly today = new Date();
   readonly viewModel$ = this.authService.currentUser$.pipe(
     map((user): DashboardViewModel => {
       const profile = dashboardProfiles[user?.role ?? "default"] ?? dashboardProfiles.default;
@@ -355,87 +351,81 @@ export class DashboradComponent implements OnInit {
       return {
         ...profile,
         displayName: user?.name?.trim() || user?.email?.trim() || "seja bem-vindo(a)",
+        isProfessionalHome: user?.role === "therapist" || user?.role === "professional" || user?.role === "enterprise",
+        isInstitutionHome: user?.role === "enterprise",
       };
     })
   );
 
-  readonly appointments$ = this.appointmentService.items$;
-  readonly appointmentsLoading$ = this.appointmentService.loading$;
-  readonly appointmentsError$ = this.appointmentService.error$;
-  readonly children$ = this.childService.children$;
-  readonly childrenLoading$ = this.childService.loading$;
-  readonly selectedChild$ = this.childService.selectedChild$;
-  readonly latestUpdate$ = this.selectedChild$.pipe(
-    map((child) => child?.id ?? null),
-    distinctUntilChanged(),
-    switchMap((childId) =>
-      childId ? this.latestUpdateService.getLatestReport(childId).pipe(catchError(() => of(null))) : of(null)
-    )
-  );
-  readonly nextAppointment$ = this.appointments$.pipe(
-    map((appointments) => this.getNextAppointment(appointments))
-  );
-
   constructor(
     private readonly authService: AuthService,
-    private readonly appointmentService: AppointmentService,
-    private readonly childService: ChildService,
-    private readonly latestUpdateService: LatestUpdateService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly childService: ChildService
   ) {}
 
   ngOnInit(): void {
-    this.childService
-      .loadAccessibleChildren({ page: 1, pageSize: 50 })
-      .pipe(take(1))
-      .subscribe({
-        next: (children) => {
-          const selected = this.childService.getSelectedChildSnapshot();
-          const child = selected && children.some((item) => item.id === selected.id) ? selected : children[0] ?? null;
-          this.childService.selectChild(child);
-        },
-        error: () => this.childService.selectChild(null),
-      });
+    this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 }).subscribe({ error: () => {} });
+  }
 
-    this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
-      const request = user?.role === "therapist"
-        ? this.appointmentService.listMyTherapistAppointments()
-        : this.appointmentService.listMyAppointments();
+  getName(child: ChildRecord): string {
+    const data = child as any;
+    return data.name ?? data.fullName ?? data.nome ?? "Criança";
+  }
 
-      request.pipe(catchError(() => of([]))).subscribe();
-    });
+  getInitial(child: ChildRecord): string {
+    return this.getName(child).trim().charAt(0).toUpperCase() || "C";
+  }
+
+  getChildPhoto(child: ChildRecord): string | null {
+    const data = child as any;
+    const photo = data.photoUrl ?? data.avatarUrl ?? data.imageUrl ?? data.photo;
+    if (typeof photo === "string" && photo.trim()) return photo;
+    if (typeof localStorage !== "undefined") {
+      try {
+        const saved = localStorage.getItem(`mindway-child-profile-${child.id}`);
+        const profile = saved ? JSON.parse(saved) : null;
+        const savedPhoto = profile?.photo ?? profile?.photoUrl;
+        return typeof savedPhoto === "string" && savedPhoto.trim() ? savedPhoto : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  getAge(child: ChildRecord): string {
+    const data = child as any;
+    if (data.age !== undefined && data.age !== null) return `${data.age} anos`;
+    const birthDate = data.birthDate ?? data.dateOfBirth ?? data.birth_date ?? data.dataNascimento;
+    if (!birthDate) return "Idade não informada";
+    const birth = new Date(birthDate);
+    if (Number.isNaN(birth.getTime())) return "Idade não informada";
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
+    return `${age} anos`;
+  }
+
+  getDiagnoses(child: ChildRecord): string {
+    const data = child as any;
+    const diagnoses = data.diagnoses ?? data.diagnosis ?? data.diagnosticos;
+    if (Array.isArray(diagnoses)) return diagnoses.map((item: any) => typeof item === "string" ? item : item?.name ?? item?.title ?? "").filter(Boolean).join(" • ");
+    return typeof diagnoses === "string" ? diagnoses : "";
+  }
+
+  getDiagnosisList(child: ChildRecord): string[] {
+    const data = child as any;
+    const diagnoses = data.diagnoses ?? data.diagnosis ?? data.diagnosticos;
+    if (Array.isArray(diagnoses)) return diagnoses.map((item: any) => typeof item === "string" ? item : item?.name ?? item?.title ?? "").filter(Boolean);
+    return typeof diagnoses === "string" ? diagnoses.split(/[,;|]/).map((item: string) => item.trim()).filter(Boolean) : [];
+  }
+
+  getGender(child: ChildRecord): string {
+    const data = child as any;
+    return data.gender ?? data.sex ?? data.genero ?? "";
   }
 
   navigateTo(route: string): void {
     void this.router.navigate([route]);
-  }
-
-  onSelectChild(childId: string): void {
-    this.childService.selectChildById(childId);
-  }
-
-  reloadAppointments(): void {
-    this.ngOnInit();
-  }
-
-  private getNextAppointment(appointments: AppointmentRecord[]): DashboardAppointment | null {
-    const now = Date.now();
-
-    const next = appointments
-      .filter((appointment) => {
-        const startsAt = new Date(appointment.startsAt).getTime();
-        return startsAt >= now && ["scheduled", "confirmed"].includes(appointment.status);
-      })
-      .sort((first, second) =>
-        new Date(first.startsAt).getTime() - new Date(second.startsAt).getTime()
-      )[0];
-
-    if (!next) return null;
-
-    return {
-      title: next.title?.trim() || "Atendimento agendado",
-      professional: next.therapist?.name || "Profissional não informado",
-      startsAt: next.startsAt,
-    };
   }
 }

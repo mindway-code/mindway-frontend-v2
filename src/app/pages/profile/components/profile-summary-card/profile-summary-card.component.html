@@ -1,19 +1,22 @@
 <section class="profile-summary card-ui card-ui--md">
-  <header class="profile-summary__header">
-    <div class="profile-summary__identity">
-      <img
-        class="profile-summary__avatar"
-        [src]="profilePhoto || 'assets/img/placeholder.PNG'"
-        alt="Imagem padrão do perfil do usuário"
-      />
-
-      <div class="profile-summary__text">
-        <h2 class="profile-summary__title">{{ (user?.name || "Usuário") | titlecase }}</h2>
-        <p class="profile-summary__subtitle">
-          <i class="bi bi-envelope"></i>
-          {{ user?.email || "—" }}
-        </p>
+  <div class="profile-summary__identity">
+    <img class="profile-summary__avatar" [src]="profilePhoto || 'assets/img/placeholder.PNG'" alt="Foto do perfil">
+    <div class="profile-summary__text">
+      <h2 class="profile-summary__title">{{ (user?.name || 'Usuário') | titlecase }}</h2>
+      <p class="profile-summary__subtitle"><i class="bi bi-envelope"></i> {{ user?.email || '—' }}</p>
+      <div class="profile-summary__actions">
+        <span class="profile-summary__role">{{ roleLabel }}</span>
+        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="edit.emit()"><i class="bi bi-pencil"></i> Editar perfil</button>
       </div>
     </div>
-  </header>
+  </div>
+
+  <span class="profile-summary__divider" aria-hidden="true"></span>
+
+  <aside class="profile-summary__account">
+    <h3>Informações da conta</h3>
+    <p><i class="bi bi-calendar-event"></i><span>Membro desde: <strong>{{ memberSince }}</strong></span></p>
+    <p><i class="bi bi-people"></i><span>Perfis de crianças: <strong>{{ childrenCount }}</strong></span></p>
+    <p><i class="bi bi-shield-check"></i><span>Segurança: <strong>Conta protegida</strong></span></p>
+  </aside>
 </section>

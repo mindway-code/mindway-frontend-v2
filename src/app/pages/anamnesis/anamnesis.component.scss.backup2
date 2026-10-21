@@ -1,0 +1,457 @@
+.anamnesis-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+
+  // ============================================================
+  // HERO
+  // ============================================================
+
+  &__hero {
+    margin-bottom: 24px;
+  }
+
+  &__hero-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 32px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+  }
+
+  &__hero-copy {
+    min-width: 0;
+  }
+
+  &__eyebrow {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.02em;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  &__subtitle {
+    max-width: 700px;
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+  }
+
+  &__header-icon {
+    flex-shrink: 0;
+    font-size: 30px;
+    color: #64748b;
+  }
+
+  &__top-grid {
+    margin-top: 16px;
+  }
+
+  // ============================================================
+  // CARD DA CRIANÇA
+  // ============================================================
+
+  &__child-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 28px;
+    padding: 18px 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+  }
+
+  &__child-card--empty {
+    justify-content: center;
+    min-height: 80px;
+    color: #6b7280;
+
+    i {
+      font-size: 20px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  &__child-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__child-copy {
+    min-width: 0;
+    flex: 1;
+
+    h2 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+  }
+
+  &__child-status {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+  }
+
+  &__child-status--complete {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+
+  // ============================================================
+  // ERROS / ESTADOS
+  // ============================================================
+
+  &__error {
+    margin-bottom: 20px;
+  }
+
+  &__state {
+    margin-bottom: 20px;
+  }
+
+  // ============================================================
+  // CABEÇALHO DAS SEÇÕES
+  // ============================================================
+
+  &__section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+
+  &__section-title {
+    margin: 0;
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &__section-copy {
+    margin: 6px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  // ============================================================
+  // LISTA DAS SEÇÕES
+  // ============================================================
+
+  &__section-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  &__section-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 82px;
+    padding: 16px 18px;
+    box-sizing: border-box;
+    text-align: left;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
+
+    &:hover {
+      background: #fafafa;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #64748b;
+      outline-offset: 2px;
+    }
+  }
+
+  &__section-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    margin-right: 16px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 18px;
+  }
+
+  &__section-item-content {
+    min-width: 0;
+    flex: 1;
+
+    h3 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+  }
+
+  &__section-item-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-left: 16px;
+
+    > i {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+  }
+
+  &__section-item-badge {
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__section-item-badge--complete {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+
+  // ============================================================
+  // SEÇÃO ABERTA
+  // ============================================================
+
+  &__opened-section {
+    width: 100%;
+    margin-bottom: 32px;
+  }
+
+  &__back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
+    padding: 8px 0;
+    border: 0;
+    background: transparent;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      color: #1f2937;
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #64748b;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    i {
+      font-size: 14px;
+    }
+  }
+}
+
+// ============================================================
+// LOADING
+// ============================================================
+
+.loading-ui {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loading-ui__line,
+.loading-ui__block {
+  display: block;
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.loading-ui__line {
+  height: 14px;
+}
+
+.loading-ui__line--sm {
+  width: 30%;
+}
+
+.loading-ui__line--lg {
+  width: 55%;
+}
+
+.loading-ui__block {
+  width: 100%;
+  height: 180px;
+}
+
+
+// ============================================================
+// RESPONSIVIDADE
+// ============================================================
+
+@media (max-width: 768px) {
+  .anamnesis-page {
+    padding: 16px;
+
+    &__hero-body {
+      padding: 22px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__header-icon {
+      display: none;
+    }
+
+    &__child-card {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    &__child-status {
+      margin-left: 64px;
+    }
+
+    &__section-item {
+      align-items: flex-start;
+    }
+
+    &__section-item-icon {
+      width: 38px;
+      height: 38px;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+
+    &__section-item-status {
+      margin-left: 8px;
+
+      > i {
+        font-size: 13px;
+      }
+    }
+
+    &__section-item-badge {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .anamnesis-page {
+    padding: 12px;
+
+    &__hero-body {
+      padding: 18px;
+    }
+
+    &__title {
+      font-size: 22px;
+    }
+
+    &__subtitle {
+      font-size: 13px;
+    }
+
+    &__child-card {
+      padding: 14px;
+    }
+
+    &__child-avatar {
+      width: 42px;
+      height: 42px;
+    }
+
+    &__section-item {
+      min-height: 74px;
+      padding: 13px;
+    }
+
+    &__section-item-content {
+      h3 {
+        font-size: 14px;
+      }
+
+      p {
+        font-size: 12px;
+      }
+    }
+  }
+}

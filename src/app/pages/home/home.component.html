@@ -1,47 +1,26 @@
-<div class="cta">
-  <h1>Bem-vindo ao <span>MindWay</span></h1>
-  <div>
-    <h6>Com a nossa plataforma, todos têm acesso fácil ao histórico, evolução e acompanhamento.</h6>
-  </div>
-  <div>
-    <a href="/profile" class="btn btn-ui btn-ui--accent">
-      <i class="bi bi-box-arrow-in-right"></i> 
-      Acessar perfil 
-    </a>
-  </div>
-</div>
+<main class="home-welcome">
+  <section class="home-welcome__intro" aria-labelledby="welcome-title">
+    <h1 id="welcome-title">Bem-vindo ao <span>MindWay</span></h1>
+    <p>Com a nossa plataforma, todos têm acesso fácil ao histórico, evolução e acompanhamento.</p>
+  </section>
 
-<div class="home-cards">
-  @for (card of cards; track card.title) {
-    <div class="card-ui card-ui--md">
-      <div class="card-ui__body card-ui__body--center">
-      <div>
-        <img
-          [src]="card.img || placeholderImg"
-          [alt]="card.alt || 'Imagem ilustrativa'"
-        />
-      </div>
-        <h2 class="card-ui__title">{{ card.title }}</h2>
-        <p class="card-ui__subtitle">{{ card.description }}</p>
-        <a class="btn-ui btn-ui--green btn-ui--sm" [routerLink]="card.route">
-          {{ card.buttonText }}
-        </a>
-      </div>
+  <section class="home-welcome__cards" aria-label="Acessos principais">
+    <article class="home-welcome__card" *ngFor="let card of cards">
+      <img [src]="card.img" [alt]="card.alt">
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.description }}</p>
+      <a class="home-welcome__button" [routerLink]="card.route">{{ card.buttonText }}</a>
+    </article>
+  </section>
+
+  <aside class="home-welcome__callout">
+    <span class="home-welcome__callout-icon" aria-hidden="true">
+      <i class="bi bi-people-fill"></i>
+    </span>
+    <div>
+      <h2>Acompanhamento personalizado!</h2>
+      <p>No MindWay, cada detalhe importa.</p>
+      <p>Trabalhe lado a lado com profissionais especializados e acompanhe a evolução com facilidade e apoio contínuo.</p>
     </div>
-  }
-</div>
-
-<div class="cta-end ">
-  <h3><span>Acompanhamento personalizado!</span></h3>
-  <div>
-    <h6>No MindWay, cada detalhe importa. <br>
-        Trabalhe lado a lado com profissionais especializados e acompanhe a evolução com facilidade e apoio contínuo.
-    </h6>
-  </div>
-  <div>
-    <a href="/profile" class="btn btn-ui btn-ui--accent">
-      <i class="bi bi-box-arrow-in-right"></i> 
-      Acessar perfil 
-    </a>
-  </div>
-</div>
+  </aside>
+</main>

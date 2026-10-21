@@ -1,0 +1,24 @@
+<main class="contact-page">
+  <section class="contact-intro">
+    <h1>Entre em <span>contato</span></h1>
+    <p>Estamos aqui para ouvir você! Fale com nossa equipe<br class="desktop-break"> para tirar dúvidas, enviar sugestões ou solicitar suporte.</p>
+  </section>
+
+  <section class="contact-content">
+    <form class="message-form" (ngSubmit)="sendMessage()" #contactForm="ngForm" novalidate>
+      <h2>Envie uma mensagem</h2>
+      <div class="form-row">
+        <label>Nome completo <b>*</b><input type="text" name="name" [(ngModel)]="name" placeholder="Digite seu nome" required maxlength="120" autocomplete="name"><small *ngIf="submitted && !name.trim()">Informe seu nome.</small></label>
+        <label>E-mail <b>*</b><input type="email" name="email" [(ngModel)]="email" placeholder="Digite seu e-mail" required email maxlength="160" autocomplete="email"><small *ngIf="submitted && (!email.trim() || contactForm.controls['email']?.invalid)">Informe um e-mail válido.</small></label>
+      </div>
+      <label>Assunto <b>*</b><select name="subject" [(ngModel)]="subject" required><option value="" disabled>Selecione o assunto</option><option *ngFor="let item of subjects" [value]="item">{{ item }}</option></select><small *ngIf="submitted && !subject">Selecione um assunto.</small></label>
+      <label>Mensagem <b>*</b><span class="textarea-wrap"><textarea name="message" [(ngModel)]="message" placeholder="Digite sua mensagem aqui..." required maxlength="500" rows="4"></textarea><small class="counter">{{ message.length }}/500</small></span><small *ngIf="submitted && !message.trim()">Escreva sua mensagem.</small></label>
+      <button class="send-button" type="submit"><i class="bi bi-send-fill"></i> Enviar mensagem</button>
+    </form>
+
+    <div class="contact-art" aria-hidden="true">
+      <div class="contact-art__shape"></div>
+      <img src="assets/img/illustrations/ilustracao-suporte-contato.png" alt="">
+    </div>
+  </section>
+</main>

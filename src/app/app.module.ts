@@ -20,6 +20,10 @@ import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.compone
 import { FooterComponent } from './shared/footer/footer.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { HomeComponent } from './pages/home/home.component';
+import { HowItWorksComponent } from './pages/how-it-works/how-it-works.component';
+import { AboutComponent } from './pages/about/about.component';
+import { HelpComponent } from './pages/help/help.component';
+import { ContactComponent } from './pages/contact/contact.component';
 import { CommonLayoutComponent } from './layout/common-layout/common-layout.component';
 import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';
 import { RegisterOptionsComponent } from './auth/register-options/register-options.component';
@@ -61,6 +65,7 @@ import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
 import { MessagesComponent } from './pages/messages/messages.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { AccessHistoryComponent } from './pages/access-history/access-history.component';
 
 registerLocaleData(localePt);
 
@@ -84,6 +89,10 @@ registerLocaleData(localePt);
     ChildCardComponent,
     ChildCreateFormComponent,
     HomeComponent,
+    HowItWorksComponent,
+    AboutComponent,
+    HelpComponent,
+    ContactComponent,
     AnamnesisComponent,
     ChildSelectorComponent,
     AnamnesisEmptyStateComponent,
@@ -114,7 +123,8 @@ registerLocaleData(localePt);
     LinkTherapistComponent,
     DashboradComponent,
     MessagesComponent,
-    SettingsComponent
+    SettingsComponent,
+    AccessHistoryComponent
   ],
   imports: [
     BrowserModule,

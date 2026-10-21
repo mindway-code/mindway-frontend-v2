@@ -1,5 +1,5 @@
 <main class="child-profile-page">
-  <header class="page-heading">
+  <header class="page-heading" *ngIf="!(selectedChild$ | async)">
     <div>
       <p class="eyebrow">ANAMNESE INFANTIL</p>
       <h1>{{ (selectedChild$ | async) ? 'Perfil da crian&#231;a' : 'Minhas crian&#231;as' }}</h1>
@@ -50,22 +50,46 @@
   <ng-template #profileView>
     <ng-container *ngIf="selectedChild$ | async as child">
       <div class="readonly-notice" *ngIf="isProfessionalView" role="status"><i class="bi bi-lock-fill" aria-hidden="true"></i><span><strong>Somente visualiza&#231;&#227;o</strong><small>Voc&#234; est&#225; visualizando informa&#231;&#245;es cadastradas pelo respons&#225;vel. N&#227;o &#233; poss&#237;vel editar os dados.</small></span></div>
+      <nav class="child-breadcrumb" aria-label="Caminho de navegação"><button type="button" (click)="onBackToChildren()">Crianças</button><i class="bi bi-chevron-right"></i><span>{{ getChildName(child) }}</span><i class="bi bi-chevron-right"></i><strong>{{ previewMode ? 'Prévia do perfil' : profileSections[activeSection].title }}</strong></nav>
       <section class="child-banner">
         <div class="child-banner__avatar-wrap">
           <div class="child-avatar child-avatar--large"><img *ngIf="getChildPhoto(child) as photo; else childProfileInitial" [src]="photo" alt=""><ng-template #childProfileInitial>{{ getChildInitial(child) }}</ng-template></div>
           <label *ngIf="!isProfessionalView" class="child-photo-button" [attr.for]="'child-photo-' + child.id"><i class="bi bi-camera" aria-hidden="true"></i> {{ getChildPhoto(child) ? 'Alterar foto' : 'Adicionar foto' }}</label>
           <input *ngIf="!isProfessionalView" class="child-photo-input" [id]="'child-photo-' + child.id" type="file" accept="image/*" (change)="onChildPhotoSelected($event)">
         </div>
-        <div><h2>{{ getChildName(child) }}</h2><p>{{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p><div class="diagnoses diagnoses--banner" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div></div>
+        <div class="child-banner__identity"><h2>{{ getChildName(child) }}</h2><p>{{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p><div class="diagnoses diagnoses--banner" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div></div>
+        <button class="back-button child-banner__back" type="button" (click)="onBackToChildren()"><i class="bi bi-chevron-left"></i> Voltar para o perfil da criança</button>
       </section>
 
-      <nav class="profile-steps" aria-label="Se&#231;&#245;es do perfil">
-          <button *ngFor="let section of profileSections; let i = index" type="button" class="profile-step" [class.profile-step--active]="activeSection === i" [attr.aria-current]="activeSection === i ? 'step' : null" (click)="selectSection(i)">
+      <nav class="profile-steps profile-steps--preview" aria-label="Se&#231;&#245;es do perfil">
+        <button type="button" class="profile-step" [class.profile-step--active]="previewMode" [attr.aria-current]="previewMode ? 'step' : null" (click)="showProfilePreview()"><span class="step-number">0</span><span class="step-label">Pr&#233;via do perfil</span></button>
+        <button *ngFor="let section of visibleProfileSections; let i = index" type="button" class="profile-step" [class.profile-step--active]="!previewMode && activeSection === i" [attr.aria-current]="!previewMode && activeSection === i ? 'step' : null" (click)="selectSection(i)">
           <span class="step-number">{{ i + 1 }}</span><span class="step-label">{{ section.title }}</span>
         </button>
       </nav>
 
-      <section class="section-card">
+      <section class="profile-preview" *ngIf="previewMode">
+        <header class="profile-preview__heading">
+          <span class="profile-preview__eye"><i class="bi bi-eye" aria-hidden="true"></i></span>
+          <div><h2>Pr&#233;via do perfil</h2><p>Veja como as informa&#231;&#245;es da crian&#231;a ser&#227;o apresentadas aos profissionais autorizados.</p></div>
+          <button type="button" class="back-button" (click)="selectSection(0)"><i class="bi bi-pencil" aria-hidden="true"></i> Editar informa&#231;&#245;es</button>
+        </header>
+        <div class="profile-preview__child">
+          <div class="child-avatar child-avatar--large"><img *ngIf="getChildPhoto(child) as photo; else previewChildInitial" [src]="photo" alt=""><ng-template #previewChildInitial>{{ getChildInitial(child) }}</ng-template></div>
+          <div class="profile-preview__identity"><h3>{{ getChildName(child) }}</h3><p>{{ getChildAge(child) }} <span aria-hidden="true">|</span> Nascimento: {{ formatBirthDate(child) }}</p><div class="diagnoses diagnoses--banner" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div></div>
+          <aside class="profile-preview__access"><p><i class="bi bi-file-earmark-text"></i><span>C&#243;digo de acesso</span><strong>{{ getChildAccessCode(child) || 'N&#227;o dispon&#237;vel' }}</strong></p><p><i class="bi bi-clock"></i><span>Atualiza&#231;&#227;o</span><strong>{{ activityHistory.length ? formatActivityDate(activityHistory[0].createdAt) : 'Sem atualiza&#231;&#245;es' }}</strong></p><p><i class="bi bi-lock"></i><span>Visibilidade</span><strong>Profissionais autorizados</strong></p></aside>
+        </div>
+        <div class="profile-preview__grid">
+          <article class="profile-preview__section" *ngFor="let section of visibleProfileSections; let i = index">
+            <span class="profile-preview__section-icon">{{ section.icon }}</span>
+            <div class="profile-preview__section-content"><h3>{{ section.title }} <small [class.is-pending]="getSectionPreviewStatus(i, child) === 'Pendente'">{{ getSectionPreviewStatus(i, child) }}</small></h3><p>{{ section.description }}</p><ul *ngIf="getSectionPreviewLines(i, child).length; else sectionEmpty"><li *ngFor="let line of getSectionPreviewLines(i, child)">{{ line }}</li></ul><ng-template #sectionEmpty><p class="profile-preview__empty">Nenhuma informa&#231;&#227;o registrada.</p></ng-template></div>
+            <button type="button" class="profile-preview__details" (click)="selectSection(i)">Ver detalhes <i class="bi bi-chevron-right"></i></button>
+          </article>
+        </div>
+        <footer class="profile-preview__footer"><button type="button" class="back-button" (click)="onBackToChildren()"><i class="bi bi-arrow-left"></i> Voltar para crian&#231;as</button><button type="button" class="primary-button" (click)="continueProfileEdit()">Continuar para a etapa 1 <i class="bi bi-arrow-right"></i></button></footer>
+      </section>
+
+      <section class="section-card" *ngIf="!previewMode">
         <header class="section-header"><div class="section-icon">{{ profileSections[activeSection].icon }}</div><div><h2>{{ profileSections[activeSection].title }}</h2><p>{{ profileSections[activeSection].description }}</p></div><span class="saved-message" *ngIf="savedMessage">{{ savedMessage }}</span></header>
 
         <div class="profile-form" *ngIf="activeSection === 0">
@@ -82,6 +106,37 @@
           <label class="field" *ngIf="!isProfessionalView"><span>C&#243;digo de acesso</span><input [value]="getChildAccessCode(child)" readonly></label>
           <label class="field field--wide"><span>Observa&#231;&#245;es adicionais</span><textarea [(ngModel)]="sectionData[0]['observacoes']" [readonly]="isProfessionalView" rows="4" maxlength="500" placeholder="Informa&#231;&#245;es importantes sobre a crian&#231;a"></textarea></label>
         </div>
+
+        <section class="health-section" *ngIf="activeSection === 2">
+          <div class="health-fields profile-form">
+            <label class="field"><span>Alergias</span><input [(ngModel)]="sectionData[2]['Alergias']" [readonly]="isProfessionalView" placeholder="Ex.: insetos, alimentos, medicamentos"></label>
+            <label class="field"><span>Condições de saúde</span><input [(ngModel)]="sectionData[2]['Condições de saúde']" [readonly]="isProfessionalView" placeholder="Condições relevantes para o cuidado"></label>
+          </div>
+
+          <div class="medication-panel">
+            <header class="medication-panel__heading"><span class="medication-panel__icon"><i class="bi bi-capsule-pill"></i></span><div><h3>Medicamentos em uso</h3><p>Registre os medicamentos que a criança utiliza.</p></div></header>
+            <article class="medication-card" *ngFor="let medication of medicationEntries; let i = index">
+              <span class="medication-card__icon"><i class="bi bi-capsule"></i></span>
+              <div class="medication-card__content">
+                <div class="medication-card__title"><strong>{{ i + 1 }}.</strong><input class="medication-name" [(ngModel)]="medication.name" [readonly]="isProfessionalView" placeholder="Nome do medicamento" [attr.aria-label]="'Nome do medicamento ' + (i + 1)"><button *ngIf="!isProfessionalView" type="button" class="remove-medication" (click)="removeMedication(i)" [attr.aria-label]="'Remover medicamento ' + (i + 1)"><i class="bi bi-trash3"></i></button></div>
+                <div class="medication-fields">
+                  <label class="field"><span>Concentração / apresentação</span><input [(ngModel)]="medication.concentration" [readonly]="isProfessionalView" placeholder="Ex.: 18 mg (comprimido)"></label>
+                  <label class="field"><span>Posologia</span><input [(ngModel)]="medication.dosage" [readonly]="isProfessionalView" placeholder="Ex.: 1 comprimido ao dia"></label>
+                  <label class="field"><span>Horário(s)</span><input [(ngModel)]="medication.schedule" [readonly]="isProfessionalView" placeholder="Ex.: 08:00"></label>
+                  <label class="field"><span>Via de administração</span><select [(ngModel)]="medication.route" [disabled]="isProfessionalView"><option value="">Selecione</option><option>Oral</option><option>Inalatória</option><option>Tópica</option><option>Injetável</option><option>Outra</option></select></label>
+                  <label class="field medication-fields__notes"><span>Observações</span><input [(ngModel)]="medication.notes" [readonly]="isProfessionalView" placeholder="Orientações relevantes"></label>
+                </div>
+              </div>
+            </article>
+            <button *ngIf="!isProfessionalView" type="button" class="add-medication" (click)="addMedication()"><i class="bi bi-plus-circle-fill"></i> Adicionar outro medicamento</button>
+            <p class="medication-empty" *ngIf="medicationEntries.length === 0">Nenhum medicamento cadastrado.</p>
+          </div>
+
+          <div class="health-fields profile-form health-fields--bottom">
+            <label class="field"><span>Restrições</span><textarea [(ngModel)]="sectionData[2]['Restrições']" [readonly]="isProfessionalView" rows="2" placeholder="Restrições alimentares ou outras"></textarea></label>
+            <label class="field"><span>Observações gerais de saúde</span><textarea [(ngModel)]="sectionData[2]['Observações']" [readonly]="isProfessionalView" rows="2" placeholder="Informações adicionais sobre a saúde da criança"></textarea></label>
+          </div>
+        </section>
         <div class="care-providers" *ngIf="activeSection === 3">
           <p class="care-providers__intro">Cadastre cada terapia, cl&#237;nica ou profissional que acompanha a crian&#231;a.</p>
 
@@ -145,13 +200,30 @@
           </div>
         </div>
 
-        <div class="profile-form" *ngIf="activeSection > 0 && activeSection !== 3 && activeSection !== 5">
+        <section class="activity-history" *ngIf="activeSection === 7">
+          <header class="activity-history__heading"><span class="activity-history__icon"><i class="bi bi-clock-history"></i></span><div><h3>Histórico de atividades</h3><p>Acompanhe as alterações salvas no perfil desta criança.</p></div></header>
+          <div class="activity-filters">
+            <label class="field"><span>Data inicial</span><input type="date" [(ngModel)]="activityFrom" (ngModelChange)="setActivityPage(1)"></label>
+            <label class="field"><span>Data final</span><input type="date" [(ngModel)]="activityTo" (ngModelChange)="setActivityPage(1)"></label>
+            <label class="field"><span>Seção</span><select [(ngModel)]="activityArea" (ngModelChange)="setActivityPage(1)"><option value="all">Todas</option><option *ngFor="let section of visibleProfileSections; let i = index" [value]="i">{{ section.title }}</option></select></label>
+            <label class="field activity-search"><span>Buscar</span><span class="activity-search__control"><i class="bi bi-search"></i><input type="search" [(ngModel)]="activitySearch" (ngModelChange)="setActivityPage(1)" placeholder="Nome, ação ou detalhe..."></span></label>
+          </div>
+          <div class="activity-empty" *ngIf="filteredActivityHistory.length === 0"><i class="bi bi-clock"></i><p>Nenhuma alteração encontrada</p><small>Altere os filtros ou salve uma seção do perfil para registrar uma atividade.</small></div>
+          <div class="activity-table-wrap" *ngIf="filteredActivityHistory.length > 0">
+            <table class="activity-table"><thead><tr><th>Data e hora</th><th>Usuário</th><th>Seção</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody>
+              <tr *ngFor="let activity of paginatedActivityHistory"><td><time [attr.datetime]="activity.createdAt">{{ formatActivityDate(activity.createdAt) }}<small>{{ formatActivityTime(activity.createdAt) }}</small></time></td><td><span class="activity-user"><span class="activity-user__avatar"><i class="bi bi-person-fill"></i></span><span><strong>{{ activity.actor }}</strong><small>{{ activity.actorRole || 'Usuário' }}</small></span></span></td><td>{{ activity.section }}</td><td><span class="activity-action">{{ activity.action }}</span></td><td>{{ activity.details }}</td></tr>
+            </tbody></table>
+          </div>
+          <footer class="activity-pagination" *ngIf="filteredActivityHistory.length > 0"><span>Mostrando {{ (activityPage - 1) * activityPageSize + 1 }} a {{ activityRangeEnd }} de {{ filteredActivityHistory.length }} registros <small>· Histórico local deste dispositivo</small></span><div><button type="button" aria-label="Página anterior" (click)="setActivityPage(activityPage - 1)" [disabled]="activityPage <= 1"><i class="bi bi-chevron-left"></i></button><strong>{{ activityPage }}</strong><button type="button" aria-label="Próxima página" (click)="setActivityPage(activityPage + 1)" [disabled]="activityPage >= activityPageCount"><i class="bi bi-chevron-right"></i></button><button class="activity-export" type="button" (click)="exportActivityHistory()"><i class="bi bi-download"></i> Exportar CSV</button></div></footer>
+        </section>
+
+        <div class="profile-form" *ngIf="activeSection > 0 && activeSection !== 2 && activeSection !== 3 && activeSection !== 5 && activeSection !== 7">
           <label class="field" *ngFor="let field of sectionFields[activeSection]"><span>{{ field }}</span><textarea *ngIf="field.toLowerCase().includes('observa')" [(ngModel)]="sectionData[activeSection][field]" [readonly]="isProfessionalView" rows="3"></textarea><input *ngIf="!field.toLowerCase().includes('observa')" [(ngModel)]="sectionData[activeSection][field]" [readonly]="isProfessionalView" [placeholder]="field === 'Profissional que fez o diagn&#243;stico' ? 'Ex.: Dra. Ana, neuropediatra' : field"></label>
         </div>
 
-        <footer class="section-footer">
+        <footer class="section-footer" *ngIf="activeSection !== 7">
           <button type="button" class="back-button" [disabled]="activeSection === 0" (click)="previousSection()">&#8592; Anterior</button>
-          <div class="footer-actions"><ng-container *ngIf="!isProfessionalView; else readOnlyNavigation"><button type="button" class="back-button" (click)="saveSection()">Salvar rascunho</button><button type="button" class="back-button" (click)="saveAndChooseAnotherChild()">Salvar e escolher outra crian&#231;a</button><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === profileSections.length - 1 ? 'Concluir' : 'Salvar e continuar &#8594;' }}</button></ng-container><ng-template #readOnlyNavigation><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === profileSections.length - 1 ? 'Voltar para crian&#231;as' : 'Pr&#243;xima se&#231;&#227;o &#8594;' }}</button></ng-template></div>
+          <div class="footer-actions"><ng-container *ngIf="!isProfessionalView; else readOnlyNavigation"><button type="button" class="back-button" (click)="saveSection()">Salvar rascunho</button><button type="button" class="back-button" (click)="saveAndChooseAnotherChild()">Salvar e escolher outra crian&#231;a</button><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === visibleProfileSections.length - 1 ? 'Concluir' : 'Salvar e continuar &#8594;' }}</button></ng-container><ng-template #readOnlyNavigation><button type="button" class="primary-button" (click)="nextSection()">{{ activeSection === visibleProfileSections.length - 1 ? 'Voltar para crian&#231;as' : 'Pr&#243;xima se&#231;&#227;o &#8594;' }}</button></ng-template></div>
         </footer>
       </section>
     </ng-container>

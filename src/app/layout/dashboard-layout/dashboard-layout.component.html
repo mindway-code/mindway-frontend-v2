@@ -14,8 +14,8 @@
   <aside class="dashboard-aside" aria-label="Menu lateral">
     <div class="dashboard-aside__topbar">
       <a routerLink="/" class="dashboard-aside__brand">
-        <span class="dashboard-aside__brand-mark">M</span>
-        <span class="dashboard-aside__brand-text" *ngIf="isDesktopSidebarExpanded || isMobileViewport">Mindway</span>
+        <img *ngIf="isDesktopSidebarExpanded || isMobileViewport" class="dashboard-aside__brand-logo" src="assets/img/mindway-logo.svg" alt="MindWay — Conexões que desenvolvem">
+        <span *ngIf="!isDesktopSidebarExpanded && !isMobileViewport" class="dashboard-aside__collapsed-mark" aria-label="MindWay">M</span>
       </a>
 
       <button
@@ -73,7 +73,17 @@
 
   <main class="dashboard-layout__main">
 
-    
+    <header class="dashboard-layout__topbar">
+      <span class="dashboard-layout__topbar-spacer"></span>
+      <ng-container *ngIf="currentUser$ | async as user">
+        <a class="dashboard-layout__account" routerLink="/settings" aria-label="Abrir configurações da conta">
+          <img *ngIf="getProfilePhoto(user.id) as photo; else topbarInitial" [src]="photo" alt="">
+          <ng-template #topbarInitial><span class="dashboard-layout__account-initial">{{ (user.name || user.email || 'U').charAt(0).toUpperCase() }}</span></ng-template>
+          <span class="dashboard-layout__account-name">{{ user.name || user.email }}</span>
+        </a>
+      </ng-container>
+    </header>
+
       <button
         class="dashboard-layout__menu-button"
         type="button"

@@ -1,39 +1,22 @@
 <article class="child-card card-ui card-ui--md">
   <header class="child-card__header">
     <div class="child-card__identity">
-      <div class="child-card__avatar"><img *ngIf="profilePhoto as photo; else childInitial" [src]="photo" [alt]="'Foto de ' + child.name"><ng-template #childInitial aria-hidden="true">{{ child.name.slice(0, 1) || "C" }}</ng-template></div>
+      <div class="child-card__avatar"><img *ngIf="profilePhoto as photo; else childInitial" [src]="photo" [alt]="'Foto de ' + child.name"><ng-template #childInitial aria-hidden="true">{{ child.name.slice(0, 1) || 'C' }}</ng-template></div>
       <div class="child-card__text">
         <h3 class="child-card__title">{{ child.name | titlecase }}</h3>
-        <p class="child-card__subtitle">
-          Idade: <strong>{{ child.age }}</strong> · Nascimento: <strong>{{ birthDateLabel }}</strong>
-        </p>
+        <p class="child-card__subtitle">Idade: <strong>{{ child.age }} anos</strong><span aria-hidden="true"> · </span>Nascimento: <strong>{{ birthDateLabel }}</strong></p>
       </div>
     </div>
+    <a class="child-card__open" routerLink="/child-profile" [queryParams]="{ childId: child.id }" [attr.aria-label]="'Abrir perfil de ' + child.name"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
   </header>
 
   <div class="child-card__body">
-    <p class="child-card__row">
-      <span class="child-card__label">Código</span>
-      <span class="child-card__value child-card__value--mono">{{ child.accessCode }}</span>
-    </p>
-
-    <p class="child-card__row" *ngIf="child.observation">
-      <span class="child-card__label">Observação</span>
-      <span class="child-card__value child-card__value--wrap">{{ child.observation }}</span>
-    </p>
+    <p class="child-card__row"><span class="child-card__label">Código</span><span class="child-card__value child-card__value--mono">{{ child.accessCode }}</span></p>
+    <p class="child-card__row" *ngIf="child.observation"><span class="child-card__label">Observação</span><span class="child-card__value child-card__value--wrap">{{ child.observation }}</span></p>
   </div>
 
   <footer class="child-card__footer">
-    <a
-      class="btn-ui btn-ui--light btn-ui--sm"
-      routerLink="/anamnesis"
-      [queryParams]="{ childId: child.id }"
-    >
-      Anamnese
-    </a>
-
-    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile" [queryParams]="{ childId: child.id }">
-      Perfil da criança
-    </a>
+    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/anamnesis" [queryParams]="{ childId: child.id }"><i class="bi bi-file-earmark-medical" aria-hidden="true"></i> Anamnese</a>
+    <a class="btn-ui btn-ui--light btn-ui--sm" routerLink="/child-profile" [queryParams]="{ childId: child.id }"><i class="bi bi-person" aria-hidden="true"></i> Perfil da criança</a>
   </footer>
 </article>

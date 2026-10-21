@@ -13,6 +13,7 @@ export interface RegisterDTO {
   role?: UserRole;
   provider?: "local" | "google";
   googleId?: string | null;
+  cnpj?: string;
 }
 
 export interface AuthTokens {

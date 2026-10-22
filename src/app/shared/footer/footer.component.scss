@@ -1,4 +1,6 @@
-:host {
-  display: block;
-}
-
+:host { display: block; }
+.site-footer { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px clamp(22px, 5vw, 64px); border-top: 1px solid #e1e7ef; color: #7186b4; font-size: .68rem; }
+.site-footer nav { display: flex; align-items: center; gap: 0; }
+.site-footer nav a { padding: 0 15px; border-right: 1px solid #aab8d1; color: #7186b4; text-decoration: none; white-space: nowrap; }
+.site-footer nav a:hover { color: #008c78; }.site-footer nav a:last-child { border: 0; }.site-footer nav a.social { padding-inline: 10px; color: #123476; font-size: 1.12rem; }
+@media (max-width: 760px) { .site-footer { flex-direction: column; align-items: flex-start; }.site-footer nav { flex-wrap: wrap; row-gap: 10px; }.site-footer nav a { padding-inline: 9px; } }

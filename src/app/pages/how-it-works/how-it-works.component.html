@@ -1,0 +1,26 @@
+<main class="how-page">
+  <section class="how-hero" aria-labelledby="how-title">
+    <div class="how-hero__copy">
+      <h1 id="how-title">Como funciona<br>o <span>MindWay</span>?</h1>
+      <p>De forma simples e segura, o MindWay conecta família, escola e profissionais para organizar informações e acompanhar o desenvolvimento de cada criança.</p>
+    </div>
+    <div class="how-hero__visual" aria-label="Família e profissionais colaborando pelo desenvolvimento da criança">
+      <img src="assets/img/illustrations/familia-escola-profissionais.png" alt="Família, escola e profissional conectados pelo desenvolvimento da criança">
+    </div>
+  </section>
+
+  <section class="how-content" aria-labelledby="steps-title">
+    <div class="section-heading">
+      <h2 id="steps-title">Passo a passo</h2>
+      <p>Veja como é fácil começar a usar a plataforma.</p>
+    </div>
+    <div class="steps-grid">
+      <a class="step-card" *ngFor="let step of steps; let i = index" [routerLink]="step.route">
+        <span class="step-number">{{ i + 1 }}</span>
+        <span class="step-icon"><img [src]="step.image" alt=""></span>
+        <strong>{{ step.title }}</strong>
+        <span class="step-description">{{ step.description }}</span>
+      </a>
+    </div>
+  </section>
+</main>

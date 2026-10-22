@@ -113,6 +113,47 @@ All services use RxJS `BehaviorSubject` for reactive state management.
 
 ## Recent Changes (Latest PR)
 
+- The profile page now uses a wider centered content area and a compact account header with the MindWay logo, Panel link, and signed-in user's name and photo.
+- The family profile page now presents account metadata beside the user identity and uses compact, clearly bordered child and invitation cards.
+- Increased the homepage card illustration sizes across desktop and mobile layouts while preserving their aspect ratio.
+- Added the supplied illustrations under `src/assets/img/illustrations/` and integrated them into the “Como funciona”, “Sobre”, and “Contato” pages, including the four step cards and support artwork.
+- The public Help page now has a searchable FAQ and a direct contact card; the Contact page uses the split message-form and support-art layout from the latest prototypes.
+- The public “Sobre” page now pairs the project introduction with the supplied family-and-care illustration and four value cards: purpose, team, privacy, and values.
+- The public “Como funciona” page now uses a compact split hero with the family illustration and a four-step guide, matching the updated prototype.
+- The public home page now follows the welcome dashboard design with profile, reports, and panel access cards plus a personalized-support banner. The reports card links to `/reports-child`.
+- The registration options page now presents four responsive profile cards: responsible adult, clinic, health professional, and school. Therapist accounts continue through the clinic invitation flow.
+- Registration profile cards use concise, action-oriented Portuguese descriptions for each of the four entry profiles.
+- The registration profile selection page now uses a smaller logo, more restrained headings, and slightly more compact cards for a more balanced presentation.
+- The registration options hero reuses the original homepage `hero.png`, adapted to the lower panel with a soft fade into the welcome text.
+- The clinic account screen now uses a responsive split layout with the supplied logo, clinic benefits, and clearer sections for clinic details and password setup.
+- Clinic registration now includes an optional CNPJ field and requires the user to check the terms and privacy acknowledgment before submitting. The optional CNPJ is passed to the API.
+- The clinic registration panel uses the supplied clinic illustration at `src/assets/img/clinic-registration.png`.
+- The clinic registration panel now keeps the illustration in its lower area and uses smaller logo and headings to preserve clear space for the welcome copy.
+- The clinic illustration panel now has a white background to blend with the logo asset, with a soft white fade between the welcome copy and the image.
+- The professional registration page now uses the supplied clinic illustration from `src/assets/img/clinic-registration.png` in its side panel.
+- The profile page now uses a centered content width, clearer card borders, and tighter spacing between the account, children, and access-sharing sections.
+
+### Homepage Visual Assets
+
+- Added the supplied homepage illustrations and logo under `src/assets/img/home/`.
+- The public landing page now uses `hero.png`, `responsavel.png`, `escola.png`, `profissional.png`, and `clinica.png`; the shared public navbar uses `logo.png`.
+- Profile card captions and arrows are included in the supplied card images, so the page renders each image as a complete card.
+- Keep this README and the root system documentation aligned when future changes affect user-facing behavior, assets, navigation, setup, or architecture.
+- Adjusted the hero copy/image separation, made the public layout full width, and reinforced shared footer styling to prevent overlap and unstyled footer links.
+- Removed the “Horário de atendimento” card from the Help page and changed its remaining contact channels to a two-column grid.
+- Reduced the public navbar logo size and expanded the home hero artwork behind a pale gradient so it remains visible without competing with the headline.
+- Shifted the hero artwork slightly right and shortened the pale gradient fade to reveal more of the family while keeping the headline readable.
+- Reduced the public navbar logo again and moved it slightly down to keep the top of the symbol visible.
+- Restored the supplied PNG logo in the public navbar at the previously reduced dimensions.
+- The home page “Responsável pela criança” card now opens the responsible account registration form directly at `/register`.
+- Removed message shortcuts from the family and professional dashboard home views. The `/messages` route remains available, but it is no longer shown in the sidebar.
+- Simplified the dashboard sidebar to show only Início, Anamnese, Crianças, Relatórios, and Configurações.
+
+### Public Site Navigation
+
+- The shared public navbar now displays **Entrar** (`/login`) and **Cadastrar** (`/register-options`) actions in place of the authenticated **Perfil** and **Sair** actions.
+- Keep this README updated whenever future project changes add or alter user-facing features, navigation, setup steps, or architecture.
+
 ### Dashboard & Child Profile Fixes
 
 - **Removed mock data** from child selection dropdown — now loads real children from API

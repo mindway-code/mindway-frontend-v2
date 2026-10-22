@@ -1,0 +1,38 @@
+<main class="help-page">
+  <section class="help-hero">
+    <div class="help-hero__copy">
+      <p class="help-hero__eyebrow">MindWay · suporte</p>
+      <h1>Central de <span>Ajuda</span></h1>
+      <p>Encontre respostas para as dúvidas mais comuns sobre o MindWay. Se precisar, nossa equipe está à disposição.</p>
+      <label class="help-search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="search" [(ngModel)]="searchTerm" placeholder="O que você está procurando?" aria-label="Buscar nas perguntas frequentes">
+        <button type="button" (click)="searchFaqs()">Buscar</button>
+      </label>
+    </div>
+    <div class="help-hero__art" aria-hidden="true">
+      <span class="help-hero__question">?</span>
+      <img src="assets/webp/med-webp-2.webp" alt="">
+    </div>
+  </section>
+
+  <section class="help-content">
+    <div class="faq-panel">
+      <h2>Dúvidas frequentes</h2>
+      <div class="faq-list">
+        <details class="faq-item" *ngFor="let faq of filteredFaqs">
+          <summary>{{ faq.question }}<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+          <p>{{ faq.answer }}</p>
+        </details>
+        <p class="faq-empty" *ngIf="filteredFaqs.length === 0">Nenhuma pergunta encontrada. Tente outros termos ou <a routerLink="/contato">fale com nossa equipe</a>.</p>
+      </div>
+    </div>
+
+    <aside class="help-contact">
+      <span class="help-contact__icon"><i class="bi bi-headset"></i></span>
+      <h2>Ainda precisa de ajuda?</h2>
+      <p>Nossa equipe está pronta para te atender.</p>
+      <a routerLink="/contato"><i class="bi bi-envelope"></i> Entrar em contato</a>
+    </aside>
+  </section>
+</main>

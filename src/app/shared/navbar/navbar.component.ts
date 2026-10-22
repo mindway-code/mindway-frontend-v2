@@ -10,13 +10,18 @@ import { AuthService } from "../../services/auth.service";
 })
 export class NavbarComponent {
   readonly currentUser$ = this.authService.currentUser$;
-  readonly isAuthenticated$ = this.authService.isAuthenticated$;
   isMenuOpen = false;
 
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {}
+  constructor(private readonly router: Router, private readonly authService: AuthService) {}
+
+  get showProfileHeader(): boolean {
+    return this.router.url.split("?")[0].replace(/\/+$/, "") === "/profile";
+  }
+
+  getProfilePhoto(userId: string): string | null {
+    if (typeof localStorage === "undefined") return null;
+    return localStorage.getItem(`mindway-account-photo-${userId}`);
+  }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
@@ -24,12 +29,5 @@ export class NavbarComponent {
 
   closeMenu(): void {
     this.isMenuOpen = false;
-  }
-
-  logout(): void {
-    this.closeMenu();
-    this.authService.logout().subscribe({
-      next: () => this.router.navigate(["/login"]),
-    });
   }
 }

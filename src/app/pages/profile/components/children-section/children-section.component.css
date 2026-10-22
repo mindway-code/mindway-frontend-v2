@@ -1,7 +1,12 @@
 .children-section {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-md);
+  gap: .8rem;
+  padding: 1rem;
+  border: 1px solid #e0eaf2;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(20 52 92 / 4%);
 }
 
 .children-section__header {
@@ -19,8 +24,9 @@
 }
 
 .children-section__title {
-  margin: 0.15rem 0 0;
-  font-size: 1.25rem;
+  margin: 0;
+  color: #123476;
+  font-size: 1rem;
   font-weight: var(--fw-xlg);
 }
 
@@ -31,14 +37,15 @@
 }
 
 .children-section__subtitle {
-  margin: 0.25rem 0 0;
-  color: var(--text-muted);
+  margin: 0.15rem 0 0;
+  color: #7183a8;
+  font-size: .7rem;
 }
 
 .children-section__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-md);
+  gap: .65rem;
 }
 
 .children-section__state {

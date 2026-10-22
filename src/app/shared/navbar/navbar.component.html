@@ -1,42 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-light border-bottom">
-  <div class="container">
-    <a class="navbar-brand fw-semibold" routerLink="/" (click)="closeMenu()">Mindway</a>
+<ng-container *ngIf="showProfileHeader; else publicNavigation">
+  <header class="profile-navbar">
+    <div class="profile-navbar__inner">
+      <a class="profile-navbar__brand" routerLink="/" aria-label="MindWay - início">
+        <img src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem">
+      </a>
+      <a class="profile-navbar__panel" routerLink="/dashboard"><i class="bi bi-house-door" aria-hidden="true"></i> Painel</a>
+      <span class="profile-navbar__spacer"></span>
+      <ng-container *ngIf="currentUser$ | async as user">
+        <a class="profile-navbar__account" routerLink="/settings" aria-label="Abrir configurações da conta">
+          <img *ngIf="getProfilePhoto(user.id) as photo; else profileInitial" [src]="photo" [alt]="'Foto de ' + (user.name || user.email)">
+          <ng-template #profileInitial><span class="profile-navbar__initial">{{ (user.name || user.email || 'U').charAt(0).toUpperCase() }}</span></ng-template>
+          <span>{{ user.name || user.email }}</span>
+        </a>
+      </ng-container>
+    </div>
+  </header>
+</ng-container>
 
-    <button
-      class="navbar-toggler"
-      type="button"
-      aria-controls="mindwayNavbar"
-      [attr.aria-expanded]="isMenuOpen"
-      aria-label="Alternar navegação"
-      (click)="toggleMenu()"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="mindwayNavbar">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Início</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-semibold" routerLink="/social-network" routerLinkActive="active" (click)="closeMenu()">Rede de Apoio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-semibold" routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Painel</a>
-        </li>
-      </ul>
-
-      <div class="navbar-actions d-flex gap-2">
-        <ng-container *ngIf="isAuthenticated$ | async; else loggedOut">
-          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/profile" (click)="closeMenu()">Perfil</a>
-          <button class="btn-ui btn-ui--green btn-ui--sm" type="button" (click)="logout()">Sair</button>
-        </ng-container>
-
-        <ng-template #loggedOut>
+<ng-template #publicNavigation>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid nav-shell">
+      <a class="navbar-brand fw-semibold" routerLink="/" (click)="closeMenu()">
+        <img class="site-logo" src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem">
+      </a>
+      <button class="navbar-toggler" type="button" aria-controls="mindwayNavbar" [attr.aria-expanded]="isMenuOpen" aria-label="Alternar navegação" (click)="toggleMenu()"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="mindwayNavbar">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()"><i class="bi bi-house-door"></i> Início</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/como-funciona" routerLinkActive="active" (click)="closeMenu()"><i class="bi bi-heart"></i> Como funciona</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/sobre" routerLinkActive="active" (click)="closeMenu()"><i class="bi bi-info-circle"></i> Sobre</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/ajuda" routerLinkActive="active" (click)="closeMenu()"><i class="bi bi-question-circle"></i> Ajuda</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/contato" routerLinkActive="active" (click)="closeMenu()"><i class="bi bi-envelope"></i> Contato</a></li>
+        </ul>
+        <div class="navbar-actions d-flex gap-2">
           <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/login" (click)="closeMenu()">Entrar</a>
-          <a class="btn-ui btn-ui--green btn-ui--sm" routerLink="/register-options" (click)="closeMenu()">Criar conta</a>
-        </ng-template>
+          <a class="btn-ui btn-ui--green btn-ui--sm" routerLink="/register-options" (click)="closeMenu()">Cadastrar</a>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</ng-template>

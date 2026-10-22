@@ -60,6 +60,26 @@ interface RoutineActivity {
   activity: string;
 }
 
+interface ChildMedication {
+  name: string;
+  concentration: string;
+  dosage: string;
+  schedule: string;
+  route: string;
+  notes: string;
+}
+
+interface ProfileActivity {
+  id: string;
+  createdAt: string;
+  section: string;
+  action: string;
+  details: string;
+  actor: string;
+  actorRole?: string;
+  description?: string;
+}
+
 @Component({
   selector: "app-child-profile",
   standalone: false,
@@ -135,17 +155,25 @@ export class ChildProfileComponent implements OnInit {
       icon: "📝",
       description: "Outras informações importantes.",
     },
+    {
+      title: "Histórico de atividades",
+      icon: "🕒",
+      description: "Acompanhe as alterações registradas neste dispositivo.",
+    },
   ];
+
+  readonly visibleProfileSections = this.profileSections.slice(0, 7);
 
 
   /**
    * Seção atualmente selecionada.
    */
   activeSection = 0;
+  previewMode = true;
 
   sectionFields: Record<number, string[]> = {
     1: ["Diagnóstico principal", "Diagnósticos adicionais", "Data do diagnóstico", "Profissional que fez o diagnóstico", "Observações"],
-    2: ["Alergias", "Medicamentos", "Condições de saúde", "Restrições", "Observações"],
+    2: ["Alergias", "Condições de saúde", "Restrições", "Observações"],
     3: ["Clínica", "Telefone da clínica", "Profissionais", "Especialidade", "Frequência", "Dias e horários", "Observações"],
     4: ["Nome da escola", "Série/ano", "Turma", "Professora", "Coordenação", "Contato", "Observações escolares"],
     5: ["Rotina", "Atividades favoritas", "Interesses", "Preferências", "Observações"],
@@ -163,10 +191,21 @@ export class ChildProfileComponent implements OnInit {
   ];
   readonly genderOptions = ["Feminino", "Masculino", "Não binário", "Outro", "Prefiro não informar"];
 
-  sectionData: Record<number, Record<string, string>> = Array.from({ length: 7 }, () => ({}));
+  sectionData: Record<number, Record<string, string>> = Array.from({ length: 8 }, () => ({}));
   childPhoto: string | null = null;
   careProviders: ChildCareProvider[] = [this.createCareProvider()];
   weekRoutine: Record<string, RoutineActivity[]> = this.createWeekRoutine();
+  medicationEntries: ChildMedication[] = [];
+  activityHistory: ProfileActivity[] = [];
+  activityArea = "all";
+  activityFrom = "";
+  activityTo = "";
+  activitySearch = "";
+  activityPage = 1;
+  readonly activityPageSize = 9;
+  private hasLocalMedicationEntries = false;
+  private currentUserName = "Usuário";
+  private currentUserRole = "Usuário";
   savedMessage = "";
   private currentAnamnesis: AnamnesisRecord | null = null;
   showCreateChild = false;
@@ -194,6 +233,8 @@ export class ChildProfileComponent implements OnInit {
     this.authService.currentUser$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
+        this.currentUserName = user?.name?.trim() || user?.email || "Usuário";
+        this.currentUserRole = this.activityRoleLabel(user?.role ?? "");
         this.isProfessionalView = user?.role === "therapist" || user?.role === "professional" || user?.role === "enterprise";
         if (this.isProfessionalView) this.showCreateChild = false;
       });
@@ -271,6 +312,7 @@ export class ChildProfileComponent implements OnInit {
       .selectChild(child);
 
     this.activeSection = 0;
+    this.previewMode = true;
     this.loadSectionData(child?.id);
 
     this.syncRouteSelection(
@@ -389,12 +431,13 @@ export class ChildProfileComponent implements OnInit {
 
     if (
       index < 0 ||
-      index >= this.profileSections.length
+      index >= this.visibleProfileSections.length
     ) {
       return;
     }
 
     this.activeSection = index;
+    this.previewMode = false;
     this.savedMessage = "";
 
     window.scrollTo({
@@ -403,12 +446,53 @@ export class ChildProfileComponent implements OnInit {
     });
   }
 
+  showProfilePreview(): void {
+    this.previewMode = true;
+    this.savedMessage = "";
+  }
+
+  continueProfileEdit(): void {
+    this.previewMode = false;
+    this.activeSection = 0;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  getSectionPreviewLines(index: number, child: ChildRecord): string[] {
+    if (index === 0) {
+      return [
+        `Nome: ${this.getChildName(child)}`,
+        `Nascimento: ${this.formatBirthDate(child)}`,
+        this.sectionData[0]?.["Gênero"] ? `Gênero: ${this.sectionData[0]["Gênero"]}` : "",
+      ].filter(Boolean);
+    }
+    if (index === 1) {
+      return [this.sectionData[1]?.["Diagnóstico principal"], this.sectionData[1]?.["Diagnósticos adicionais"]].filter((value): value is string => Boolean(value?.trim()));
+    }
+    if (index === 2) {
+      return [this.sectionData[2]?.["Condições de saúde"], this.sectionData[2]?.["Alergias"], this.medicationEntries.filter((entry) => entry.name.trim()).map((entry) => entry.name).join(", ")].filter((value): value is string => Boolean(value?.trim()));
+    }
+    if (index === 3) {
+      return this.careProviders.map((provider) => [provider.type, provider.professional, provider.specialty, provider.frequency].filter(Boolean).join(" · ")).filter(Boolean).slice(0, 3);
+    }
+    const keys: Record<number, string[]> = {
+      4: ["Nome da escola", "Série/ano", "Turma"],
+      5: ["Rotina", "Atividades favoritas", "Interesses"],
+      6: ["Observações gerais"],
+    };
+    if (index === 7) return this.activityHistory.slice(0, 2).map((entry) => `${entry.action}: ${entry.details}`);
+    return (keys[index] ?? []).map((key) => this.sectionData[index]?.[key]).filter((value): value is string => Boolean(value?.trim())).slice(0, 3);
+  }
+
+  getSectionPreviewStatus(index: number, child: ChildRecord): string {
+    return this.getSectionPreviewLines(index, child).length || index === 0 ? "Preenchido" : "Pendente";
+  }
+
 
   /**
    * Próxima seção.
    */
   nextSection(): void {
-    if (this.activeSection === this.profileSections.length - 1) {
+    if (this.activeSection >= this.visibleProfileSections.length - 1) {
       this.finishProfile();
       return;
     }
@@ -436,6 +520,8 @@ export class ChildProfileComponent implements OnInit {
     if (this.activeSection > 0) {
 
       this.activeSection--;
+    } else {
+      this.showProfilePreview();
     }
   }
 
@@ -467,6 +553,114 @@ export class ChildProfileComponent implements OnInit {
     this.savedMessage = "";
   }
 
+  addMedication(): void {
+    if (this.isProfessionalView) return;
+    this.medicationEntries = [...this.medicationEntries, this.createMedication()];
+    this.savedMessage = "";
+  }
+
+  removeMedication(index: number): void {
+    if (this.isProfessionalView) return;
+    this.medicationEntries = this.medicationEntries.filter((_, currentIndex) => currentIndex !== index);
+    this.savedMessage = "";
+  }
+
+  private createMedication(name = ""): ChildMedication {
+    return { name, concentration: "", dosage: "", schedule: "", route: "", notes: "" };
+  }
+
+  private parseMedications(value: unknown): ChildMedication[] {
+    if (typeof value !== "string" || !value.trim()) return [];
+    const prefix = "MWMED:";
+    if (value.startsWith(prefix)) {
+      try {
+        const parsed = JSON.parse(value.slice(prefix.length));
+        if (Array.isArray(parsed)) return parsed.map((item) => ({ ...this.createMedication(), ...item }));
+      } catch { /* Keep legacy medication text below. */ }
+    }
+    return value.split(/\n+/).map((entry) => entry.trim()).filter(Boolean).map((entry) => {
+      const [name = "", concentration = "", dosage = "", schedule = "", route = "", notes = ""] = entry.split(" · ");
+      return { name, concentration, dosage, schedule, route, notes };
+    });
+  }
+
+  private serializeMedications(): string | null {
+    const entries = this.medicationEntries.filter((item) => Object.values(item).some((value) => value.trim()));
+    return entries.length ? entries.map((item) => [item.name, item.concentration, item.dosage, item.schedule, item.route, item.notes].filter(Boolean).join(" · ")).join("\n") : null;
+  }
+
+  get filteredActivityHistory(): ProfileActivity[] {
+    return this.activityHistory.filter((activity) => {
+      const date = new Date(activity.createdAt).toLocaleDateString("en-CA");
+      const matchesFrom = !this.activityFrom || date >= this.activityFrom;
+      const matchesTo = !this.activityTo || date <= this.activityTo;
+      const matchesSection = this.activityArea === "all" || activity.section === this.profileSections[Number(this.activityArea)]?.title;
+      const searchable = `${activity.actor} ${activity.section} ${activity.action} ${activity.details}`.toLocaleLowerCase();
+      const matchesSearch = !this.activitySearch.trim() || searchable.includes(this.activitySearch.trim().toLocaleLowerCase());
+      return matchesFrom && matchesTo && matchesSection && matchesSearch;
+    });
+  }
+
+  get paginatedActivityHistory(): ProfileActivity[] {
+    const start = (this.activityPage - 1) * this.activityPageSize;
+    return this.filteredActivityHistory.slice(start, start + this.activityPageSize);
+  }
+
+  get activityPageCount(): number {
+    return Math.max(1, Math.ceil(this.filteredActivityHistory.length / this.activityPageSize));
+  }
+
+  get activityRangeEnd(): number {
+    return Math.min(this.activityPage * this.activityPageSize, this.filteredActivityHistory.length);
+  }
+
+  formatActivityDate(value: string): string {
+    return new Date(value).toLocaleDateString("pt-BR");
+  }
+
+  formatActivityTime(value: string): string {
+    return new Date(value).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  setActivityPage(page: number): void {
+    this.activityPage = Math.max(1, Math.min(this.activityPageCount, page));
+  }
+
+  private activityRoleLabel(role: string): string {
+    const labels: Record<string, string> = {
+      guardian: "Responsável", parent: "Responsável", therapist: "Terapeuta",
+      professional: "Profissional de saúde", teacher: "Profissional da escola",
+      school: "Profissional da escola", enterprise: "Clínica",
+    };
+    return labels[role.toLocaleLowerCase()] ?? "Usuário";
+  }
+
+  exportActivityHistory(): void {
+    const rows = [["Data", "Horário", "Usuário", "Seção", "Ação", "Detalhes"], ...this.filteredActivityHistory.map((item) => [
+      this.formatActivityDate(item.createdAt), this.formatActivityTime(item.createdAt), item.actor, item.section, item.action, item.details,
+    ])];
+    const csv = "\uFEFF" + rows.map((row) => row.map((value) => `"${value.replace(/"/g, '""')}"`).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "historico-atividades-crianca.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  private createActivityEntry(): ProfileActivity {
+    const section = this.profileSections[this.activeSection];
+    return {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      createdAt: new Date().toISOString(),
+      section: section.title,
+      action: "Salvou alterações",
+      details: `Atualizou a seção ${section.title.toLocaleLowerCase()}.`,
+      actor: this.currentUserName,
+      actorRole: this.currentUserRole,
+    };
+  }
+
   saveSection(): boolean {
     if (this.isProfessionalView) return true;
     const child = this.childService.getSelectedChildSnapshot();
@@ -476,12 +670,18 @@ export class ChildProfileComponent implements OnInit {
     }
 
     try {
+      const nextHistory = this.activeSection === 7
+        ? this.activityHistory
+        : [this.createActivityEntry(), ...this.activityHistory].slice(0, 500);
       localStorage.setItem(`mindway-child-profile-${child.id}`, JSON.stringify({
         sections: this.sectionData,
         careProviders: this.careProviders,
         weekRoutine: this.weekRoutine,
+        medicationEntries: this.medicationEntries,
+        activityHistory: nextHistory,
         photo: this.childPhoto,
       }));
+      this.activityHistory = nextHistory;
       const request$ = this.persistSectionToApi(child.id);
       if (!request$) {
         this.savedMessage = "Dados salvos neste dispositivo. Esta seção ainda não é salva no servidor.";
@@ -519,7 +719,7 @@ export class ChildProfileComponent implements OnInit {
               }
             : {
                 diagnosis: health?.diagnosis ?? null,
-                medication: this.sectionData[2]["Medicamentos"]?.trim() || null,
+                medication: this.serializeMedications(),
                 allergies: this.sectionData[2]["Alergias"]?.trim() || null,
               };
           return this.anamnesisService.upsertHealth(childId, payload, Boolean(health));
@@ -579,10 +779,16 @@ export class ChildProfileComponent implements OnInit {
   }
 
   private loadSectionData(childId?: string): void {
-    this.sectionData = Array.from({ length: 7 }, () => ({}));
+    this.sectionData = Array.from({ length: 8 }, () => ({}));
     this.childPhoto = null;
     this.careProviders = [this.createCareProvider()];
     this.weekRoutine = this.createWeekRoutine();
+    this.medicationEntries = [];
+    this.activityHistory = [];
+    this.activityPage = 1;
+    this.activitySearch = "";
+    this.activityArea = "all";
+    this.hasLocalMedicationEntries = false;
     this.currentAnamnesis = null;
     if (!childId) return;
     const selectedChild = this.childService.getSelectedChildSnapshot();
@@ -597,6 +803,8 @@ export class ChildProfileComponent implements OnInit {
       if (Array.isArray(parsed)) {
         // Migrate drafts saved before care providers became a repeatable list.
         this.sectionData = parsed;
+        this.medicationEntries = this.parseMedications(parsed[2]?.["Medicamentos"]);
+        this.hasLocalMedicationEntries = Boolean(parsed[2]?.["Medicamentos"]);
         const oldRoutine = parsed[5]?.["Rotina"];
         if (oldRoutine?.trim()) this.sectionData[5]["Observações sobre a rotina"] = oldRoutine;
         const legacy = parsed[3] ?? {};
@@ -615,6 +823,24 @@ export class ChildProfileComponent implements OnInit {
       } else {
         this.sectionData = parsed?.sections ?? this.sectionData;
         this.childPhoto = parsed?.photo ?? parsed?.photoUrl ?? null;
+        this.activityHistory = Array.isArray(parsed?.activityHistory)
+          ? parsed.activityHistory.map((item: Partial<ProfileActivity>) => ({
+              id: item.id ?? `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              createdAt: item.createdAt ?? new Date().toISOString(),
+              section: item.section ?? "Perfil da criança",
+              action: item.action ?? "Salvou alterações",
+              details: item.details ?? item.description ?? "Atualizou informações do perfil.",
+              actor: item.actor ?? "Usuário",
+              actorRole: item.actorRole ?? "Usuário",
+            }))
+          : [];
+        if (Array.isArray(parsed?.medicationEntries)) {
+          this.medicationEntries = parsed.medicationEntries.map((item: Partial<ChildMedication>) => ({ ...this.createMedication(), ...item }));
+          this.hasLocalMedicationEntries = true;
+        } else {
+          this.medicationEntries = this.parseMedications(this.sectionData[2]?.["Medicamentos"]);
+          this.hasLocalMedicationEntries = Boolean(this.sectionData[2]?.["Medicamentos"]);
+        }
         this.careProviders = parsed?.careProviders?.length
           ? parsed.careProviders
           : [this.createCareProvider()];
@@ -636,9 +862,11 @@ export class ChildProfileComponent implements OnInit {
         diagnostics["Profissional que fez o diagnóstico"] = diagnostics["Profissional responsável"];
       }
     } catch {
-      this.sectionData = Array.from({ length: 7 }, () => ({}));
+      this.sectionData = Array.from({ length: 8 }, () => ({}));
       this.careProviders = [this.createCareProvider()];
       this.weekRoutine = this.createWeekRoutine();
+      this.medicationEntries = [];
+      this.activityHistory = [];
     }
     if (selectedChild?.anamnesis) {
       this.currentAnamnesis = selectedChild.anamnesis;
@@ -662,7 +890,7 @@ export class ChildProfileComponent implements OnInit {
     const routine = anamnesis.routine;
     if (health?.diagnosis) this.sectionData[1]["Diagnóstico principal"] = health.diagnosis;
     if (health?.allergies) this.sectionData[2]["Alergias"] = health.allergies;
-    if (health?.medication) this.sectionData[2]["Medicamentos"] = health.medication;
+    if (health?.medication && !this.hasLocalMedicationEntries) this.medicationEntries = this.parseMedications(health.medication);
     if (routine?.therapies) this.sectionData[3]["Profissionais"] = routine.therapies;
     if (routine?.schoolPeriod) this.sectionData[4]["Série/ano"] = routine.schoolPeriod;
     if (routine?.routineObservation) this.sectionData[5]["Observações sobre a rotina"] = routine.routineObservation;

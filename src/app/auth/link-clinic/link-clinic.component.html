@@ -1,47 +1,51 @@
 <section class="link-clinic">
-  <div class="link-clinic__visual" aria-hidden="true">
-    <img class="link-clinic__image" src="/assets/webp/clinic-webp.webp" alt="clínica" />
+  <div class="link-clinic__visual">
+    <img class="link-clinic__image" src="assets/img/clinic-registration.png" alt="" />
+    <div class="link-clinic__visual-copy">
+      <a class="link-clinic__brand" routerLink="/" aria-label="Voltar ao início">
+        <img class="link-clinic__logo" src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
+      </a>
+      <div class="link-clinic__intro">
+        <p class="link-clinic__eyebrow">Cadastro da clínica</p>
+        <h2>Sua clínica<br />no MindWay</h2>
+        <p>Organize sua equipe, acompanhe os atendimentos e centralize as informações em um só lugar, de forma segura e colaborativa.</p>
+      </div>
+    </div>
   </div>
 
   <main class="link-clinic__content">
-    <a class="link-clinic__brand" routerLink="/" aria-label="Voltar ao início">
-      <span class="link-clinic__brand-mark">M</span>
-      <span>MindWay</span>
-    </a>
-
-    <div class="link-clinic__intro">
+    <div class="link-clinic__form-intro">
       <p class="link-clinic__eyebrow">Cadastro da clínica</p>
-      <h2>Você foi convidado(a) para entrar no MindWay</h2>
-      <p>
-        Crie a conta da clínica para organizar acompanhamentos, colaborar com profissionais e acessar os recursos da plataforma.
-      </p>
+      <h1>Cadastre sua clínica</h1>
+      <p>Crie a conta para organizar sua equipe e os atendimentos no MindWay.</p>
     </div>
 
     <ul class="link-clinic__benefits" aria-label="Benefícios para a clínica">
       <li>
         <i class="bi bi-shield-check" aria-hidden="true"></i>
-        Perfil institucional com acesso seguro.
+        Controle o acesso da equipe e proteja os dados.
       </li>
       <li>
         <i class="bi bi-people" aria-hidden="true"></i>
-        Fluxo preparado para equipes e responsáveis.
+        Convide profissionais e gerencie atendimentos.
       </li>
       <li>
         <i class="bi bi-journal-check" aria-hidden="true"></i>
-        Informações organizadas em um só lugar.
+        Dados, relatórios e histórico em um só lugar.
       </li>
     </ul>
 
     <form class="link-clinic__form" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="link-clinic__form-header">
-        <h2>Concluir cadastro</h2>
+      <div class="link-clinic__section-heading">
+        <h3>Dados da clínica</h3>
         <p>Use os dados oficiais da clínica para criar o acesso.</p>
       </div>
 
+      <div class="link-clinic__clinic-fields">
       <div class="input-ui">
         <div class="input-ui__field">
           <input class="input-ui__control" formControlName="name" type="text" autocomplete="organization" placeholder=" " />
-          <label class="input-ui__label">Nome da clínica</label>
+          <label class="input-ui__label">Nome da clínica <span aria-hidden="true">*</span></label>
         </div>
         <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
           Informe o nome da clínica.
@@ -50,19 +54,33 @@
 
       <div class="input-ui">
         <div class="input-ui__field">
+          <input class="input-ui__control" formControlName="cnpj" type="text" inputmode="numeric" autocomplete="off" placeholder=" " maxlength="18" />
+          <label class="input-ui__label">CNPJ (opcional)</label>
+        </div>
+        <small class="link-clinic__field-hint">Ex.: 00.000.000/0000-00</small>
+      </div>
+      </div>
+
+      <div class="input-ui">
+        <div class="input-ui__field">
           <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
-          <label class="input-ui__label">E-mail institucional</label>
+          <label class="input-ui__label">E-mail institucional <span aria-hidden="true">*</span></label>
         </div>
         <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
           Informe um e-mail válido.
         </p>
       </div>
 
+      <div class="link-clinic__section-heading link-clinic__section-heading--password">
+        <h3>Defina sua senha</h3>
+        <p>Use uma senha segura para proteger sua conta.</p>
+      </div>
+
       <div class="link-clinic__form-grid">
         <div class="input-ui">
           <div class="input-ui__field">
             <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
-            <label class="input-ui__label">Senha</label>
+            <label class="input-ui__label">Senha <span aria-hidden="true">*</span></label>
           </div>
           <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
             Use pelo menos 6 caracteres.
@@ -78,13 +96,18 @@
               autocomplete="new-password"
               placeholder=" "
             />
-            <label class="input-ui__label">Confirmar senha</label>
+            <label class="input-ui__label">Confirmar senha <span aria-hidden="true">*</span></label>
           </div>
           <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
             Confirme a senha.
           </p>
         </div>
       </div>
+
+      <label class="link-clinic__consent">
+        <input type="checkbox" formControlName="termsAccepted" />
+        <span>Li e aceito os <strong>Termos de uso</strong> e a <strong>Política de Privacidade</strong>.</span>
+      </label>
 
       <p class="link-clinic__error" *ngIf="passwordsDoNotMatch" role="alert">
         As senhas precisam ser iguais.

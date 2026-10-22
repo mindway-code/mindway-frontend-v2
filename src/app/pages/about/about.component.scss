@@ -1,0 +1,37 @@
+:host { display: block; color: #123476; }
+
+.about-page { width: min(100%, 1120px); margin: 0 auto; padding: 10px clamp(18px, 4vw, 42px) 24px; }
+.about-hero { min-height: 185px; display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; overflow: hidden; padding: 12px 12px 0 4px; border-radius: 14px; background: linear-gradient(105deg,#f1faf8 0%,#f5fbfa 48%,#eaf8f6 100%); }
+.about-hero__copy { position: relative; z-index: 1; padding: 14px 0 20px 4px; }
+.about-hero h1 { margin: 0 0 7px; color: #123476; font-size: clamp(1.7rem,3.4vw,2.35rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
+.about-hero h1 span { color: #009b91; }
+.about-hero__copy p { max-width: 390px; margin: 0 0 8px; color: #7183a8; font-size: .78rem; line-height: 1.4; }
+.about-hero__art { height: 185px; position: relative; align-self: stretch; overflow: hidden; }
+.about-hero__art::before { content: ''; position: absolute; z-index: 1; inset: 0 auto 0 0; width: 34%; background: linear-gradient(90deg,#f3faf9,rgba(243,250,249,.86) 35%,transparent); pointer-events: none; }
+.about-hero__art img { width: min(100%,440px); height: 100%; display: block; margin-left: auto; object-fit: contain; object-position: right bottom; mix-blend-mode: multiply; }
+
+.about-values { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-top: 10px; }
+.about-value { min-width: 0; min-height: 106px; display: flex; flex-direction: column; align-items: center; padding: 8px 11px 10px; border: 1px solid #e2eaf1; border-radius: 8px; background: #fff; text-align: center; }
+.about-value__icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: #e2f6f2; color: #078b83; font-size: 1.2rem; }
+.about-value__icon.blue { background: #e2f4fb; color: #078b9e; }
+.about-value__icon.mint { background: #e2f6f2; color: #078b83; }
+.about-value__icon.gold { background: #e2f6f2; color: #078b83; }
+.about-value__icon.purple { background: #e2f6f2; color: #078b83; }
+.about-value h2 { margin: 5px 0 2px; color: #123476; font-size: .7rem; font-weight: 800; }
+.about-value p { max-width: 190px; margin: 0; color: #8291ac; font-size: .62rem; line-height: 1.28; }
+
+@media (max-width: 680px) {
+  .about-page { padding-inline: 14px; }
+  .about-hero { grid-template-columns: 1fr 1fr; }
+  .about-hero__copy p { font-size: .72rem; }
+  .about-hero__art { height: 175px; }
+  .about-values { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 440px) {
+  .about-hero { grid-template-columns: 1fr; padding: 12px 14px 0; }
+  .about-hero__copy { padding: 6px 0 0; }
+  .about-hero__art { height: 155px; margin: -6px -14px 0; }
+  .about-hero__art::before { width: 20%; }
+  .about-values { gap: 8px; }
+}

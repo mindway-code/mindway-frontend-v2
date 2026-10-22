@@ -5,6 +5,10 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
+import { HowItWorksComponent } from './pages/how-it-works/how-it-works.component';
+import { AboutComponent } from './pages/about/about.component';
+import { HelpComponent } from './pages/help/help.component';
+import { ContactComponent } from './pages/contact/contact.component';
 import { SocialNetworkComponent } from './pages/social-network/social-network.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { RegisterOptionsComponent } from './auth/register-options/register-options.component';
@@ -23,6 +27,7 @@ import { LinkProfessionalComponent } from './auth/link-professional/link-profess
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
 import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { AccessHistoryComponent } from './pages/access-history/access-history.component';
 
 const routes: Routes = [
   // Rotas com layout comum (navbar/footer)
@@ -31,6 +36,10 @@ const routes: Routes = [
     component: CommonLayoutComponent,
     children: [
       { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'como-funciona', component: HowItWorksComponent },
+      { path: 'sobre', component: AboutComponent },
+      { path: 'ajuda', component: HelpComponent },
+      { path: 'contato', component: ContactComponent },
       { path: 'social-network', component: SocialNetworkComponent, canActivate: [AuthGuard] },
     ],
   },
@@ -101,6 +110,12 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [{ path: '', component: SettingsComponent, pathMatch: 'full' }],
+  },
+  {
+    path: 'access-history',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: AccessHistoryComponent, pathMatch: 'full' }],
   },
   { path: 'children/:childId/anamnesis', redirectTo: 'anamnesis', pathMatch: 'full' },
 

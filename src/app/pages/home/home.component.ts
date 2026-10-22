@@ -33,7 +33,7 @@ export class HomeComponent {
       img: 'assets/webp/relate.webp',
       alt: 'Ilustração da área de relatórios',
       buttonText: 'Ver relatórios',
-      route: '/reports'
+      route: '/reports-child'
     },
     {
       title: 'Acessar painel',

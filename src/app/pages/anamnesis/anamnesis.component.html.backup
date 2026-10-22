@@ -1,0 +1,618 @@
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  filter,
+  map,
+  take,
+  tap,
+} from "rxjs";
+
+import { AnamnesisService } from "../../services/anamnesis.service";
+import { AuthService } from "../../services/auth.service";
+import { ChildService } from "../../services/child.service";
+
+import type { ChildRecord } from "../../api/interfaces/child.interface";
+
+import type {
+  AnamnesisRecord,
+  UpdateAnamnesisGeneralNotesDTO,
+  UpsertAnamnesisBehaviorDTO,
+  UpsertAnamnesisBirthDTO,
+  UpsertAnamnesisHealthDTO,
+  UpsertAnamnesisLanguageCommunicationDTO,
+  UpsertAnamnesisMotorDevelopmentDTO,
+  UpsertAnamnesisRoutineDTO,
+} from "../../api/interfaces/anamnesis.interface";
+
+@Component({
+  selector: "app-anamnesis",
+  standalone: false,
+  templateUrl: "./anamnesis.component.html",
+  styleUrls: ["./anamnesis.component.scss"],
+})
+export class AnamnesisComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly selectedChildIdSubject =
+    new BehaviorSubject<string | null>(null);
+
+  readonly children$ = this.childService.children$;
+  readonly childrenLoading$ = this.childService.loading$;
+  readonly childrenError$ = this.childService.error$;
+
+  readonly anamnesis$ = this.anamnesisService.anamnesis$;
+  readonly loading$ = this.anamnesisService.loading$;
+  readonly saving$ = this.anamnesisService.saving$;
+  readonly error$ = this.anamnesisService.error$;
+
+  readonly currentUser$ = this.authService.currentUser$;
+
+  readonly canEdit$ = this.currentUser$.pipe(
+    map(
+      (user) =>
+        user?.role === "common" ||
+        user?.role === "admin"
+    )
+  );
+
+  readonly selectedChild$ = combineLatest([
+    this.children$,
+    this.selectedChildIdSubject,
+  ]).pipe(
+    map(
+      ([children, childId]) =>
+        children.find((child) => child.id === childId) ?? null
+    )
+  );
+
+  readonly overview$ = combineLatest([
+    this.selectedChild$,
+    this.anamnesis$,
+  ]).pipe(
+    map(([child, anamnesis]) =>
+      this.buildOverview(child, anamnesis)
+    )
+  );
+
+  selectedChildId: string | null = null;
+
+  /**
+   * Seção que está aberta atualmente.
+   *
+   * null = lista das seções
+   */
+  activeSection: string | null = null;
+
+  /**
+   * Snapshot usado pela tela para mostrar
+   * rapidamente o estado das seções.
+   *
+   * Precisa ser público porque é utilizado pelo HTML.
+   */
+  anamnesisSnapshot: AnamnesisRecord | null = null;
+
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly anamnesisService: AnamnesisService,
+    private readonly authService: AuthService,
+    private readonly childService: ChildService
+  ) {}
+
+  ngOnInit(): void {
+    this.childService
+      .loadAccessibleChildren({
+        page: 1,
+        pageSize: 50,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          if (this.selectedChildId) {
+            this.childService.selectChildById(
+              this.selectedChildId
+            );
+          }
+        },
+        error: () => {},
+      });
+
+    this.anamnesis$
+      .pipe(
+        tap(
+          (anamnesis) =>
+            (this.anamnesisSnapshot = anamnesis)
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
+
+    this.route.queryParamMap
+      .pipe(
+        map((params) => params.get("childId")),
+        filter(
+          (childId): childId is string =>
+            Boolean(childId)
+        ),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((childId) => {
+        this.onChildSelected(childId);
+      });
+  }
+
+  onChildSelected(childId: string): void {
+    const normalized = childId?.trim() ?? "";
+
+    this.activeSection = null;
+
+    if (!normalized) {
+      this.selectedChildId = null;
+      this.selectedChildIdSubject.next(null);
+
+      this.childService.selectChild(null);
+      this.anamnesisService.clearState();
+
+      return;
+    }
+
+    this.selectedChildId = normalized;
+    this.selectedChildIdSubject.next(normalized);
+
+    this.childService.selectChildById(normalized);
+
+    this.anamnesisService.clearState();
+
+    this.anamnesisService
+      .loadByChildId(normalized)
+      .subscribe();
+  }
+
+  /**
+   * Abre uma seção.
+   */
+  openSection(section: string): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.activeSection = section;
+  }
+
+  /**
+   * Volta para a lista das seções.
+   */
+  closeSection(): void {
+    this.activeSection = null;
+  }
+
+  /**
+   * Continua o preenchimento a partir
+   * da primeira seção pendente.
+   */
+  continueAnamnesis(): void {
+    const nextSection =
+      this.getNextPendingSection(
+        this.anamnesisSnapshot
+      );
+
+    if (nextSection) {
+      this.openSection(nextSection);
+    }
+  }
+
+  /**
+   * Texto da próxima seção.
+   */
+  getNextSectionLabel(
+    anamnesis: AnamnesisRecord | null
+  ): string {
+    const section =
+      this.getNextPendingSection(anamnesis);
+
+    const labels: Record<string, string> = {
+      birth: "Gestação e nascimento",
+      motorDevelopment: "Desenvolvimento motor",
+      languageCommunication:
+        "Linguagem e comunicação",
+      health: "Saúde",
+      behavior: "Comportamento",
+      routine: "Rotina e acompanhamento",
+      generalNotes: "Observações gerais",
+    };
+
+    return section
+      ? labels[section]
+      : "Anamnese concluída";
+  }
+
+  /**
+   * TrackBy do seletor de crianças.
+   */
+  trackChildById(
+    index: number,
+    child: ChildRecord
+  ): string {
+    return child.id;
+  }
+
+  onCreateAnamnesis(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .createAnamnesis(this.selectedChildId)
+      .subscribe();
+  }
+
+  onSaveBirth(
+    payload: UpsertAnamnesisBirthDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertBirth(
+        this.selectedChildId,
+        payload,
+        Boolean(this.anamnesisSnapshot?.birth)
+      )
+      .subscribe({
+        next: () => this.goToNextSection("birth"),
+      });
+  }
+
+  onDeleteBirth(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de nascimento?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteBirth(this.selectedChildId)
+      .subscribe();
+  }
+
+  onSaveMotorDevelopment(
+    payload: UpsertAnamnesisMotorDevelopmentDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertMotorDevelopment(
+        this.selectedChildId,
+        payload,
+        Boolean(
+          this.anamnesisSnapshot?.motorDevelopment
+        )
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection(
+            "motorDevelopment"
+          ),
+      });
+  }
+
+  onDeleteMotorDevelopment(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de desenvolvimento motor?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteMotorDevelopment(
+        this.selectedChildId
+      )
+      .subscribe();
+  }
+
+  onSaveLanguageCommunication(
+    payload: UpsertAnamnesisLanguageCommunicationDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertLanguageCommunication(
+        this.selectedChildId,
+        payload,
+        Boolean(
+          this.anamnesisSnapshot
+            ?.languageCommunication
+        )
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection(
+            "languageCommunication"
+          ),
+      });
+  }
+
+  onDeleteLanguageCommunication(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de linguagem e comunicação?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteLanguageCommunication(
+        this.selectedChildId
+      )
+      .subscribe();
+  }
+
+  onSaveHealth(
+    payload: UpsertAnamnesisHealthDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertHealth(
+        this.selectedChildId,
+        payload,
+        Boolean(this.anamnesisSnapshot?.health)
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection("health"),
+      });
+  }
+
+  onDeleteHealth(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de saúde?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteHealth(this.selectedChildId)
+      .subscribe();
+  }
+
+  onSaveBehavior(
+    payload: UpsertAnamnesisBehaviorDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertBehavior(
+        this.selectedChildId,
+        payload,
+        Boolean(this.anamnesisSnapshot?.behavior)
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection("behavior"),
+      });
+  }
+
+  onDeleteBehavior(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de comportamento?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteBehavior(this.selectedChildId)
+      .subscribe();
+  }
+
+  onSaveRoutine(
+    payload: UpsertAnamnesisRoutineDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .upsertRoutine(
+        this.selectedChildId,
+        payload,
+        Boolean(this.anamnesisSnapshot?.routine)
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection("routine"),
+      });
+  }
+
+  onDeleteRoutine(): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        "Tem certeza de que deseja excluir as informações de rotina?"
+      )
+    ) {
+      return;
+    }
+
+    this.anamnesisService
+      .deleteRoutine(this.selectedChildId)
+      .subscribe();
+  }
+
+  onSaveGeneralNotes(
+    payload: UpdateAnamnesisGeneralNotesDTO
+  ): void {
+    if (!this.selectedChildId) {
+      return;
+    }
+
+    this.anamnesisService
+      .updateGeneralNotes(
+        this.selectedChildId,
+        payload
+      )
+      .subscribe({
+        next: () =>
+          this.goToNextSection(
+            "generalNotes"
+          ),
+      });
+  }
+
+  /**
+   * Abre a próxima seção depois do salvamento.
+   */
+  private goToNextSection(
+    currentSection: string
+  ): void {
+    const sections = [
+      "birth",
+      "motorDevelopment",
+      "languageCommunication",
+      "health",
+      "behavior",
+      "routine",
+      "generalNotes",
+    ];
+
+    const currentIndex =
+      sections.indexOf(currentSection);
+
+    const nextSection =
+      sections[currentIndex + 1];
+
+    if (nextSection) {
+      this.activeSection = nextSection;
+    } else {
+      this.activeSection = null;
+    }
+  }
+
+  /**
+   * Retorna a primeira seção pendente.
+   */
+  private getNextPendingSection(
+    anamnesis: AnamnesisRecord | null
+  ): string | null {
+    if (!anamnesis) {
+      return "birth";
+    }
+
+    if (!anamnesis.birth) {
+      return "birth";
+    }
+
+    if (!anamnesis.motorDevelopment) {
+      return "motorDevelopment";
+    }
+
+    if (!anamnesis.languageCommunication) {
+      return "languageCommunication";
+    }
+
+    if (!anamnesis.health) {
+      return "health";
+    }
+
+    if (!anamnesis.behavior) {
+      return "behavior";
+    }
+
+    if (!anamnesis.routine) {
+      return "routine";
+    }
+
+    if (!anamnesis.generalNotes?.trim()) {
+      return "generalNotes";
+    }
+
+    return null;
+  }
+
+  private buildOverview(
+    child: ChildRecord | null,
+    anamnesis: AnamnesisRecord | null
+  ): {
+    child: ChildRecord | null;
+    completedSections: number;
+    totalSections: number;
+    hasAnamnesis: boolean;
+  } {
+    const totalSections = 7;
+
+    if (!anamnesis) {
+      return {
+        child,
+        completedSections: 0,
+        totalSections,
+        hasAnamnesis: false,
+      };
+    }
+
+    const completedSections = [
+      Boolean(anamnesis.birth),
+      Boolean(anamnesis.motorDevelopment),
+      Boolean(
+        anamnesis.languageCommunication
+      ),
+      Boolean(anamnesis.health),
+      Boolean(anamnesis.behavior),
+      Boolean(anamnesis.routine),
+      Boolean(
+        anamnesis.generalNotes?.trim()
+      ),
+    ].filter(Boolean).length;
+
+    return {
+      child,
+      completedSections,
+      totalSections,
+      hasAnamnesis: true,
+    };
+  }
+}

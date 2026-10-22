@@ -1,0 +1,20 @@
+<main class="about-page">
+  <section class="about-hero" aria-labelledby="about-title">
+    <div class="about-hero__copy">
+      <h1 id="about-title">Sobre o <span>MindWay</span></h1>
+      <p>O MindWay nasceu do desejo de tornar o desenvolvimento infantil mais organizado, acessível e colaborativo, conectando famílias, escolas e profissionais de saúde.</p>
+      <p>Acreditamos que cada criança é única e que o acesso à informação correta, no momento certo, faz toda a diferença na sua jornada.</p>
+    </div>
+    <div class="about-hero__art">
+      <img src="assets/img/illustrations/equipe-familia-profissionais.png" alt="Família, educadores e profissionais de saúde reunidos em torno da criança">
+    </div>
+  </section>
+
+  <section class="about-values" aria-label="Propósito e valores do MindWay">
+    <article class="about-value" *ngFor="let item of values">
+      <span class="about-value__icon" [ngClass]="item.tone"><i class="bi" [ngClass]="item.icon"></i></span>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.text }}</p>
+    </article>
+  </section>
+</main>

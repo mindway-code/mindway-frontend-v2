@@ -1,4 +1,4 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
 export interface SocialNetworkRecord {
   id: string;
@@ -23,4 +23,3 @@ export interface ListSocialNetworksResponse {
   items: SocialNetworkRecord[];
   meta: { pagination: PaginationMeta };
 }
-

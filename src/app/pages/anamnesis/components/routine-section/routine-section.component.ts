@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import type { AnamnesisRoutineRecord, UpsertAnamnesisRoutineDTO } from "../../../../api/interfaces/anamnesis.interface";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import type {
+  AnamnesisRoutineRecord,
+  UpsertAnamnesisRoutineDTO,
+} from '../../../../api/interfaces/anamnesis.interface';
 
 @Component({
-  selector: "app-routine-section",
+  selector: 'app-routine-section',
   standalone: false,
-  templateUrl: "./routine-section.component.html",
-  styleUrls: ["./routine-section.component.scss"],
+  templateUrl: './routine-section.component.html',
+  styleUrls: ['./routine-section.component.scss'],
 })
 export class RoutineSectionComponent implements OnChanges {
   @Input() data: AnamnesisRoutineRecord | null | undefined = null;
@@ -18,18 +21,18 @@ export class RoutineSectionComponent implements OnChanges {
   editing = false;
 
   readonly form = this.fb.group({
-    wakesUpAt: ["" as string],
-    therapies: ["" as string],
-    schoolPeriod: ["" as string],
-    extraActivity: ["" as string],
-    sleepsAt: ["" as string],
-    routineObservation: ["" as string],
+    wakesUpAt: ['' as string],
+    therapies: ['' as string],
+    schoolPeriod: ['' as string],
+    extraActivity: ['' as string],
+    sleepsAt: ['' as string],
+    routineObservation: ['' as string],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
+    if (changes['data']) {
       this.patchFormFromData();
       if (this.editing) this.editing = false;
     }
@@ -62,14 +65,14 @@ export class RoutineSectionComponent implements OnChanges {
   private patchFormFromData(): void {
     this.form.patchValue(
       {
-        wakesUpAt: this.data?.wakesUpAt ?? "",
-        therapies: this.data?.therapies ?? "",
-        schoolPeriod: this.data?.schoolPeriod ?? "",
-        extraActivity: this.data?.extraActivity ?? "",
-        sleepsAt: this.data?.sleepsAt ?? "",
-        routineObservation: this.data?.routineObservation ?? "",
+        wakesUpAt: this.data?.wakesUpAt ?? '',
+        therapies: this.data?.therapies ?? '',
+        schoolPeriod: this.data?.schoolPeriod ?? '',
+        extraActivity: this.data?.extraActivity ?? '',
+        sleepsAt: this.data?.sleepsAt ?? '',
+        routineObservation: this.data?.routineObservation ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
@@ -78,4 +81,3 @@ export class RoutineSectionComponent implements OnChanges {
     return trimmed ? trimmed : null;
   }
 }
-

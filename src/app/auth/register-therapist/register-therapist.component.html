@@ -14,35 +14,64 @@
         <form class="d-flex flex-column gap-3" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="Lucas Silva" type="text" autocomplete="name" formControlName="name" />
+              <input
+                class="input-ui__control"
+                placeholder="Lucas Silva"
+                type="text"
+                autocomplete="name"
+                formControlName="name"
+              />
               <label class="input-ui__label">Nome completo</label>
             </div>
           </div>
 
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="nome&#64;dominio.com" type="email" autocomplete="email" formControlName="email" />
+              <input
+                class="input-ui__control"
+                placeholder="nome&#64;dominio.com"
+                type="email"
+                autocomplete="email"
+                formControlName="email"
+              />
               <label class="input-ui__label">E-mail</label>
             </div>
           </div>
 
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="CRP/Registro" type="text" autocomplete="off" />
+              <input
+                class="input-ui__control"
+                placeholder="CRP/Registro"
+                type="text"
+                autocomplete="off"
+              />
               <label class="input-ui__label">Registro profissional</label>
             </div>
           </div>
 
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="****" type="password" autocomplete="new-password" formControlName="password" />
+              <input
+                class="input-ui__control"
+                placeholder="****"
+                type="password"
+                autocomplete="new-password"
+                formControlName="password"
+              />
               <label class="input-ui__label">Senha</label>
             </div>
           </div>
 
           <div class="input-ui">
             <div class="input-ui__field">
-              <input class="input-ui__control" placeholder="****" type="password" autocomplete="new-password" formControlName="confirmPassword" />
+              <input
+                class="input-ui__control"
+                placeholder="****"
+                type="password"
+                autocomplete="new-password"
+                formControlName="confirmPassword"
+              />
               <label class="input-ui__label">Confirmar senha</label>
             </div>
           </div>
@@ -51,7 +80,11 @@
             {{ error }}
           </div>
 
-          <button class="btn-ui btn-ui--green w-100" type="submit" [disabled]="form.invalid || (loading$ | async)">
+          <button
+            class="btn-ui btn-ui--green w-100"
+            type="submit"
+            [disabled]="form.invalid || (loading$ | async)"
+          >
             Criar conta
           </button>
         </form>

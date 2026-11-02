@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "therapist" | "common" | "enterprise" | "professional";
+export type UserRole = 'admin' | 'therapist' | 'common' | 'enterprise' | 'professional';
 
 export interface UserRecord {
   id: string;
@@ -14,7 +14,7 @@ export interface UserDTO {
   email?: string | null;
   password?: string | null;
   role: UserRole;
-  provider?: "local" | "google";
+  provider?: 'local' | 'google';
   googleId?: string;
 }
 
@@ -23,7 +23,6 @@ export interface UpdateUserDTO {
   email?: string | null;
   password?: string;
   role?: UserRole;
-  provider?: "local" | "google";
+  provider?: 'local' | 'google';
   googleId?: string;
 }
-

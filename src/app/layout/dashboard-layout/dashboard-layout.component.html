@@ -14,8 +14,18 @@
   <aside class="dashboard-aside" aria-label="Menu lateral">
     <div class="dashboard-aside__topbar">
       <a routerLink="/" class="dashboard-aside__brand">
-        <img *ngIf="isDesktopSidebarExpanded || isMobileViewport" class="dashboard-aside__brand-logo" src="assets/img/mindway-logo.svg" alt="MindWay — Conexões que desenvolvem">
-        <span *ngIf="!isDesktopSidebarExpanded && !isMobileViewport" class="dashboard-aside__collapsed-mark" aria-label="MindWay">M</span>
+        <img
+          *ngIf="isDesktopSidebarExpanded || isMobileViewport"
+          class="dashboard-aside__brand-logo"
+          src="assets/img/mindway-logo.svg"
+          alt="MindWay — Conexões que desenvolvem"
+        />
+        <span
+          *ngIf="!isDesktopSidebarExpanded && !isMobileViewport"
+          class="dashboard-aside__collapsed-mark"
+          aria-label="MindWay"
+          >M</span
+        >
       </a>
 
       <button
@@ -25,19 +35,37 @@
         [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
         [attr.aria-label]="isMobileViewport ? 'Fechar menu' : 'Ocultar ou mostrar menu lateral'"
       >
-        <i class="bi" [ngClass]="isMobileViewport ? 'bi-x-lg' : (isDesktopSidebarExpanded ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar')"></i>
+        <i
+          class="bi"
+          [ngClass]="
+            isMobileViewport
+              ? 'bi-x-lg'
+              : isDesktopSidebarExpanded
+                ? 'bi-layout-sidebar-inset'
+                : 'bi-layout-sidebar'
+          "
+        ></i>
       </button>
     </div>
 
     <div class="dashboard-aside__user">
-      <ng-container *ngIf="currentUser$ | async as user">
-        <img *ngIf="getProfilePhoto(user.id) as photo; else defaultProfilePhoto" class="dashboard-aside__avatar" [src]="photo" alt="Foto de perfil">
+      <!-- <ng-container *ngIf="currentUser$ | async as user">
+        <img
+          *ngIf="getProfilePhoto(user.id) as photo; else defaultProfilePhoto"
+          class="dashboard-aside__avatar"
+          [src]="photo"
+          alt="Foto de perfil"
+        />
         <ng-template #defaultProfilePhoto>
-          <img class="dashboard-aside__avatar" src="assets/img/placeholder.PNG" alt="Imagem padrão do perfil do usuário">
+          <img
+            class="dashboard-aside__avatar"
+            src="assets/img/placeholder.PNG"
+            alt="Imagem padrão do perfil do usuário"
+          />
         </ng-template>
-      </ng-container>
+      </ng-container> -->
 
-      <div class="dashboard-aside__user-info" *ngIf="isDesktopSidebarExpanded || isMobileViewport">
+      <!-- <div class="dashboard-aside__user-info" *ngIf="isDesktopSidebarExpanded || isMobileViewport">
         <p class="dashboard-aside__welcome">Bem vindo(a)!</p>
 
         <strong class="dashboard-aside__name">
@@ -47,7 +75,7 @@
 
           <ng-template #userFallback>Usuário</ng-template>
         </strong>
-      </div>
+      </div> -->
     </div>
 
     <nav class="dashboard-aside__nav" aria-label="Navegação do painel">
@@ -59,7 +87,11 @@
         (click)="closeMobileSidebar()"
       >
         <i class="bi dashboard-aside__link-icon" [ngClass]="item.icon" aria-hidden="true"></i>
-        <span class="dashboard-aside__link-text" *ngIf="isDesktopSidebarExpanded || isMobileViewport">{{ item.label }}</span>
+        <span
+          class="dashboard-aside__link-text"
+          *ngIf="isDesktopSidebarExpanded || isMobileViewport"
+          >{{ item.label }}</span
+        >
       </a>
     </nav>
 
@@ -73,26 +105,21 @@
 
   <main class="dashboard-layout__main">
 
-    <header class="dashboard-layout__topbar">
-      <span class="dashboard-layout__topbar-spacer"></span>
-      <ng-container *ngIf="currentUser$ | async as user">
-        <a class="dashboard-layout__account" routerLink="/settings" aria-label="Abrir configurações da conta">
-          <img *ngIf="getProfilePhoto(user.id) as photo; else topbarInitial" [src]="photo" alt="">
-          <ng-template #topbarInitial><span class="dashboard-layout__account-initial">{{ (user.name || user.email || 'U').charAt(0).toUpperCase() }}</span></ng-template>
-          <span class="dashboard-layout__account-name">{{ user.name || user.email }}</span>
-        </a>
-      </ng-container>
-    </header>
-
-      <button
-        class="dashboard-layout__menu-button"
-        type="button"
-        (click)="toggleSidebar()"
-        [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
-      >
-        <i class="bi bi-list" aria-hidden="true"></i>
-        <span>{{ isMobileViewport ? "Menu" : (isDesktopSidebarExpanded ? "Ocultar menu lateral" : "Mostrar menu lateral") }}</span>
-      </button>
+    <button
+      class="dashboard-layout__menu-button"
+      type="button"
+      (click)="toggleSidebar()"
+      [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
+    >
+      <i class="bi bi-list" aria-hidden="true"></i>
+      <span>{{
+        isMobileViewport
+          ? 'Menu'
+          : isDesktopSidebarExpanded
+            ? 'Ocultar menu lateral'
+            : 'Mostrar menu lateral'
+      }}</span>
+    </button>
 
     <div class="dashboard-layout__panel">
       <router-outlet></router-outlet>

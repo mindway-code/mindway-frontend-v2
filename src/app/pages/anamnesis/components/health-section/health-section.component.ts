@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import type { AnamnesisHealthRecord, UpsertAnamnesisHealthDTO } from "../../../../api/interfaces/anamnesis.interface";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import type {
+  AnamnesisHealthRecord,
+  UpsertAnamnesisHealthDTO,
+} from '../../../../api/interfaces/anamnesis.interface';
 
 @Component({
-  selector: "app-health-section",
+  selector: 'app-health-section',
   standalone: false,
-  templateUrl: "./health-section.component.html",
-  styleUrls: ["./health-section.component.scss"],
+  templateUrl: './health-section.component.html',
+  styleUrls: ['./health-section.component.scss'],
 })
 export class HealthSectionComponent implements OnChanges {
   @Input() data: AnamnesisHealthRecord | null | undefined = null;
@@ -18,15 +21,15 @@ export class HealthSectionComponent implements OnChanges {
   editing = false;
 
   readonly form = this.fb.group({
-    diagnosis: ["" as string],
-    medication: ["" as string],
-    allergies: ["" as string],
+    diagnosis: ['' as string],
+    medication: ['' as string],
+    allergies: ['' as string],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
+    if (changes['data']) {
       this.patchFormFromData();
       if (this.editing) this.editing = false;
     }
@@ -56,11 +59,11 @@ export class HealthSectionComponent implements OnChanges {
   private patchFormFromData(): void {
     this.form.patchValue(
       {
-        diagnosis: this.data?.diagnosis ?? "",
-        medication: this.data?.medication ?? "",
-        allergies: this.data?.allergies ?? "",
+        diagnosis: this.data?.diagnosis ?? '',
+        medication: this.data?.medication ?? '',
+        allergies: this.data?.allergies ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
@@ -69,4 +72,3 @@ export class HealthSectionComponent implements OnChanges {
     return trimmed ? trimmed : null;
   }
 }
-

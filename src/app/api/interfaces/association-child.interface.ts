@@ -1,4 +1,4 @@
-import type { ChildRecord } from "./child.interface";
+import type { ChildRecord } from './child.interface';
 
 export interface AssociationChildRecord {
   id: string;
@@ -17,4 +17,3 @@ export interface AssociateChildResult {
   association: AssociationChildRecord | null;
   alreadyHadAccess: boolean;
 }
-

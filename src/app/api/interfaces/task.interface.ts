@@ -1,6 +1,6 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
-export type TaskStatus = "pending" | "in_progress" | "done" | "canceled";
+export type TaskStatus = 'pending' | 'in_progress' | 'done' | 'canceled';
 
 export interface TaskRecord {
   id: string;
@@ -40,4 +40,3 @@ export interface ListTasksResponse {
   items: TaskRecord[];
   meta: { pagination: PaginationMeta };
 }
-

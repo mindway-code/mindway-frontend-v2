@@ -1,4 +1,4 @@
-import type { AnamnesisRecord } from "./anamnesis.interface";
+import type { AnamnesisRecord } from './anamnesis.interface';
 
 export interface ChildRecord {
   id: string;

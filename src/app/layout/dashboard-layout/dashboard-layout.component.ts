@@ -1,5 +1,5 @@
-import { Component, HostListener } from "@angular/core";
-import { AuthService } from "../../services/auth.service";
+import { Component, HostListener } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 interface DashboardNavItem {
   label: string;
@@ -11,17 +11,17 @@ interface DashboardNavItem {
   selector: 'app-dashboard-layout',
   standalone: false,
   templateUrl: './dashboard-layout.component.html',
-  styleUrl: './dashboard-layout.component.css'
+  styleUrl: './dashboard-layout.component.css',
 })
 export class DashboardLayoutComponent {
   readonly currentUser$ = this.authService.currentUser$;
   readonly navItems: DashboardNavItem[] = [
-    { label: "Início", route: "/dashboard", icon: "bi-house-door" },
-    { label: "Anamnese", route: "/anamnesis", icon: "bi-journal-text" },
-    { label: "Crianças", route: "/child-profile", icon: "bi-people" },
-    { label: "Relatórios", route: "/reports-child", icon: "bi-clipboard-data" },
-    { label: "Histórico", route: "/access-history", icon: "bi-clock-history" },
-    { label: "Configurações", route: "/settings", icon: "bi-gear" },
+    { label: 'Início', route: '/dashboard', icon: 'bi-house-door' },
+    { label: 'Anamnese', route: '/anamnesis', icon: 'bi-journal-text' },
+    { label: 'Crianças', route: '/child-profile', icon: 'bi-people' },
+    { label: 'Relatórios', route: '/reports-child', icon: 'bi-clipboard-data' },
+    { label: 'Histórico', route: '/access-history', icon: 'bi-clock-history' },
+    { label: 'Configurações', route: '/settings', icon: 'bi-gear' },
   ];
 
   isDesktopSidebarExpanded = true;
@@ -35,7 +35,7 @@ export class DashboardLayoutComponent {
   }
 
   getProfilePhoto(userId: string): string | null {
-    if (typeof localStorage === "undefined") return null;
+    if (typeof localStorage === 'undefined') return null;
     return localStorage.getItem(`mindway-account-photo-${userId}`);
   }
   toggleSidebar(): void {
@@ -53,7 +53,7 @@ export class DashboardLayoutComponent {
     }
   }
 
-  @HostListener("window:resize")
+  @HostListener('window:resize')
   onResize(): void {
     this.viewportWidth = this.getViewportWidth();
 
@@ -63,6 +63,6 @@ export class DashboardLayoutComponent {
   }
 
   private getViewportWidth(): number {
-    return typeof window !== "undefined" ? window.innerWidth : 1280;
+    return typeof window !== 'undefined' ? window.innerWidth : 1280;
   }
 }

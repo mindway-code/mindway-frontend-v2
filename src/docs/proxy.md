@@ -19,7 +19,7 @@ http://localhost:3000/api/users
 The frontend can call:
 
 ```ts
-/api/users
+/api/erssu;
 ```
 
 Angular dev server forwards `/api` to the backend.
@@ -98,6 +98,7 @@ export const environment = {
 If the request is going through Angular dev server proxy, CORS usually should not happen.
 
 Check:
+
 - Did you use `/api` instead of `http://localhost:3000/api`?
 - Did you start Angular with proxy config?
 - Is the backend running?
@@ -105,6 +106,7 @@ Check:
 ### 404 Error
 
 Check:
+
 - Backend route exists.
 - Proxy target points to the correct backend port.
 - API path is correct.
@@ -112,6 +114,7 @@ Check:
 ### Network Error
 
 Check:
+
 - Backend server is running.
 - Backend port matches `proxy.conf.json`.
 - No firewall/process issue.

@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-register-options',
   standalone: false,
   templateUrl: './register-options.component.html',
-  styleUrl: './register-options.component.css'
+  styleUrl: './register-options.component.css',
 })
-export class RegisterOptionsComponent {
-
-}
+export class RegisterOptionsComponent {}

@@ -22,4 +22,3 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('mindway-frontend');
   });
 });
-

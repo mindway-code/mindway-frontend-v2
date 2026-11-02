@@ -13,7 +13,11 @@
     </div>
 
     <div class="child-details__actions">
-      <button class="btn-ui btn-ui--accent btn-ui--sm" type="button" (click)="openAnamnesis.emit(child)">
+      <button
+        class="btn-ui btn-ui--accent btn-ui--sm"
+        type="button"
+        (click)="openAnamnesis.emit(child)"
+      >
         Abrir anamnese
       </button>
     </div>
@@ -27,13 +31,15 @@
 
     <article class="child-details__fact">
       <span class="child-details__fact-label">Data de nascimento</span>
-      <strong class="child-details__fact-value">{{ child.birthDate | date: "longDate" }}</strong>
+      <strong class="child-details__fact-value">{{ child.birthDate | date: 'longDate' }}</strong>
     </article>
   </div>
 
   <article class="child-details__notes">
     <span class="child-details__label">Observação</span>
-    <p class="child-details__note">{{ child.observation || "Nenhuma observação adicionada ainda." }}</p>
+    <p class="child-details__note">
+      {{ child.observation || 'Nenhuma observação adicionada ainda.' }}
+    </p>
   </article>
 </ng-container>
 
@@ -41,7 +47,8 @@
   <div class="child-details__empty">
     <p class="child-details__empty-title">Nenhuma criança selecionada</p>
     <p class="child-details__empty-copy">
-      O perfil permanece oculto até você escolher uma criança, ajudando a evitar a visualização de informações erradas por engano.
+      O perfil permanece oculto até você escolher uma criança, ajudando a evitar a visualização de
+      informações erradas por engano.
     </p>
   </div>
 </ng-template>

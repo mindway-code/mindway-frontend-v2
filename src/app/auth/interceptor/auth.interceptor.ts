@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-} from "@angular/common/http";
-import { Observable, catchError, finalize, shareReplay, switchMap, throwError } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { AuthService } from "../../services/auth.service";
-import { TokenService } from "../../services/token.service";
-import { Router } from "@angular/router";
+} from '@angular/common/http';
+import { Observable, catchError, finalize, shareReplay, switchMap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -19,18 +19,18 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private readonly tokenService: TokenService,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const apiUrl = environment.apiUrl;
-    const isApiRequest = req.url.startsWith(apiUrl) || req.url.startsWith("/api");
+    const isApiRequest = req.url.startsWith(apiUrl) || req.url.startsWith('/api');
 
     const isAuthEndpoint =
-      req.url.includes("/auth/login") ||
-      req.url.includes("/auth/register") ||
-      req.url.includes("/auth/refresh") ||
-      req.url.includes("/auth/logout");
+      req.url.includes('/auth/login') ||
+      req.url.includes('/auth/register') ||
+      req.url.includes('/auth/refresh') ||
+      req.url.includes('/auth/logout');
 
     const accessToken = this.tokenService.getAccessToken();
 
@@ -61,14 +61,14 @@ export class AuthInterceptor implements HttpInterceptor {
             }),
             catchError((refreshErr) => {
               this.authService.clearAuthState();
-              this.router.navigate(["/login"]);
+              this.router.navigate(['/login']);
               return throwError(() => refreshErr);
-            })
+            }),
           );
         }
 
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -78,7 +78,7 @@ export class AuthInterceptor implements HttpInterceptor {
         shareReplay({ bufferSize: 1, refCount: true }),
         finalize(() => {
           this.refreshInFlight$ = null;
-        })
+        }),
       );
     }
 

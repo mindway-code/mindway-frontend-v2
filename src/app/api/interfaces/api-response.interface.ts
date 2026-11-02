@@ -31,4 +31,3 @@ export interface PaginationQuery {
 export interface DeleteResult {
   id: string;
 }
-

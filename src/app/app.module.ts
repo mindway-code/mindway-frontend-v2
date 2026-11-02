@@ -124,7 +124,7 @@ registerLocaleData(localePt);
     DashboradComponent,
     MessagesComponent,
     SettingsComponent,
-    AccessHistoryComponent
+    AccessHistoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -138,13 +138,13 @@ registerLocaleData(localePt);
     ReactiveFormsModule,
     DialogModule,
     ButtonModule,
-    AsyncPipe
+    AsyncPipe,
   ],
   providers: [
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

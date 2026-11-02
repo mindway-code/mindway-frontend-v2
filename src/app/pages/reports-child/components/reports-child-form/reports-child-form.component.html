@@ -3,14 +3,19 @@
     <div class="reports-child-form__header">
       <div>
         <h2 class="card-ui__title">
-          {{ mode === "create" ? "Criar relatório" : "Editar relatório" }}
+          {{ mode === 'create' ? 'Criar relatório' : 'Editar relatório' }}
         </h2>
         <p class="card-ui__subtitle reports-child-form__subtitle">
           Registre as notas mais relevantes de forma estruturada e fácil de revisar depois.
         </p>
       </div>
 
-      <button class="btn-ui btn-ui--outline btn-ui--sm" type="button" [disabled]="saving" (click)="cancel.emit()">
+      <button
+        class="btn-ui btn-ui--outline btn-ui--sm"
+        type="button"
+        [disabled]="saving"
+        (click)="cancel.emit()"
+      >
         Cancelar
       </button>
     </div>
@@ -28,7 +33,9 @@
           />
           <label class="input-ui__label" for="rTitle">Título</label>
         </div>
-        <p class="input-ui__hint">Ex: acompanhamento semanal, retorno da escola ou resumo da terapia.</p>
+        <p class="input-ui__hint">
+          Ex: acompanhamento semanal, retorno da escola ou resumo da terapia.
+        </p>
       </div>
 
       <div class="input-ui">
@@ -58,7 +65,9 @@
           ></textarea>
           <label class="input-ui__label" for="rDifficulty">Dificuldade</label>
         </div>
-        <p class="input-ui__hint">Registre desafios, obstáculos ou situações que precisam de atenção.</p>
+        <p class="input-ui__hint">
+          Registre desafios, obstáculos ou situações que precisam de atenção.
+        </p>
       </div>
 
       <div class="input-ui reports-child-form__span-2">
@@ -73,12 +82,14 @@
           ></textarea>
           <label class="input-ui__label" for="rRecommendation">Recomendação</label>
         </div>
-        <p class="input-ui__hint">Adicione próximos passos, orientações ou ações para os responsáveis.</p>
+        <p class="input-ui__hint">
+          Adicione próximos passos, orientações ou ações para os responsáveis.
+        </p>
       </div>
 
       <div class="reports-child-form__actions">
         <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">
-          {{ mode === "create" ? "Criar" : "Salvar" }}
+          {{ mode === 'create' ? 'Criar' : 'Salvar' }}
         </button>
       </div>
     </form>

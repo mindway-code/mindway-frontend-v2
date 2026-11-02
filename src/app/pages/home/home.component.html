@@ -6,7 +6,7 @@
 
   <section class="home-welcome__cards" aria-label="Acessos principais">
     <article class="home-welcome__card" *ngFor="let card of cards">
-      <img [src]="card.img" [alt]="card.alt">
+      <img [src]="card.img" [alt]="card.alt" />
       <h2>{{ card.title }}</h2>
       <p>{{ card.description }}</p>
       <a class="home-welcome__button" [routerLink]="card.route">{{ card.buttonText }}</a>
@@ -20,7 +20,10 @@
     <div>
       <h2>Acompanhamento personalizado!</h2>
       <p>No MindWay, cada detalhe importa.</p>
-      <p>Trabalhe lado a lado com profissionais especializados e acompanhe a evolução com facilidade e apoio contínuo.</p>
+      <p>
+        Trabalhe lado a lado com profissionais especializados e acompanhe a evolução com facilidade
+        e apoio contínuo.
+      </p>
     </div>
   </aside>
 </main>

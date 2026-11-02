@@ -13,7 +13,8 @@
       <p class="link-professional__eyebrow">Cadastro profissional</p>
       <h2>Você foi convidado(a) para colaborar no MindWay</h2>
       <p>
-        Crie sua conta profissional para acessar acompanhamentos, contribuir com registros e trabalhar junto à rede de apoio.
+        Crie sua conta profissional para acessar acompanhamentos, contribuir com registros e
+        trabalhar junto à rede de apoio.
       </p>
     </div>
 
@@ -40,20 +41,38 @@
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="name" type="text" autocomplete="name" placeholder=" " />
+          <input
+            class="input-ui__control"
+            formControlName="name"
+            type="text"
+            autocomplete="name"
+            placeholder=" "
+          />
           <label class="input-ui__label">Nome completo</label>
         </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+        <p
+          class="input-ui__hint input-ui__hint--error"
+          *ngIf="form.controls.name.touched && form.controls.name.invalid"
+        >
           Informe seu nome.
         </p>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
+          <input
+            class="input-ui__control"
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            placeholder=" "
+          />
           <label class="input-ui__label">E-mail profissional</label>
         </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <p
+          class="input-ui__hint input-ui__hint--error"
+          *ngIf="form.controls.email.touched && form.controls.email.invalid"
+        >
           Informe um e-mail válido.
         </p>
       </div>
@@ -61,10 +80,19 @@
       <div class="link-professional__form-grid">
         <div class="input-ui">
           <div class="input-ui__field">
-            <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
+            <input
+              class="input-ui__control"
+              formControlName="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder=" "
+            />
             <label class="input-ui__label">Senha</label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.password.touched && form.controls.password.invalid"
+          >
             Use pelo menos 6 caracteres.
           </p>
         </div>
@@ -80,7 +108,10 @@
             />
             <label class="input-ui__label">Confirmar senha</label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid"
+          >
             Confirme a senha.
           </p>
         </div>
@@ -99,7 +130,9 @@
         type="submit"
         [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)"
       >
-        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta profissional</ng-container>
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl"
+          >Criar conta profissional</ng-container
+        >
         <ng-template #loadingTpl>Criando conta...</ng-template>
       </button>
 

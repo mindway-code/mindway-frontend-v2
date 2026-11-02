@@ -8,9 +8,8 @@ describe('LinkProfessionalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LinkProfessionalComponent]
-    })
-    .compileComponents();
+      imports: [LinkProfessionalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LinkProfessionalComponent);
     component = fixture.componentInstance;

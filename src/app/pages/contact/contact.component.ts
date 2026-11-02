@@ -13,7 +13,15 @@ export class ContactComponent {
   message = '';
   submitted = false;
 
-  readonly subjects = ['Cadastro e acesso', 'Perfil da criança', 'Anamnese e registros', 'Relatórios', 'Privacidade e segurança', 'Sugestão', 'Outro'];
+  readonly subjects = [
+    'Cadastro e acesso',
+    'Perfil da criança',
+    'Anamnese e registros',
+    'Relatórios',
+    'Privacidade e segurança',
+    'Sugestão',
+    'Outro',
+  ];
 
   sendMessage(): void {
     this.submitted = true;

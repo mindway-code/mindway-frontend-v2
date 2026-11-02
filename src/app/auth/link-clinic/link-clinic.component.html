@@ -3,12 +3,19 @@
     <img class="link-clinic__image" src="assets/img/clinic-registration.png" alt="" />
     <div class="link-clinic__visual-copy">
       <a class="link-clinic__brand" routerLink="/" aria-label="Voltar ao início">
-        <img class="link-clinic__logo" src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
+        <img
+          class="link-clinic__logo"
+          src="assets/img/home/logo.png"
+          alt="MindWay — Conexões que desenvolvem"
+        />
       </a>
       <div class="link-clinic__intro">
         <p class="link-clinic__eyebrow">Cadastro da clínica</p>
         <h2>Sua clínica<br />no MindWay</h2>
-        <p>Organize sua equipe, acompanhe os atendimentos e centralize as informações em um só lugar, de forma segura e colaborativa.</p>
+        <p>
+          Organize sua equipe, acompanhe os atendimentos e centralize as informações em um só lugar,
+          de forma segura e colaborativa.
+        </p>
       </div>
     </div>
   </div>
@@ -42,31 +49,59 @@
       </div>
 
       <div class="link-clinic__clinic-fields">
-      <div class="input-ui">
-        <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="name" type="text" autocomplete="organization" placeholder=" " />
-          <label class="input-ui__label">Nome da clínica <span aria-hidden="true">*</span></label>
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="name"
+              type="text"
+              autocomplete="organization"
+              placeholder=" "
+            />
+            <label class="input-ui__label">Nome da clínica <span aria-hidden="true">*</span></label>
+          </div>
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.name.touched && form.controls.name.invalid"
+          >
+            Informe o nome da clínica.
+          </p>
         </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
-          Informe o nome da clínica.
-        </p>
+
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="cnpj"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder=" "
+              maxlength="18"
+            />
+            <label class="input-ui__label">CNPJ (opcional)</label>
+          </div>
+          <small class="link-clinic__field-hint">Ex.: 00.000.000/0000-00</small>
+        </div>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="cnpj" type="text" inputmode="numeric" autocomplete="off" placeholder=" " maxlength="18" />
-          <label class="input-ui__label">CNPJ (opcional)</label>
+          <input
+            class="input-ui__control"
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            placeholder=" "
+          />
+          <label class="input-ui__label"
+            >E-mail institucional <span aria-hidden="true">*</span></label
+          >
         </div>
-        <small class="link-clinic__field-hint">Ex.: 00.000.000/0000-00</small>
-      </div>
-      </div>
-
-      <div class="input-ui">
-        <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
-          <label class="input-ui__label">E-mail institucional <span aria-hidden="true">*</span></label>
-        </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <p
+          class="input-ui__hint input-ui__hint--error"
+          *ngIf="form.controls.email.touched && form.controls.email.invalid"
+        >
           Informe um e-mail válido.
         </p>
       </div>
@@ -79,10 +114,19 @@
       <div class="link-clinic__form-grid">
         <div class="input-ui">
           <div class="input-ui__field">
-            <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
+            <input
+              class="input-ui__control"
+              formControlName="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder=" "
+            />
             <label class="input-ui__label">Senha <span aria-hidden="true">*</span></label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.password.touched && form.controls.password.invalid"
+          >
             Use pelo menos 6 caracteres.
           </p>
         </div>
@@ -98,7 +142,10 @@
             />
             <label class="input-ui__label">Confirmar senha <span aria-hidden="true">*</span></label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid"
+          >
             Confirme a senha.
           </p>
         </div>
@@ -106,7 +153,10 @@
 
       <label class="link-clinic__consent">
         <input type="checkbox" formControlName="termsAccepted" />
-        <span>Li e aceito os <strong>Termos de uso</strong> e a <strong>Política de Privacidade</strong>.</span>
+        <span
+          >Li e aceito os <strong>Termos de uso</strong> e a
+          <strong>Política de Privacidade</strong>.</span
+        >
       </label>
 
       <p class="link-clinic__error" *ngIf="passwordsDoNotMatch" role="alert">
@@ -117,8 +167,14 @@
         {{ error }}
       </p>
 
-      <button class="btn-ui btn-ui--green link-clinic__submit" type="submit" [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)">
-        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta da clínica</ng-container>
+      <button
+        class="btn-ui btn-ui--green link-clinic__submit"
+        type="submit"
+        [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)"
+      >
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl"
+          >Criar conta da clínica</ng-container
+        >
         <ng-template #loadingTpl>Criando conta...</ng-template>
       </button>
 

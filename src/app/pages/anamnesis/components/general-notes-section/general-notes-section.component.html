@@ -9,13 +9,17 @@
   (cancel)="onCancel()"
 >
   <ng-container *ngIf="!editing">
-    <p class="mb-0">{{ generalNotes || "Nenhuma nota ainda." }}</p>
+    <p class="mb-0">{{ generalNotes || 'Nenhuma nota ainda.' }}</p>
   </ng-container>
 
   <form *ngIf="editing" class="anamnesis-section__form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="input-ui">
       <div class="input-ui__field">
-        <textarea class="input-ui__control" formControlName="generalNotes" placeholder=" "></textarea>
+        <textarea
+          class="input-ui__control"
+          formControlName="generalNotes"
+          placeholder=" "
+        ></textarea>
         <label class="input-ui__label">Notas gerais</label>
       </div>
     </div>

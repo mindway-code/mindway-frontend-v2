@@ -44,7 +44,9 @@
   color: var(--text-dark, #212529);
   padding: 0.85rem 1rem;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .reports-child-selector__search-input:focus {
@@ -57,7 +59,6 @@
   margin: 0.85rem 0 0;
   color: var(--text-muted, #6c757d);
 }
-
 
 @media (max-width: 700px) {
   .reports-child-selector-body {

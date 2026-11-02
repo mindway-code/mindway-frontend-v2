@@ -1,16 +1,20 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { PaginationMeta, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
-import type { CreateMessageDTO, MessageRecord } from "../api/interfaces/message.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import type {
+  PaginationMeta,
+  SuccessResponse,
+  DeleteResult,
+} from '../api/interfaces/api-response.interface';
+import type { CreateMessageDTO, MessageRecord } from '../api/interfaces/message.interface';
 
 export interface ListMessagesQuery {
   page?: number;
   pageSize?: number;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class MessageService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -36,11 +40,17 @@ export class MessageService {
     return this.sendInternal(`${this.apiUrl}/messages/dm/${userId}`, dto);
   }
 
-  listSocialNetworkMessages(socialNetworkId: string, query: ListMessagesQuery = {}): Observable<MessageRecord[]> {
+  listSocialNetworkMessages(
+    socialNetworkId: string,
+    query: ListMessagesQuery = {},
+  ): Observable<MessageRecord[]> {
     return this.listInternal(`${this.apiUrl}/messages/social-networks/${socialNetworkId}`, query);
   }
 
-  sendSocialNetworkMessage(socialNetworkId: string, dto: CreateMessageDTO): Observable<MessageRecord> {
+  sendSocialNetworkMessage(
+    socialNetworkId: string,
+    dto: CreateMessageDTO,
+  ): Observable<MessageRecord> {
     return this.sendInternal(`${this.apiUrl}/messages/social-networks/${socialNetworkId}`, dto);
   }
 
@@ -49,8 +59,8 @@ export class MessageService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
     return this.http.get<SuccessResponse<MessageRecord[]>>(url, { params }).pipe(
       tap((res) => {
@@ -59,10 +69,10 @@ export class MessageService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar as mensagens.");
+        this.errorSubject.next('Não foi possível carregar as mensagens.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -74,10 +84,10 @@ export class MessageService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível enviar a mensagem.");
+        this.errorSubject.next('Não foi possível enviar a mensagem.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -85,14 +95,18 @@ export class MessageService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.http.delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/messages/${messageId}`).pipe(
-      map((res) => res.data),
-      tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((m) => m.id !== messageId))),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível excluir a mensagem.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.loadingSubject.next(false))
-    );
+    return this.http
+      .delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/messages/${messageId}`)
+      .pipe(
+        map((res) => res.data),
+        tap(() =>
+          this.itemsSubject.next(this.itemsSubject.value.filter((m) => m.id !== messageId)),
+        ),
+        catchError((err) => {
+          this.errorSubject.next('Não foi possível excluir a mensagem.');
+          return throwError(() => err);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+      );
   }
 }

@@ -1,22 +1,32 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, of, switchMap, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { SuccessResponse, ErrorResponse } from "../api/interfaces/api-response.interface";
-import type { LoginPayload, RegisterDTO } from "../api/interfaces/auth.interface";
-import type { UserRecord } from "../api/interfaces/user.interface";
-import { TokenService } from "./token.service";
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  finalize,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
+import { environment } from '../../environments/environment';
+import type { SuccessResponse, ErrorResponse } from '../api/interfaces/api-response.interface';
+import type { LoginPayload, RegisterDTO } from '../api/interfaces/auth.interface';
+import type { UserRecord } from '../api/interfaces/user.interface';
+import { TokenService } from './token.service';
 
 function toMessage(err: unknown, fallback: string): string {
   if (err instanceof HttpErrorResponse) {
     const data = err.error as Partial<ErrorResponse> | undefined;
     const msg = data?.error?.message;
-    if (typeof msg === "string" && msg.trim()) return msg;
+    if (typeof msg === 'string' && msg.trim()) return msg;
   }
   return fallback;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -31,7 +41,7 @@ export class AuthService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
   ) {}
 
   getAccessToken(): string | null {
@@ -57,10 +67,10 @@ export class AuthService {
         tap((token) => this.tokenService.setAccessToken(token)),
         tap(() => void 0),
         catchError((err) => {
-          this.errorSubject.next(toMessage(err, "E-mail ou senha inválidos."));
+          this.errorSubject.next(toMessage(err, 'E-mail ou senha inválidos.'));
           return throwError(() => err);
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       );
   }
 
@@ -76,10 +86,10 @@ export class AuthService {
         map((res) => res.data.accessToken),
         tap((token) => this.tokenService.setAccessToken(token)),
         catchError((err) => {
-          this.errorSubject.next(toMessage(err, "Não foi possível cadastrar."));
+          this.errorSubject.next(toMessage(err, 'Não foi possível cadastrar.'));
           return throwError(() => err);
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       );
   }
 
@@ -88,11 +98,11 @@ export class AuthService {
       .post<SuccessResponse<{ accessToken: string }>>(
         `${this.apiUrl}/auth/refresh`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       )
       .pipe(
         map((res) => res.data.accessToken),
-        tap((token) => this.tokenService.setAccessToken(token))
+        tap((token) => this.tokenService.setAccessToken(token)),
       );
   }
 
@@ -108,10 +118,10 @@ export class AuthService {
         catchError((err) => {
           // If backend is unreachable, still clear local state.
           this.clearAuthState();
-          this.errorSubject.next(toMessage(err, "Sessão encerrada localmente."));
+          this.errorSubject.next(toMessage(err, 'Sessão encerrada localmente.'));
           return of(void 0);
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       );
   }
 
@@ -123,10 +133,10 @@ export class AuthService {
       map((res) => res.data),
       tap((user) => this.currentUserSubject.next(user)),
       catchError((err) => {
-        this.errorSubject.next(toMessage(err, "Não foi possível carregar o usuário atual."));
+        this.errorSubject.next(toMessage(err, 'Não foi possível carregar o usuário atual.'));
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -145,7 +155,7 @@ export class AuthService {
       catchError(() => {
         this.clearAuthState();
         return of(null);
-      })
+      }),
     );
   }
 }

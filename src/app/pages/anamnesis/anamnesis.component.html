@@ -1,87 +1,88 @@
 <div class="anamnesis-page">
-
   <!-- =========================================================
        P&#193;GINA 1 &#65533;?" SELECIONAR CRIAN&#65533;?A
        ========================================================= -->
 
   <ng-container *ngIf="!selectedChildId">
-
     <header class="anamnesis-page__hero">
-
       <div class="anamnesis-page__hero-content">
-
         <div class="anamnesis-page__hero-text">
+          <span class="anamnesis-page__eyebrow"> ANAMNESE INFANTIL </span>
 
-          <span class="anamnesis-page__eyebrow">
-            ANAMNESE INFANTIL
-          </span>
-
-          <h1 class="anamnesis-page__title">
-            Minhas crian&#231;as
-          </h1>
+          <h1 class="anamnesis-page__title">Minhas crian&#231;as</h1>
 
           <p class="anamnesis-page__subtitle" *ngIf="!isProfessionalView">
-            Registre e acompanhe informa&#231;&#245;es importantes sobre
-            o desenvolvimento e a rotina da crian&#231;a.
+            Registre e acompanhe informa&#231;&#245;es importantes sobre o desenvolvimento e a
+            rotina da crian&#231;a.
           </p>
           <p class="anamnesis-page__subtitle" *ngIf="isProfessionalView">
             Consulte as informa&#231;&#245;es do desenvolvimento e da rotina da crian&#231;a.
           </p>
-
         </div>
-
 
         <!-- Ilustra&#231;&#227;o da anamnese -->
-        <div
-          class="anamnesis-page__hero-image"
-          aria-hidden="true"
-        >
-
-          <img
-            src="assets/img/anamnese.png"
-            alt=""
-          />
-
+        <div class="anamnesis-page__hero-image" aria-hidden="true">
+          <img src="assets/img/anamnese.png" alt="" />
         </div>
-
       </div>
-
 
       <!-- =======================================================
            SELE&#65533;?&#65533;fO DA CRIAN&#65533;?A
            ======================================================= -->
-
-      </header>
+    </header>
 
     <ng-container *ngIf="children$ | async as children">
-      <div class="anamnesis-page__children-loading" *ngIf="childrenLoading$ | async">Carregando crian&#231;as...</div>
+      <div class="anamnesis-page__children-loading" *ngIf="childrenLoading$ | async">
+        Carregando crian&#231;as...
+      </div>
 
       <section class="anamnesis-page__children" *ngIf="!(childrenLoading$ | async)">
-
         <div class="anamnesis-page__children-grid">
-          <article class="anamnesis-page__child-option" *ngFor="let child of children; let i = index">
-            <div class="anamnesis-page__child-option-avatar" [class.anamnesis-page__child-option-avatar--alt]="i % 2 === 1" aria-hidden="true">
-              <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="">
+          <article
+            class="anamnesis-page__child-option"
+            *ngFor="let child of children; let i = index"
+          >
+            <div
+              class="anamnesis-page__child-option-avatar"
+              [class.anamnesis-page__child-option-avatar--alt]="i % 2 === 1"
+              aria-hidden="true"
+            >
+              <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="" />
               <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
             </div>
             <h3>{{ child.name }}</h3>
             <p class="anamnesis-page__child-option-meta">
-              {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatChildBirthDate(child) }} <span aria-hidden="true">|</span> {{ getChildGender(child) }}
+              {{ getChildAge(child) }} <span aria-hidden="true">|</span>
+              {{ formatChildBirthDate(child) }} <span aria-hidden="true">|</span>
+              {{ getChildGender(child) }}
             </p>
-            <div class="anamnesis-page__diagnoses" *ngIf="getChildDiagnoses(child).length; else noDiagnosis">
+            <div
+              class="anamnesis-page__diagnoses"
+              *ngIf="getChildDiagnoses(child).length; else noDiagnosis"
+            >
               <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
             </div>
-            <ng-template #noDiagnosis><p class="anamnesis-page__no-diagnosis">Sem diagn&#243;stico informado</p></ng-template>
-            <button type="button" class="anamnesis-page__child-action" (click)="onChildSelected(child.id)">Ver anamnese</button>
+            <ng-template #noDiagnosis
+              ><p class="anamnesis-page__no-diagnosis">
+                Sem diagn&#243;stico informado
+              </p></ng-template
+            >
+            <button
+              type="button"
+              class="anamnesis-page__child-action"
+              (click)="onChildSelected(child.id)"
+            >
+              Ver anamnese
+            </button>
           </article>
 
           <div class="anamnesis-page__children-empty" *ngIf="children.length === 0">
-            Nenhuma crian&#231;a cadastrada ainda. Cadastre uma crian&#231;a na p&#225;gina Crian&#231;a.
+            Nenhuma crian&#231;a cadastrada ainda. Cadastre uma crian&#231;a na p&#225;gina
+            Crian&#231;a.
           </div>
         </div>
       </section>
     </ng-container>
-
 
     <!-- =======================================================
          ERRO AO CARREGAR CRIAN&#65533;?AS
@@ -91,61 +92,38 @@
       *ngIf="childrenError$ | async as error"
       class="anamnesis-page__error card-ui card-ui--md card-ui--accent"
     >
-
       <div class="card-ui__body">
         {{ error }}
       </div>
-
     </section>
-
   </ng-container>
-
-
 
   <!-- =========================================================
        P&#193;GINA 2 &#65533;?" ANAMNESE DA CRIAN&#65533;?A
        ========================================================= -->
 
   <ng-container *ngIf="selectedChildId">
-
     <!-- =======================================================
          CARREGAMENTO
          ======================================================= -->
 
-    <ng-container
-      *ngIf="loading$ | async; else loadedAnamnesis"
-    >
-
+    <ng-container *ngIf="loading$ | async; else loadedAnamnesis">
       <section class="anamnesis-page__loading">
-
         <div class="loading-ui">
+          <span class="loading-ui__line loading-ui__line--sm"></span>
 
-          <span
-            class="loading-ui__line loading-ui__line--sm"
-          ></span>
+          <span class="loading-ui__line loading-ui__line--lg"></span>
 
-          <span
-            class="loading-ui__line loading-ui__line--lg"
-          ></span>
-
-          <span
-            class="loading-ui__block"
-          ></span>
-
+          <span class="loading-ui__block"></span>
         </div>
-
       </section>
-
     </ng-container>
-
-
 
     <!-- =======================================================
          ANAMNESE CARREGADA
          ======================================================= -->
 
     <ng-template #loadedAnamnesis>
-
       <!-- =====================================================
            ERRO
            ===================================================== -->
@@ -154,13 +132,10 @@
         *ngIf="error$ | async as error"
         class="anamnesis-page__error card-ui card-ui--md card-ui--accent"
       >
-
         <div class="card-ui__body">
           {{ error }}
         </div>
-
       </section>
-
 
       <!-- =====================================================
            CASO AINDA N&#65533;fO EXISTA ANAMNESE
@@ -172,355 +147,306 @@
         [saving]="(saving$ | async) ?? false"
         (createAnamnesis)="onCreateAnamnesis()"
       ></app-anamnesis-empty-state>
-      <section class="anamnesis-readonly-empty" *ngIf="!(anamnesis$ | async) && isProfessionalView" role="status">
+      <section
+        class="anamnesis-readonly-empty"
+        *ngIf="!(anamnesis$ | async) && isProfessionalView"
+        role="status"
+      >
         <i class="bi bi-lock-fill" aria-hidden="true"></i>
-        <div><strong>Anamnese ainda n&#227;o preenchida</strong><p>As informa&#231;&#245;es aparecer&#227;o aqui quando o respons&#225;vel preencher a anamnese.</p></div>
+        <div>
+          <strong>Anamnese ainda n&#227;o preenchida</strong>
+          <p>
+            As informa&#231;&#245;es aparecer&#227;o aqui quando o respons&#225;vel preencher a
+            anamnese.
+          </p>
+        </div>
       </section>
-
-
 
       <!-- =====================================================
            ANAMNESE EXISTENTE
            ===================================================== -->
 
-      <ng-container
-        *ngIf="anamnesis$ | async as anamnesis"
-      >
-
-
+      <ng-container *ngIf="anamnesis$ | async as anamnesis">
         <!-- ===================================================
              CABE&#65533;?ALHO DA P&#193;GINA 2
              =================================================== -->
 
         <header class="anamnesis-page__hero anamnesis-page__hero--child">
-
           <div class="anamnesis-page__hero-content">
-
             <div class="anamnesis-page__hero-text">
+              <span class="anamnesis-page__eyebrow"> ANAMNESE INFANTIL </span>
 
-              <span class="anamnesis-page__eyebrow">
-                ANAMNESE INFANTIL
-              </span>
-
-              <h1 class="anamnesis-page__title">
-                Anamnese
-              </h1>
+              <h1 class="anamnesis-page__title">Anamnese</h1>
 
               <p class="anamnesis-page__subtitle" *ngIf="!isProfessionalView">
-                Registre e acompanhe informa&#231;&#245;es importantes sobre
-                o desenvolvimento e a rotina da crian&#231;a.
+                Registre e acompanhe informa&#231;&#245;es importantes sobre o desenvolvimento e a
+                rotina da crian&#231;a.
               </p>
               <p class="anamnesis-page__subtitle" *ngIf="isProfessionalView">
                 Consulte as informa&#231;&#245;es do desenvolvimento e da rotina da crian&#231;a.
               </p>
-
             </div>
-
 
             <!-- Ilustra&#231;&#227;o -->
-            <div
-              class="anamnesis-page__hero-image"
-              aria-hidden="true"
-            >
-
-              <img
-                src="assets/img/anamnese.png"
-                alt=""
-              />
-
+            <div class="anamnesis-page__hero-image" aria-hidden="true">
+              <img src="assets/img/anamnese.png" alt="" />
             </div>
-
           </div>
-
 
           <!-- =================================================
                ETAPAS DA ANAMNESE
                ================================================= -->
 
           <div class="anamnesis-page__steps">
-
             <!-- ETAPA 1 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'birth'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.birth
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'birth'"
+              [class.anamnesis-page__step--complete]="anamnesis.birth"
             >
-
-              <span class="anamnesis-page__step-number">
-                1
-              </span>
+              <span class="anamnesis-page__step-number"> 1 </span>
 
               <span class="anamnesis-page__step-label">
                 Gesta&#231;&#227;o e<br />
                 nascimento
               </span>
-
             </div>
-
 
             <!-- ETAPA 2 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'motorDevelopment'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.motorDevelopment
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'motorDevelopment'"
+              [class.anamnesis-page__step--complete]="anamnesis.motorDevelopment"
             >
-
-              <span class="anamnesis-page__step-number">
-                2
-              </span>
+              <span class="anamnesis-page__step-number"> 2 </span>
 
               <span class="anamnesis-page__step-label">
                 Desenvolvimento<br />
                 motor
               </span>
-
             </div>
-
 
             <!-- ETAPA 3 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'languageCommunication'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.languageCommunication
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'languageCommunication'"
+              [class.anamnesis-page__step--complete]="anamnesis.languageCommunication"
             >
-
-              <span class="anamnesis-page__step-number">
-                3
-              </span>
+              <span class="anamnesis-page__step-number"> 3 </span>
 
               <span class="anamnesis-page__step-label">
                 Linguagem e<br />
                 comunica&#231;&#227;o
               </span>
-
             </div>
-
 
             <!-- ETAPA 4 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'health'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.health
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'health'"
+              [class.anamnesis-page__step--complete]="anamnesis.health"
             >
+              <span class="anamnesis-page__step-number"> 4 </span>
 
-              <span class="anamnesis-page__step-number">
-                4
-              </span>
-
-              <span class="anamnesis-page__step-label">
-                Sa&#250;de
-              </span>
-
+              <span class="anamnesis-page__step-label"> Sa&#250;de </span>
             </div>
-
 
             <!-- ETAPA 5 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'behavior'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.behavior
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'behavior'"
+              [class.anamnesis-page__step--complete]="anamnesis.behavior"
             >
+              <span class="anamnesis-page__step-number"> 5 </span>
 
-              <span class="anamnesis-page__step-number">
-                5
-              </span>
-
-              <span class="anamnesis-page__step-label">
-                Comportamento
-              </span>
-
+              <span class="anamnesis-page__step-label"> Comportamento </span>
             </div>
-
 
             <!-- ETAPA 6 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'routine'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.routine
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'routine'"
+              [class.anamnesis-page__step--complete]="anamnesis.routine"
             >
-
-              <span class="anamnesis-page__step-number">
-                6
-              </span>
+              <span class="anamnesis-page__step-number"> 6 </span>
 
               <span class="anamnesis-page__step-label">
                 Rotina e<br />
                 acompanhamento
               </span>
-
             </div>
-
 
             <!-- ETAPA 7 -->
 
             <div
               class="anamnesis-page__step"
-              [class.anamnesis-page__step--active]="
-                activeSection === 'generalNotes'
-              "
-              [class.anamnesis-page__step--complete]="
-                anamnesis.generalNotes?.trim()
-              "
+              [class.anamnesis-page__step--active]="activeSection === 'generalNotes'"
+              [class.anamnesis-page__step--complete]="anamnesis.generalNotes?.trim()"
             >
-
-              <span class="anamnesis-page__step-number">
-                7
-              </span>
+              <span class="anamnesis-page__step-number"> 7 </span>
 
               <span class="anamnesis-page__step-label">
                 Observa&#231;&#245;es<br />
                 gerais
               </span>
-
             </div>
-
           </div>
-
         </header>
-
-
 
         <!-- ===================================================
              INFORMA&#65533;?&#65533;.ES DA CRIAN&#65533;?A
              =================================================== -->
 
         <section class="anamnesis-page__child-card">
-
           <div class="anamnesis-page__child-avatar">
-            <ng-container *ngIf="(selectedChild$ | async) as avatarChild">
-              <img *ngIf="getChildPhoto(avatarChild) as photo; else childInitial" [src]="photo" alt="Foto de {{ avatarChild.name }}">
-              <ng-template #childInitial aria-hidden="true">{{ avatarChild.name.charAt(0) }}</ng-template>
+            <ng-container *ngIf="selectedChild$ | async as avatarChild">
+              <img
+                *ngIf="getChildPhoto(avatarChild) as photo; else childInitial"
+                [src]="photo"
+                alt="Foto de {{ avatarChild.name }}"
+              />
+              <ng-template #childInitial aria-hidden="true">{{
+                avatarChild.name.charAt(0)
+              }}</ng-template>
             </ng-container>
           </div>
 
-
           <div class="anamnesis-page__child-copy">
-
             <h2>
               {{ (selectedChild$ | async)?.name }}
             </h2>
 
-            <ng-container *ngIf="(selectedChild$ | async) as child">
-              <p class="anamnesis-page__child-meta">{{ child.age }} anos <span aria-hidden="true">|</span> {{ formatChildBirthDate(child) }}<ng-container *ngIf="getChildGender(child) as gender"><span aria-hidden="true">|</span> {{ gender }}</ng-container></p>
-              <div class="anamnesis-page__diagnoses" *ngIf="getChildDiagnoses(child).length"><span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span></div>
+            <ng-container *ngIf="selectedChild$ | async as child">
+              <p class="anamnesis-page__child-meta">
+                {{ child.age }} anos <span aria-hidden="true">|</span>
+                {{ formatChildBirthDate(child)
+                }}<ng-container *ngIf="getChildGender(child) as gender"
+                  ><span aria-hidden="true">|</span> {{ gender }}</ng-container
+                >
+              </p>
+              <div class="anamnesis-page__diagnoses" *ngIf="getChildDiagnoses(child).length">
+                <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
+              </div>
             </ng-container>
-            <p class="anamnesis-page__child-progress" *ngIf="!isProfessionalView">{{ (overview$ | async)?.completedSections ?? 0 }}/7 se&#231;&#245;es preenchidas</p>
-
+            <p class="anamnesis-page__child-progress" *ngIf="!isProfessionalView">
+              {{ (overview$ | async)?.completedSections ?? 0 }}/7 se&#231;&#245;es preenchidas
+            </p>
           </div>
 
-          <div class="anamnesis-readonly-badge" *ngIf="isProfessionalView"><i class="bi bi-lock-fill" aria-hidden="true"></i><span><strong>Somente visualiza&#231;&#227;o</strong><small>Estas informa&#231;&#245;es foram preenchidas pelo respons&#225;vel.</small></span></div>
+          <div class="anamnesis-readonly-badge" *ngIf="isProfessionalView">
+            <i class="bi bi-lock-fill" aria-hidden="true"></i
+            ><span
+              ><strong>Somente visualiza&#231;&#227;o</strong
+              ><small
+                >Estas informa&#231;&#245;es foram preenchidas pelo respons&#225;vel.</small
+              ></span
+            >
+          </div>
 
-
-          <span *ngIf="!isProfessionalView"
+          <span
+            *ngIf="!isProfessionalView"
             class="anamnesis-page__child-status"
             [class.anamnesis-page__child-status--complete]="
-              (overview$ | async)?.completedSections ===
-              (overview$ | async)?.totalSections
+              (overview$ | async)?.completedSections === (overview$ | async)?.totalSections
             "
           >
-
             {{
-              (overview$ | async)?.completedSections ===
-              (overview$ | async)?.totalSections
-                ? "Conclu&#237;da"
-                : "Em preenchimento"
+              (overview$ | async)?.completedSections === (overview$ | async)?.totalSections
+                ? 'Conclu&#237;da'
+                : 'Em preenchimento'
             }}
-
           </span>
-
         </section>
 
         <ng-container *ngIf="isProfessionalView">
-          <section class="anamnesis-readonly-sections" aria-label="Informa&#231;&#245;es da anamnese">
-            <article class="anamnesis-readonly-section" *ngFor="let section of sectionOrder; let i = index" [class.is-open]="readOnlyOpenSection === section">
-              <button type="button" class="anamnesis-readonly-section__trigger" (click)="toggleReadOnlySection(section)" [attr.aria-expanded]="readOnlyOpenSection === section">
+          <section
+            class="anamnesis-readonly-sections"
+            aria-label="Informa&#231;&#245;es da anamnese"
+          >
+            <article
+              class="anamnesis-readonly-section"
+              *ngFor="let section of sectionOrder; let i = index"
+              [class.is-open]="readOnlyOpenSection === section"
+            >
+              <button
+                type="button"
+                class="anamnesis-readonly-section__trigger"
+                (click)="toggleReadOnlySection(section)"
+                [attr.aria-expanded]="readOnlyOpenSection === section"
+              >
                 <span class="anamnesis-readonly-section__number">{{ i + 1 }}</span>
-                <span class="anamnesis-readonly-section__title"><strong>{{ sectionLabels[section] }}</strong><small>{{ sectionDescriptions[section] }}</small></span>
-                <span class="anamnesis-readonly-section__status" [class.is-complete]="isSectionCompleted(anamnesis, section)"><i class="bi" [ngClass]="isSectionCompleted(anamnesis, section) ? 'bi-check-circle-fill' : 'bi-circle'"></i>{{ isSectionCompleted(anamnesis, section) ? 'Preenchida' : 'N&#227;o preenchida' }}</span>
-                <i class="bi" [ngClass]="readOnlyOpenSection === section ? 'bi-chevron-up' : 'bi-chevron-right'" aria-hidden="true"></i>
+                <span class="anamnesis-readonly-section__title"
+                  ><strong>{{ sectionLabels[section] }}</strong
+                  ><small>{{ sectionDescriptions[section] }}</small></span
+                >
+                <span
+                  class="anamnesis-readonly-section__status"
+                  [class.is-complete]="isSectionCompleted(anamnesis, section)"
+                  ><i
+                    class="bi"
+                    [ngClass]="
+                      isSectionCompleted(anamnesis, section) ? 'bi-check-circle-fill' : 'bi-circle'
+                    "
+                  ></i
+                  >{{
+                    isSectionCompleted(anamnesis, section) ? 'Preenchida' : 'N&#227;o preenchida'
+                  }}</span
+                >
+                <i
+                  class="bi"
+                  [ngClass]="readOnlyOpenSection === section ? 'bi-chevron-up' : 'bi-chevron-right'"
+                  aria-hidden="true"
+                ></i>
               </button>
               <div class="anamnesis-readonly-section__body" *ngIf="readOnlyOpenSection === section">
-                <div class="anamnesis-readonly-field" *ngFor="let field of getReadOnlyFields(anamnesis, section)"><strong>{{ field.label }}</strong><span>{{ field.value }}</span></div>
-                <p class="anamnesis-readonly-section__empty" *ngIf="!getReadOnlyFields(anamnesis, section).length">Nenhuma informa&#231;&#227;o preenchida pelo respons&#225;vel nesta se&#231;&#227;o.</p>
+                <div
+                  class="anamnesis-readonly-field"
+                  *ngFor="let field of getReadOnlyFields(anamnesis, section)"
+                >
+                  <strong>{{ field.label }}</strong
+                  ><span>{{ field.value }}</span>
+                </div>
+                <p
+                  class="anamnesis-readonly-section__empty"
+                  *ngIf="!getReadOnlyFields(anamnesis, section).length"
+                >
+                  Nenhuma informa&#231;&#227;o preenchida pelo respons&#225;vel nesta
+                  se&#231;&#227;o.
+                </p>
               </div>
             </article>
           </section>
         </ng-container>
-
-
 
         <!-- ===================================================
              LISTA DAS SE&#65533;?&#65533;.ES
              =================================================== -->
 
         <ng-container *ngIf="!isProfessionalView && !activeSection">
-
           <section class="anamnesis-page__section-header">
-
             <div class="anamnesis-page__section-heading">
-
               <div class="anamnesis-page__section-heading-icon">
-
-                <i
-                  class="bi bi-file-earmark-text"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
               </div>
-
 
               <div>
-
-                <h2 class="anamnesis-page__section-title">
-                  Se&#231;&#245;es da anamnese
-                </h2>
+                <h2 class="anamnesis-page__section-title">Se&#231;&#245;es da anamnese</h2>
 
                 <p class="anamnesis-page__section-copy">
-                  Selecione uma se&#231;&#227;o para visualizar ou preencher
-                  as informa&#231;&#245;es.
+                  Selecione uma se&#231;&#227;o para visualizar ou preencher as
+                  informa&#231;&#245;es.
                 </p>
-
               </div>
-
             </div>
-
           </section>
 
-
-
           <div class="anamnesis-page__section-list">
-
-
             <!-- =================================================
                  1 &#65533;?" GESTA&#65533;?&#65533;fO E NASCIMENTO
                  ================================================= -->
@@ -530,80 +456,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('birth')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--birth"
               >
-
-                <i
-                  class="bi bi-heart"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-heart" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Gesta&#231;&#227;o e nascimento</h3>
 
-                <h3>
-                  Gesta&#231;&#227;o e nascimento
-                </h3>
-
-                <p>
-                  Informa&#231;&#245;es sobre gesta&#231;&#227;o, parto e nascimento.
-                </p>
-
+                <p>Informa&#231;&#245;es sobre gesta&#231;&#227;o, parto e nascimento.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.birth;
-                    else birthPending
-                  "
+                  *ngIf="anamnesis.birth; else birthPending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #birthPending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  2 &#65533;?" DESENVOLVIMENTO MOTOR
@@ -614,80 +501,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('motorDevelopment')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--motor"
               >
-
-                <i
-                  class="bi bi-person-walking"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-person-walking" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Desenvolvimento motor</h3>
 
-                <h3>
-                  Desenvolvimento motor
-                </h3>
-
-                <p>
-                  Marcos motores e coordena&#231;&#227;o da crian&#231;a.
-                </p>
-
+                <p>Marcos motores e coordena&#231;&#227;o da crian&#231;a.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.motorDevelopment;
-                    else motorPending
-                  "
+                  *ngIf="anamnesis.motorDevelopment; else motorPending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #motorPending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  3 &#65533;?" LINGUAGEM E COMUNICA&#65533;?&#65533;fO
@@ -698,80 +546,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('languageCommunication')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--language"
               >
-
-                <i
-                  class="bi bi-chat"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chat" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Linguagem e comunica&#231;&#227;o</h3>
 
-                <h3>
-                  Linguagem e comunica&#231;&#227;o
-                </h3>
-
-                <p>
-                  Desenvolvimento da fala, compreens&#227;o e comunica&#231;&#227;o.
-                </p>
-
+                <p>Desenvolvimento da fala, compreens&#227;o e comunica&#231;&#227;o.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.languageCommunication;
-                    else languagePending
-                  "
+                  *ngIf="anamnesis.languageCommunication; else languagePending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #languagePending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  4 &#65533;?" SA&#65533;sDE
@@ -782,80 +591,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('health')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--health"
               >
-
-                <i
-                  class="bi bi-plus-lg"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Sa&#250;de</h3>
 
-                <h3>
-                  Sa&#250;de
-                </h3>
-
-                <p>
-                  Diagn&#243;sticos, medicamentos e alergias.
-                </p>
-
+                <p>Diagn&#243;sticos, medicamentos e alergias.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.health;
-                    else healthPending
-                  "
+                  *ngIf="anamnesis.health; else healthPending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #healthPending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  5 &#65533;?" COMPORTAMENTO
@@ -866,80 +636,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('behavior')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--behavior"
               >
-
-                <i
-                  class="bi bi-people"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-people" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Comportamento</h3>
 
-                <h3>
-                  Comportamento
-                </h3>
-
-                <p>
-                  Concentra&#231;&#227;o, intera&#231;&#227;o, ansiedade e comportamento.
-                </p>
-
+                <p>Concentra&#231;&#227;o, intera&#231;&#227;o, ansiedade e comportamento.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.behavior;
-                    else behaviorPending
-                  "
+                  *ngIf="anamnesis.behavior; else behaviorPending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #behaviorPending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  6 &#65533;?" ROTINA E ACOMPANHAMENTO
@@ -950,80 +681,41 @@
               class="anamnesis-page__section-item"
               (click)="openSection('routine')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--routine"
               >
-
-                <i
-                  class="bi bi-calendar3"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-calendar3" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Rotina e acompanhamento</h3>
 
-                <h3>
-                  Rotina e acompanhamento
-                </h3>
-
-                <p>
-                  Sono, escola, terapias e atividades da crian&#231;a.
-                </p>
-
+                <p>Sono, escola, terapias e atividades da crian&#231;a.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.routine;
-                    else routinePending
-                  "
+                  *ngIf="anamnesis.routine; else routinePending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #routinePending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
-
 
             <!-- =================================================
                  7 &#65533;?" OBSERVA&#65533;?&#65533;.ES GERAIS
@@ -1034,110 +726,57 @@
               class="anamnesis-page__section-item"
               (click)="openSection('generalNotes')"
             >
-
               <div
                 class="anamnesis-page__section-item-icon anamnesis-page__section-item-icon--notes"
               >
-
-                <i
-                  class="bi bi-file-earmark-text"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
               </div>
-
 
               <div class="anamnesis-page__section-item-content">
+                <h3>Observa&#231;&#245;es gerais</h3>
 
-                <h3>
-                  Observa&#231;&#245;es gerais
-                </h3>
-
-                <p>
-                  Outras informa&#231;&#245;es importantes sobre a crian&#231;a.
-                </p>
-
+                <p>Outras informa&#231;&#245;es importantes sobre a crian&#231;a.</p>
               </div>
 
-
               <div class="anamnesis-page__section-item-status">
-
                 <span
-                  *ngIf="
-                    anamnesis.generalNotes?.trim();
-                    else notesPending
-                  "
+                  *ngIf="anamnesis.generalNotes?.trim(); else notesPending"
                   class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--complete"
                 >
-
-                  <i
-                    class="bi bi-check-circle-fill"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
 
                   Preenchida
-
                 </span>
 
-
                 <ng-template #notesPending>
-
                   <span
                     class="anamnesis-page__section-item-badge anamnesis-page__section-item-badge--pending"
                   >
-
-                    <i
-                      class="bi bi-circle"
-                      aria-hidden="true"
-                    ></i>
+                    <i class="bi bi-circle" aria-hidden="true"></i>
 
                     N&#227;o preenchida
-
                   </span>
-
                 </ng-template>
 
-
-                <i
-                  class="bi bi-chevron-right"
-                  aria-hidden="true"
-                ></i>
-
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </div>
-
             </button>
-
           </div>
-
         </ng-container>
-
-
 
         <!-- ===================================================
              FORMUL&#193;RIOS DAS ETAPAS
              =================================================== -->
 
         <ng-container *ngIf="!isProfessionalView && activeSection">
-
           <div class="anamnesis-page__opened-section">
-
             <!-- VOLTAR PARA LISTA -->
 
-            <button
-              type="button"
-              class="anamnesis-page__back-button"
-              (click)="closeSection()"
-            >
-
-              <i
-                class="bi bi-arrow-left"
-                aria-hidden="true"
-              ></i>
+            <button type="button" class="anamnesis-page__back-button" (click)="closeSection()">
+              <i class="bi bi-arrow-left" aria-hidden="true"></i>
 
               Voltar para as se&#231;&#245;es
-
             </button>
-
 
             <!-- =================================================
                  ETAPA 1
@@ -1151,7 +790,6 @@
               (delete)="onDeleteBirth()"
             ></app-birth-section>
 
-
             <!-- =================================================
                  ETAPA 2
                  ================================================= -->
@@ -1164,22 +802,17 @@
               (delete)="onDeleteMotorDevelopment()"
             ></app-motor-development-section>
 
-
             <!-- =================================================
                  ETAPA 3
                  ================================================= -->
 
             <app-language-communication-section
-              *ngIf="
-                activeSection ===
-                'languageCommunication'
-              "
+              *ngIf="activeSection === 'languageCommunication'"
               [data]="anamnesis.languageCommunication"
               [saving]="(saving$ | async) ?? false"
               (save)="onSaveLanguageCommunication($event)"
               (delete)="onDeleteLanguageCommunication()"
             ></app-language-communication-section>
-
 
             <!-- =================================================
                  ETAPA 4
@@ -1193,7 +826,6 @@
               (delete)="onDeleteHealth()"
             ></app-health-section>
 
-
             <!-- =================================================
                  ETAPA 5
                  ================================================= -->
@@ -1205,7 +837,6 @@
               (save)="onSaveBehavior($event)"
               (delete)="onDeleteBehavior()"
             ></app-behavior-section>
-
 
             <!-- =================================================
                  ETAPA 6
@@ -1219,7 +850,6 @@
               (delete)="onDeleteRoutine()"
             ></app-routine-section>
 
-
             <!-- =================================================
                  ETAPA 7
                  ================================================= -->
@@ -1231,23 +861,18 @@
               (save)="onSaveGeneralNotes($event)"
             ></app-general-notes-section>
 
-
             <!-- =================================================
                  NAVEGA&#65533;?&#65533;fO ENTRE AS ETAPAS
                  ================================================= -->
 
             <div class="anamnesis-page__section-navigation">
-
               <button
                 type="button"
                 class="anamnesis-page__navigation-button anamnesis-page__navigation-button--secondary"
                 (click)="goToPreviousSection()"
                 [disabled]="activeSectionNumber === 1 || ((saving$ | async) ?? false)"
               >
-                <i
-                  class="bi bi-arrow-left"
-                  aria-hidden="true"
-                ></i>
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
 
                 Anterior
               </button>
@@ -1257,10 +882,7 @@
                 class="anamnesis-page__navigation-button anamnesis-page__navigation-button--sections"
                 (click)="closeSection()"
               >
-                <i
-                  class="bi bi-list"
-                  aria-hidden="true"
-                ></i>
+                <i class="bi bi-list" aria-hidden="true"></i>
 
                 Voltar para as se&#231;&#245;es
               </button>
@@ -1274,32 +896,19 @@
                 <ng-container *ngIf="!isLastSection">
                   Pr&#243;ximo
 
-                  <i
-                    class="bi bi-arrow-right"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-arrow-right" aria-hidden="true"></i>
                 </ng-container>
 
                 <ng-container *ngIf="isLastSection">
                   Finalizar
 
-                  <i
-                    class="bi bi-check2"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="bi bi-check2" aria-hidden="true"></i>
                 </ng-container>
               </button>
-
             </div>
-
           </div>
-
         </ng-container>
-
       </ng-container>
-
     </ng-template>
-
   </ng-container>
-
 </div>

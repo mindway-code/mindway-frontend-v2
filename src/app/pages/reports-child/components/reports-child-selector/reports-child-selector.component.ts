@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import type { ChildRecord } from "../../../../api/interfaces/child.interface";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import type { ChildRecord } from '../../../../api/interfaces/child.interface';
 
 @Component({
-  selector: "app-reports-child-selector",
+  selector: 'app-reports-child-selector',
   standalone: false,
-  templateUrl: "./reports-child-selector.component.html",
-  styleUrls: ["./reports-child-selector.component.scss"],
+  templateUrl: './reports-child-selector.component.html',
+  styleUrls: ['./reports-child-selector.component.scss'],
 })
 export class ReportsChildSelectorComponent {
   @Input() children: ChildRecord[] | null = [];
   @Input() selectedChildId: string | null = null;
   @Input() loading = false;
-  searchTerm = "";
+  searchTerm = '';
 
   @Output() selectedChildIdChange = new EventEmitter<string>();
 
@@ -21,7 +21,9 @@ export class ReportsChildSelectorComponent {
 
     if (!normalizedSearch) return children;
 
-    const filtered = children.filter((child) => child.name.toLowerCase().includes(normalizedSearch));
+    const filtered = children.filter((child) =>
+      child.name.toLowerCase().includes(normalizedSearch),
+    );
     const selectedChild = children.find((child) => child.id === this.selectedChildId);
 
     if (selectedChild && !filtered.some((child) => child.id === selectedChild.id)) {
@@ -32,7 +34,7 @@ export class ReportsChildSelectorComponent {
   }
 
   onChange(next: string): void {
-    const normalized = next?.trim() ?? "";
+    const normalized = next?.trim() ?? '';
     if (normalized) this.selectedChildIdChange.emit(normalized);
   }
 

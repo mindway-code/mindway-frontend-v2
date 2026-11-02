@@ -1,9 +1,18 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { PaginationMeta, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
-import type { CreateTaskDTO, TaskRecord, TaskStatus, UpdateTaskDTO } from "../api/interfaces/task.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import type {
+  PaginationMeta,
+  SuccessResponse,
+  DeleteResult,
+} from '../api/interfaces/api-response.interface';
+import type {
+  CreateTaskDTO,
+  TaskRecord,
+  TaskStatus,
+  UpdateTaskDTO,
+} from '../api/interfaces/task.interface';
 
 export interface ListTasksQuery {
   page?: number;
@@ -11,7 +20,7 @@ export interface ListTasksQuery {
   status?: TaskStatus;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class TaskService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -42,9 +51,9 @@ export class TaskService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
-    if (query.status) params = params.set("status", query.status);
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
+    if (query.status) params = params.set('status', query.status);
 
     return this.http.get<SuccessResponse<TaskRecord[]>>(url, { params }).pipe(
       tap((res) => {
@@ -53,10 +62,10 @@ export class TaskService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar as tarefas.");
+        this.errorSubject.next('Não foi possível carregar as tarefas.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -68,10 +77,10 @@ export class TaskService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível criar a tarefa.");
+        this.errorSubject.next('Não foi possível criar a tarefa.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -83,10 +92,10 @@ export class TaskService {
       map((res) => res.data),
       tap((updated) => this.selectedItemSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível atualizar a tarefa.");
+        this.errorSubject.next('Não foi possível atualizar a tarefa.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -98,10 +107,10 @@ export class TaskService {
       map((res) => res.data),
       tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível excluir a tarefa.");
+        this.errorSubject.next('Não foi possível excluir a tarefa.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 }

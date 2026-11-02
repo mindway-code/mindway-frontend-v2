@@ -23,7 +23,9 @@
   color: var(--text-dark, #212529);
   padding: 0.85rem 1rem;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .child-list__search-input:focus {
@@ -41,8 +43,6 @@
 .child-list__empty {
   padding: 0.75rem 0;
 }
-
-
 
 @media (max-width: 700px) {
   .child-list {

@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-social-network',
   standalone: false,
   templateUrl: './social-network.component.html',
-  styleUrls: ['./social-network.component.scss']
+  styleUrls: ['./social-network.component.scss'],
 })
 export class SocialNetworkComponent {}

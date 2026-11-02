@@ -1,14 +1,18 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { PaginationMeta, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import type {
+  PaginationMeta,
+  SuccessResponse,
+  DeleteResult,
+} from '../api/interfaces/api-response.interface';
 import type {
   AppointmentRecord,
   AppointmentStatus,
   CreateAppointmentDTO,
   UpdateAppointmentDTO,
-} from "../api/interfaces/appointment.interface";
+} from '../api/interfaces/appointment.interface';
 
 export interface ListAppointmentsQuery {
   page?: number;
@@ -16,7 +20,7 @@ export interface ListAppointmentsQuery {
   status?: AppointmentStatus;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AppointmentService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -47,9 +51,9 @@ export class AppointmentService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
-    if (query.status) params = params.set("status", query.status);
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
+    if (query.status) params = params.set('status', query.status);
 
     return this.http.get<SuccessResponse<AppointmentRecord[]>>(url, { params }).pipe(
       tap((res) => {
@@ -58,10 +62,10 @@ export class AppointmentService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar os atendimentos.");
+        this.errorSubject.next('Não foi possível carregar os atendimentos.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -69,44 +73,50 @@ export class AppointmentService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.http.post<SuccessResponse<AppointmentRecord>>(`${this.apiUrl}/appointments`, dto).pipe(
-      map((res) => res.data),
-      tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível criar o atendimento.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.loadingSubject.next(false))
-    );
+    return this.http
+      .post<SuccessResponse<AppointmentRecord>>(`${this.apiUrl}/appointments`, dto)
+      .pipe(
+        map((res) => res.data),
+        tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
+        catchError((err) => {
+          this.errorSubject.next('Não foi possível criar o atendimento.');
+          return throwError(() => err);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+      );
   }
 
   update(id: string, dto: UpdateAppointmentDTO): Observable<AppointmentRecord> {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.http.put<SuccessResponse<AppointmentRecord>>(`${this.apiUrl}/appointments/${id}`, dto).pipe(
-      map((res) => res.data),
-      tap((updated) => this.selectedItemSubject.next(updated)),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível atualizar o atendimento.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.loadingSubject.next(false))
-    );
+    return this.http
+      .put<SuccessResponse<AppointmentRecord>>(`${this.apiUrl}/appointments/${id}`, dto)
+      .pipe(
+        map((res) => res.data),
+        tap((updated) => this.selectedItemSubject.next(updated)),
+        catchError((err) => {
+          this.errorSubject.next('Não foi possível atualizar o atendimento.');
+          return throwError(() => err);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+      );
   }
 
   delete(id: string): Observable<DeleteResult> {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.http.delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/appointments/${id}`).pipe(
-      map((res) => res.data),
-      tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível excluir o atendimento.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.loadingSubject.next(false))
-    );
+    return this.http
+      .delete<SuccessResponse<DeleteResult>>(`${this.apiUrl}/appointments/${id}`)
+      .pipe(
+        map((res) => res.data),
+        tap(() => this.itemsSubject.next(this.itemsSubject.value.filter((x) => x.id !== id))),
+        catchError((err) => {
+          this.errorSubject.next('Não foi possível excluir o atendimento.');
+          return throwError(() => err);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+      );
   }
 }

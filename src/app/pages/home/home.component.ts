@@ -13,9 +13,8 @@ interface HomeCard {
   selector: 'app-home',
   standalone: false,
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
-
 export class HomeComponent {
   placeholderImg = 'assets/img/placeholder.PNG';
   cards: HomeCard[] = [
@@ -25,7 +24,7 @@ export class HomeComponent {
       img: 'assets/webp/family.webp',
       alt: 'Ilustração da área de perfil',
       buttonText: 'Acessar perfil',
-      route: '/profile'
+      route: '/profile',
     },
     {
       title: 'Relatórios',
@@ -33,7 +32,7 @@ export class HomeComponent {
       img: 'assets/webp/relate.webp',
       alt: 'Ilustração da área de relatórios',
       buttonText: 'Ver relatórios',
-      route: '/reports-child'
+      route: '/reports-child',
     },
     {
       title: 'Acessar painel',
@@ -41,7 +40,7 @@ export class HomeComponent {
       img: 'assets/webp/relate2.webp',
       alt: 'Ilustração da ficha de anamnese',
       buttonText: 'Ir para o painel',
-      route: '/dashboard'
-    }
+      route: '/dashboard',
+    },
   ];
 }

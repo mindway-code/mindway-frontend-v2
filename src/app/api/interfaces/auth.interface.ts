@@ -1,4 +1,4 @@
-import type { UserRole, UserRecord } from "./user.interface";
+import type { UserRole, UserRecord } from './user.interface';
 
 export interface LoginPayload {
   email: string;
@@ -11,7 +11,7 @@ export interface RegisterDTO {
   password: string;
   confirmPassword: string;
   role?: UserRole;
-  provider?: "local" | "google";
+  provider?: 'local' | 'google';
   googleId?: string | null;
   cnpj?: string;
 }
@@ -24,4 +24,3 @@ export interface AuthState {
   accessToken: string | null;
   currentUser: UserRecord | null;
 }
-

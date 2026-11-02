@@ -49,12 +49,14 @@ src/app/app-routing.module.ts
 The project has both standalone-style files and NgModule-style files.
 
 Standalone-style files:
+
 ```txt
 app.config.ts
 app.routes.ts
 ```
 
 NgModule-style files:
+
 ```txt
 app.module.ts
 app-routing.module.ts
@@ -76,6 +78,7 @@ app-routing.module.ts
 ```
 
 Good if:
+
 - The project was already generated with modules.
 - Existing components are not standalone.
 - You want simpler migration with less refactor.
@@ -90,6 +93,7 @@ app.routes.ts
 ```
 
 Good if:
+
 - You want modern Angular style.
 - You want route-level lazy loading.
 - You want less NgModule boilerplate.
@@ -210,6 +214,7 @@ src/test.ts
 The project appears to use Karma/Jasmine.
 
 Recommended:
+
 - Keep existing tests running.
 - Add tests for important components first.
 - Add service tests after Observable services are created.

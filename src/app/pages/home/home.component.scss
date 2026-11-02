@@ -19,7 +19,7 @@
   color: #123476;
   font-size: clamp(1.8rem, 3.2vw, 2.35rem);
   font-weight: 800;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
   line-height: 1.15;
 }
 
@@ -28,9 +28,9 @@
 }
 
 .home-welcome__intro p {
-  margin: .35rem 0 0;
+  margin: 0.35rem 0 0;
   color: #7183a8;
-  font-size: .98rem;
+  font-size: 0.98rem;
   line-height: 1.5;
 }
 
@@ -73,7 +73,7 @@
   min-height: 42px;
   margin: 0 0 12px;
   color: #7484a4;
-  font-size: .86rem;
+  font-size: 0.86rem;
   line-height: 1.4;
 }
 
@@ -89,10 +89,13 @@
   border-radius: 7px;
   background: #008b7d;
   color: #fff;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 650;
   text-decoration: none;
-  transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
 .home-welcome__button:hover {
@@ -141,7 +144,7 @@
 .home-welcome__callout p {
   margin: 2px 0 0;
   color: #7183a8;
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 1.45;
 }
 

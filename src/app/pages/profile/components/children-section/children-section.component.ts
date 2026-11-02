@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import type { CreateAssociationChildDTO } from "../../../../api/interfaces/association-child.interface";
-import type { ChildRecord, CreateChildDTO } from "../../../../api/interfaces/child.interface";
-import type { UserRole } from "../../../../api/interfaces/user.interface";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import type { CreateAssociationChildDTO } from '../../../../api/interfaces/association-child.interface';
+import type { ChildRecord, CreateChildDTO } from '../../../../api/interfaces/child.interface';
+import type { UserRole } from '../../../../api/interfaces/user.interface';
 
 @Component({
-  selector: "app-children-section",
+  selector: 'app-children-section',
   standalone: false,
-  templateUrl: "./children-section.component.html",
-  styleUrl: "./children-section.component.css",
+  templateUrl: './children-section.component.html',
+  styleUrl: './children-section.component.css',
 })
 export class ChildrenSectionComponent {
   @Input() children: ChildRecord[] = [];
@@ -26,6 +26,6 @@ export class ChildrenSectionComponent {
   @Output() associateChild = new EventEmitter<CreateAssociationChildDTO>();
 
   get canCreateChild(): boolean {
-    return this.userRole === "common";
+    return this.userRole === 'common';
   }
 }

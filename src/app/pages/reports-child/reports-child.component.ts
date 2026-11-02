@@ -1,25 +1,25 @@
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { BehaviorSubject, combineLatest, map, take } from "rxjs";
-import { AuthService } from "../../services/auth.service";
-import { ChildService } from "../../services/child.service";
-import { ReportsChildService } from "../../services/reports-child.service";
-import type { ChildRecord } from "../../api/interfaces/child.interface";
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, combineLatest, map, take } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { ChildService } from '../../services/child.service';
+import { ReportsChildService } from '../../services/reports-child.service';
+import type { ChildRecord } from '../../api/interfaces/child.interface';
 import type {
   CreateReportsChildDTO,
   ReportsChildRecord,
   UpdateReportsChildDTO,
-} from "../../api/interfaces/reports-child.interface";
-import type { UserRecord } from "../../api/interfaces/user.interface";
+} from '../../api/interfaces/reports-child.interface';
+import type { UserRecord } from '../../api/interfaces/user.interface';
 
 type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean };
-type ReportFilter = "all" | "school" | "therapist" | "professional";
+type ReportFilter = 'all' | 'school' | 'therapist' | 'professional';
 
 @Component({
-  selector: "app-reports-child",
+  selector: 'app-reports-child',
   standalone: false,
-  templateUrl: "./reports-child.component.html",
-  styleUrls: ["./reports-child.component.scss"],
+  templateUrl: './reports-child.component.html',
+  styleUrls: ['./reports-child.component.scss'],
 })
 export class ReportsChildComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
@@ -38,37 +38,66 @@ export class ReportsChildComponent implements OnInit {
 
   private readonly selectedChildIdSubject = new BehaviorSubject<string | null>(null);
   readonly selectedChildId$ = this.selectedChildIdSubject.asObservable();
-  private readonly activeCategorySubject = new BehaviorSubject<string>("all");
+  private readonly activeCategorySubject = new BehaviorSubject<string>('all');
   readonly activeCategory$ = this.activeCategorySubject.asObservable();
   private readonly selectedReportIdSubject = new BehaviorSubject<string | null>(null);
 
   readonly selectedChild$ = combineLatest([this.children$, this.selectedChildId$]).pipe(
-    map(([children, selectedId]) => children.find((c) => c.id === selectedId) ?? null)
+    map(([children, selectedId]) => children.find((c) => c.id === selectedId) ?? null),
   );
   readonly canCreateReport$ = combineLatest([this.selectedChild$, this.currentUser$]).pipe(
-    map(([child, user]) => !!user && (user.role === "admin" || user.role === "enterprise" || user.role === "professional" || user.role === "therapist") && !!child)
+    map(
+      ([child, user]) =>
+        !!user &&
+        (user.role === 'admin' ||
+          user.role === 'enterprise' ||
+          user.role === 'professional' ||
+          user.role === 'therapist') &&
+        !!child,
+    ),
   );
 
-  readonly reportsWithPermissions$ = combineLatest([this.reports$, this.currentUser$, this.selectedChild$]).pipe(
-    map(([reports, user, child]) => reports.map((r) => ({ ...r, canManage: this.canManageReport(user, child, r) })))
+  readonly reportsWithPermissions$ = combineLatest([
+    this.reports$,
+    this.currentUser$,
+    this.selectedChild$,
+  ]).pipe(
+    map(([reports, user, child]) =>
+      reports.map((r) => ({ ...r, canManage: this.canManageReport(user, child, r) })),
+    ),
   );
-  readonly visibleReports$ = combineLatest([this.reportsWithPermissions$, this.activeCategory$]).pipe(
-    map(([reports, category]) => category === "all" ? reports : reports.filter((report) => this.getCategory(report) === category))
+  readonly visibleReports$ = combineLatest([
+    this.reportsWithPermissions$,
+    this.activeCategory$,
+  ]).pipe(
+    map(([reports, category]) =>
+      category === 'all'
+        ? reports
+        : reports.filter((report) => this.getCategory(report) === category),
+    ),
   );
-  readonly selectedReport$ = combineLatest([this.visibleReports$, this.selectedReportIdSubject]).pipe(
-    map(([reports, selectedId]) => reports.find((report) => report.id === selectedId) ?? reports[0] ?? null)
+  readonly selectedReport$ = combineLatest([
+    this.visibleReports$,
+    this.selectedReportIdSubject,
+  ]).pipe(
+    map(
+      ([reports, selectedId]) =>
+        reports.find((report) => report.id === selectedId) ?? reports[0] ?? null,
+    ),
   );
   readonly reportSummary$ = combineLatest([this.selectedChild$, this.reportsWithPermissions$]).pipe(
     map(([child, reports]) => {
       const latestCreatedAt = reports.length
-        ? [...reports]
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
-            ?.createdAt ?? null
+        ? ([...reports].sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          )[0]?.createdAt ?? null)
         : null;
       const now = new Date();
       const currentMonthReports = reports.filter((report) => {
         const createdAt = new Date(report.createdAt);
-        return createdAt.getMonth() === now.getMonth() && createdAt.getFullYear() === now.getFullYear();
+        return (
+          createdAt.getMonth() === now.getMonth() && createdAt.getFullYear() === now.getFullYear()
+        );
       }).length;
 
       return {
@@ -78,43 +107,41 @@ export class ReportsChildComponent implements OnInit {
         manageableReports: reports.filter((report) => report.canManage).length,
         latestCreatedAt,
       };
-    })
+    }),
   );
 
   selectedChildId: string | null = null;
   readonly reportCategories = [
-    { id: "all", label: "Todos", icon: "bi-grid" },
-    { id: "school", label: "Escola", icon: "bi-house-heart" },
-    { id: "therapy", label: "Terapias", icon: "bi-person-arms-up" },
-    { id: "health", label: "Saúde", icon: "bi-heart-pulse" },
+    { id: 'all', label: 'Todos', icon: 'bi-grid' },
+    { id: 'school', label: 'Escola', icon: 'bi-house-heart' },
+    { id: 'therapy', label: 'Terapias', icon: 'bi-person-arms-up' },
+    { id: 'health', label: 'Saúde', icon: 'bi-heart-pulse' },
   ];
   editingReport: ReportsChildRecord | null = null;
   showCreateForm = false;
-  searchTerm = "";
-  activeFilter: ReportFilter = "all";
-  sortOrder: "recent" | "oldest" = "recent";
+  searchTerm = '';
+  activeFilter: ReportFilter = 'all';
+  sortOrder: 'recent' | 'oldest' = 'recent';
 
   constructor(
     private readonly authService: AuthService,
     private readonly childService: ChildService,
-    private readonly reportsChildService: ReportsChildService
+    private readonly reportsChildService: ReportsChildService,
   ) {}
 
   ngOnInit(): void {
     this.loadChildren();
 
-    this.selectedChildId$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((childId) => {
-        const normalized = childId?.trim() ?? "";
-        if (!normalized) {
-          this.reportsChildService.clearState();
-          return;
-        }
-
+    this.selectedChildId$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((childId) => {
+      const normalized = childId?.trim() ?? '';
+      if (!normalized) {
         this.reportsChildService.clearState();
-        this.reportsChildService.loadByChildId(normalized, { page: 1, pageSize: 20 }).subscribe();
-      });
+        return;
+      }
+
+      this.reportsChildService.clearState();
+      this.reportsChildService.loadByChildId(normalized, { page: 1, pageSize: 20 }).subscribe();
+    });
   }
 
   retryLoadChildren(): void {
@@ -136,25 +163,25 @@ export class ReportsChildComponent implements OnInit {
   }
 
   onSelectChild(childId: string): void {
-    const normalized = childId?.trim() ?? "";
+    const normalized = childId?.trim() ?? '';
     this.selectedChildId = normalized || null;
     this.editingReport = null;
     this.showCreateForm = false;
     this.selectedChildIdSubject.next(this.selectedChildId);
     this.selectedReportIdSubject.next(null);
-    this.activeCategorySubject.next("all");
+    this.activeCategorySubject.next('all');
   }
 
   getChildPhoto(child: ChildRecord): string | null {
     const data = child as any;
     const photo = data.photoUrl ?? data.avatarUrl ?? data.imageUrl ?? data.photo;
-    if (typeof photo === "string" && photo.trim()) return photo;
-    if (typeof localStorage !== "undefined") {
+    if (typeof photo === 'string' && photo.trim()) return photo;
+    if (typeof localStorage !== 'undefined') {
       try {
         const saved = localStorage.getItem(`mindway-child-profile-${child.id}`);
         const profile = saved ? JSON.parse(saved) : null;
         const savedPhoto = profile?.photo ?? profile?.photoUrl;
-        return typeof savedPhoto === "string" && savedPhoto.trim() ? savedPhoto : null;
+        return typeof savedPhoto === 'string' && savedPhoto.trim() ? savedPhoto : null;
       } catch {
         return null;
       }
@@ -172,18 +199,20 @@ export class ReportsChildComponent implements OnInit {
   }
 
   getCategory(report: ReportsChildRecord): string {
-    const title = report.title.toLocaleLowerCase("pt-BR");
-    if (/m[eé]dic|sa[uú]de|cl[ií]nic/.test(title)) return "health";
-    if (report.userRole === "enterprise" || /escola|pedag[oó]gic/.test(title)) return "school";
-    return "therapy";
+    const title = report.title.toLocaleLowerCase('pt-BR');
+    if (/m[eé]dic|sa[uú]de|cl[ií]nic/.test(title)) return 'health';
+    if (report.userRole === 'enterprise' || /escola|pedag[oó]gic/.test(title)) return 'school';
+    return 'therapy';
   }
 
   countCategory(reports: ReportsChildRecord[], category: string): number {
-    return category === "all" ? reports.length : reports.filter((report) => this.getCategory(report) === category).length;
+    return category === 'all'
+      ? reports.length
+      : reports.filter((report) => this.getCategory(report) === category).length;
   }
 
   categoryLabel(category: string): string {
-    return this.reportCategories.find((item) => item.id === category)?.label ?? "Relatório";
+    return this.reportCategories.find((item) => item.id === category)?.label ?? 'Relatório';
   }
 
   printSelectedReport(): void {
@@ -236,7 +265,7 @@ export class ReportsChildComponent implements OnInit {
 
   onDeleteReport(report: ReportWithPermissions): void {
     if (!report.canManage) return;
-    if (!confirm("Tem certeza de que deseja excluir este relatório?")) return;
+    if (!confirm('Tem certeza de que deseja excluir este relatório?')) return;
 
     this.reportsChildService
       .deleteReport(report.id)
@@ -257,34 +286,46 @@ export class ReportsChildComponent implements OnInit {
       .filter((report) => {
         if (!normalizedSearch) return true;
 
-        return [report.title, report.behavior, report.difficulty, report.recommendation, report.user?.name, report.user?.email]
+        return [
+          report.title,
+          report.behavior,
+          report.difficulty,
+          report.recommendation,
+          report.user?.name,
+          report.user?.email,
+        ]
           .filter(Boolean)
           .some((value) => value!.toLowerCase().includes(normalizedSearch));
       })
       .sort((a, b) => {
         const difference = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        return this.sortOrder === "recent" ? difference : -difference;
+        return this.sortOrder === 'recent' ? difference : -difference;
       });
   }
 
   reportType(report: ReportsChildRecord): string {
     const labels: Record<string, string> = {
-      enterprise: "Escola",
-      therapist: "Terapeuta",
-      professional: "Profissional",
-      common: "Responsável",
-      admin: "Administração",
+      enterprise: 'Escola',
+      therapist: 'Terapeuta',
+      professional: 'Profissional',
+      common: 'Responsável',
+      admin: 'Administração',
     };
 
-    return labels[report.userRole] ?? "Relatório";
+    return labels[report.userRole] ?? 'Relatório';
   }
 
   reportDescription(report: ReportsChildRecord): string {
-    return report.behavior || report.difficulty || report.recommendation || "Relatório compartilhado para acompanhamento.";
+    return (
+      report.behavior ||
+      report.difficulty ||
+      report.recommendation ||
+      'Relatório compartilhado para acompanhamento.'
+    );
   }
 
   reportAuthor(report: ReportsChildRecord): string {
-    return report.user?.name || report.user?.email || "Profissional não identificado";
+    return report.user?.name || report.user?.email || 'Profissional não identificado';
   }
 
   reportInitial(report: ReportsChildRecord): string {
@@ -294,42 +335,47 @@ export class ReportsChildComponent implements OnInit {
   downloadReport(report: ReportsChildRecord): void {
     const content = [
       report.title,
-      "",
+      '',
       `Profissional: ${this.reportAuthor(report)}`,
-      `Data: ${new Date(report.createdAt).toLocaleDateString("pt-BR")}`,
-      report.behavior ? `Comportamento: ${report.behavior}` : "",
-      report.difficulty ? `Dificuldade: ${report.difficulty}` : "",
-      report.recommendation ? `Recomendação: ${report.recommendation}` : "",
+      `Data: ${new Date(report.createdAt).toLocaleDateString('pt-BR')}`,
+      report.behavior ? `Comportamento: ${report.behavior}` : '',
+      report.difficulty ? `Dificuldade: ${report.difficulty}` : '',
+      report.recommendation ? `Recomendação: ${report.recommendation}` : '',
     ]
       .filter(Boolean)
-      .join("\n");
-    const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
-    const link = document.createElement("a");
+      .join('\n');
+    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `${report.title.replace(/[^a-z0-9]/gi, "-").toLowerCase() || "relatorio"}.txt`;
+    link.download = `${report.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'relatorio'}.txt`;
     link.click();
     URL.revokeObjectURL(url);
   }
 
   clearFilters(): void {
-    this.searchTerm = "";
-    this.activeFilter = "all";
-    this.sortOrder = "recent";
+    this.searchTerm = '';
+    this.activeFilter = 'all';
+    this.sortOrder = 'recent';
   }
 
   private matchesFilter(report: ReportsChildRecord): boolean {
-    if (this.activeFilter === "all") return true;
-    if (this.activeFilter === "school") return report.userRole === "enterprise";
+    if (this.activeFilter === 'all') return true;
+    if (this.activeFilter === 'school') return report.userRole === 'enterprise';
     return report.userRole === this.activeFilter;
   }
 
-  private canManageReport(user: UserRecord | null, child: ChildRecord | null, report: ReportsChildRecord): boolean {
+  private canManageReport(
+    user: UserRecord | null,
+    child: ChildRecord | null,
+    report: ReportsChildRecord,
+  ): boolean {
     const userId = user?.id ?? null;
     const role = user?.role ?? null;
     if (!userId) return false;
-    if (role === "admin") return true;
-    const canAuthor = role === "enterprise" || role === "professional" || role === "therapist";
-    const isResponsible = child?.responsibleId === userId || child?.secondaryResponsibleId === userId;
+    if (role === 'admin') return true;
+    const canAuthor = role === 'enterprise' || role === 'professional' || role === 'therapist';
+    const isResponsible =
+      child?.responsibleId === userId || child?.secondaryResponsibleId === userId;
     return canAuthor && !isResponsible && report.userId === userId;
   }
 }

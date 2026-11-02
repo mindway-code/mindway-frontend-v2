@@ -1,32 +1,32 @@
-import { Component } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { switchMap } from "rxjs";
-import { AuthService } from "../../services/auth.service";
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: "app-link-clinic",
+  selector: 'app-link-clinic',
   standalone: false,
-  templateUrl: "./link-clinic.component.html",
-  styleUrl: "./link-clinic.component.css",
+  templateUrl: './link-clinic.component.html',
+  styleUrl: './link-clinic.component.css',
 })
 export class LinkClinicComponent {
   readonly loading$ = this.authService.loading$;
   readonly error$ = this.authService.error$;
 
   readonly form = this.fb.group({
-    name: ["", [Validators.required]],
-    cnpj: [""],
-    email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ["", [Validators.required, Validators.minLength(6)]],
+    name: ['', [Validators.required]],
+    cnpj: [''],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     termsAccepted: [false, [Validators.requiredTrue]],
   });
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   onSubmit(): void {
@@ -35,23 +35,30 @@ export class LinkClinicComponent {
       return;
     }
 
-    const name = this.form.value.name?.trim() ?? "";
-    const email = this.form.value.email?.trim() ?? "";
-    const cnpj = this.form.value.cnpj?.trim() ?? "";
-    const password = this.form.value.password ?? "";
-    const confirmPassword = this.form.value.confirmPassword ?? "";
+    const name = this.form.value.name?.trim() ?? '';
+    const email = this.form.value.email?.trim() ?? '';
+    const cnpj = this.form.value.cnpj?.trim() ?? '';
+    const password = this.form.value.password ?? '';
+    const confirmPassword = this.form.value.confirmPassword ?? '';
 
     this.authService
-      .register({ name, email, password, confirmPassword, role: "enterprise", cnpj: cnpj || undefined })
+      .register({
+        name,
+        email,
+        password,
+        confirmPassword,
+        role: 'enterprise',
+        cnpj: cnpj || undefined,
+      })
       .pipe(switchMap(() => this.authService.loadCurrentUser()))
       .subscribe({
-        next: () => this.router.navigate(["/profile"]),
+        next: () => this.router.navigate(['/profile']),
       });
   }
 
   get passwordsDoNotMatch(): boolean {
-    const password = this.form.value.password ?? "";
-    const confirmPassword = this.form.value.confirmPassword ?? "";
+    const password = this.form.value.password ?? '';
+    const confirmPassword = this.form.value.confirmPassword ?? '';
     return Boolean(password && confirmPassword && password !== confirmPassword);
   }
 }

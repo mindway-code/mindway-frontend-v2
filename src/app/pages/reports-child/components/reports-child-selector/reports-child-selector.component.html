@@ -1,7 +1,9 @@
 <section class="card-ui--sm reports-child-selector">
   <div class="reports-child-selector-body">
     <div class="reports-child-selector__search">
-      <label class="reports-child-selector__label" for="reports-child-search">Pesquisar criança</label>
+      <label class="reports-child-selector__label" for="reports-child-search"
+        >Pesquisar criança</label
+      >
       <input
         id="reports-child-search"
         class="reports-child-selector__search-input"
@@ -17,11 +19,11 @@
         <select
           id="reportsChildSelect"
           class="select-ui__control"
-          [disabled]="loading || !(children?.length)"
+          [disabled]="loading || !children?.length"
           [ngModel]="selectedChildId || ''"
           (ngModelChange)="onChange($event)"
         >
-          <option value="" >Clique aqui</option>
+          <option value="">Clique aqui</option>
           <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
             {{ child.name }} - {{ child.age }} anos
           </option>

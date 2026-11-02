@@ -1,13 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthService } from "../../services/auth.service";
-import { AssociationChildService } from "../../services/association-child.service";
-import { ChildService } from "../../services/child.service";
-import { UserService } from "../../services/user.service";
-import type { CreateAssociationChildDTO } from "../../api/interfaces/association-child.interface";
-import type { ChildRecord, CreateChildDTO } from "../../api/interfaces/child.interface";
-import type { UpdateUserDTO } from "../../api/interfaces/user.interface";
-import { map, switchMap, take } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { AssociationChildService } from '../../services/association-child.service';
+import { ChildService } from '../../services/child.service';
+import { UserService } from '../../services/user.service';
+import type { CreateAssociationChildDTO } from '../../api/interfaces/association-child.interface';
+import type { ChildRecord, CreateChildDTO } from '../../api/interfaces/child.interface';
+import type { UpdateUserDTO } from '../../api/interfaces/user.interface';
+import { map, switchMap, take } from 'rxjs';
 
 interface InviteLink {
   label: string;
@@ -20,7 +20,7 @@ interface InviteLink {
   selector: 'app-profile',
   standalone: false,
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
   readonly user$ = this.authService.currentUser$;
@@ -40,34 +40,34 @@ export class ProfileComponent implements OnInit {
 
   readonly inviteLinks: InviteLink[] = [
     {
-      label: "Escola",
-      description: "Convide uma escola para criar acesso institucional.",
-      path: "/link-school",
-      icon: "bi-building-add",
+      label: 'Escola',
+      description: 'Convide uma escola para criar acesso institucional.',
+      path: '/link-school',
+      icon: 'bi-building-add',
     },
     {
-      label: "Clínica",
-      description: "Convide uma clínica para organizar acompanhamentos.",
-      path: "/link-clinic",
-      icon: "bi-hospital",
+      label: 'Clínica',
+      description: 'Convide uma clínica para organizar acompanhamentos.',
+      path: '/link-clinic',
+      icon: 'bi-hospital',
     },
     {
-      label: "Terapeuta",
-      description: "Convide terapeutas para colaborar nos registros.",
-      path: "/link-therapist",
-      icon: "bi-person-badge",
+      label: 'Terapeuta',
+      description: 'Convide terapeutas para colaborar nos registros.',
+      path: '/link-therapist',
+      icon: 'bi-person-badge',
     },
     {
-      label: "Profissional",
-      description: "Convide professores, fisioterapeutas e áreas relacionadas.",
-      path: "/link-professional",
-      icon: "bi-clipboard2-pulse",
+      label: 'Profissional',
+      description: 'Convide professores, fisioterapeutas e áreas relacionadas.',
+      path: '/link-professional',
+      icon: 'bi-clipboard2-pulse',
     },
     {
-      label: "Responsável",
-      description: "Convide familiares ou cuidadores para criar uma conta.",
-      path: "/register",
-      icon: "bi-person-heart",
+      label: 'Responsável',
+      description: 'Convide familiares ou cuidadores para criar uma conta.',
+      path: '/register',
+      icon: 'bi-person-heart',
     },
   ];
 
@@ -75,15 +75,13 @@ export class ProfileComponent implements OnInit {
   showCreateChild = false;
   flashMessage: string | null = null;
 
-
   constructor(
     private readonly authService: AuthService,
     private readonly associationChildService: AssociationChildService,
     private readonly userService: UserService,
     private readonly childService: ChildService,
-    private readonly router: Router
-  ) {
-  }
+    private readonly router: Router,
+  ) {}
 
   ngOnInit(): void {
     // Children list is profile-specific and not restored automatically.
@@ -106,12 +104,12 @@ export class ProfileComponent implements OnInit {
       .updateMe(payload)
       .pipe(
         switchMap(() => this.authService.loadCurrentUser()),
-        take(1)
+        take(1),
       )
       .subscribe({
         next: () => {
           this.editMode = false;
-          this.flashMessage = "Perfil atualizado.";
+          this.flashMessage = 'Perfil atualizado.';
         },
         error: () => {
           // Service exposes a user-friendly error message.
@@ -131,15 +129,18 @@ export class ProfileComponent implements OnInit {
   createChild(payload: CreateChildDTO): void {
     this.flashMessage = null;
 
-    this.childService.createChild(payload).pipe(take(1)).subscribe({
-      next: () => {
-        this.showCreateChild = false;
-        this.flashMessage = "Criança criada.";
-      },
-      error: () => {
-        // Service exposes a user-friendly error message.
-      },
-    });
+    this.childService
+      .createChild(payload)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.showCreateChild = false;
+          this.flashMessage = 'Criança criada.';
+        },
+        error: () => {
+          // Service exposes a user-friendly error message.
+        },
+      });
   }
 
   associateChild(payload: CreateAssociationChildDTO): void {
@@ -149,11 +150,11 @@ export class ProfileComponent implements OnInit {
       .associateByAccessCode(payload)
       .pipe(
         switchMap(() => this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 })),
-        take(1)
+        take(1),
       )
       .subscribe({
         next: () => {
-          this.flashMessage = "Criança conectada.";
+          this.flashMessage = 'Criança conectada.';
         },
         error: () => {
           // Service exposes a user-friendly error message.
@@ -170,17 +171,17 @@ export class ProfileComponent implements OnInit {
   }
 
   onOpenAnamnesis(child: ChildRecord): void {
-    this.router.navigate(["/anamnesis"], { queryParams: { childId: child.id } });
+    this.router.navigate(['/anamnesis'], { queryParams: { childId: child.id } });
   }
 
   getInviteUrl(path: string): string {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     return `${origin}${path}`;
   }
 
   copyInviteLink(path: string): void {
     const url = this.getInviteUrl(path);
     void navigator.clipboard?.writeText(url);
-    this.flashMessage = "Link de convite copiado.";
+    this.flashMessage = 'Link de convite copiado.';
   }
 }

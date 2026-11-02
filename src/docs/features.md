@@ -104,6 +104,7 @@ Responsibilities:
 - Promotional sections
 
 Should not contain:
+
 - Direct API calls
 - Auth rules
 - Global layout duplicated code
@@ -220,6 +221,7 @@ ui/
 Shared components should be reusable and not contain business-specific logic.
 
 Good examples:
+
 - Navbar
 - Footer
 - Cards
@@ -229,6 +231,7 @@ Good examples:
 - Loading state
 
 Bad examples:
+
 - Component that directly calls login API
 - Component that depends on one page only
 - Component with hardcoded route-specific business logic

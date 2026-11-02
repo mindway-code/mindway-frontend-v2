@@ -22,8 +22,7 @@ describe('DashboardLayoutComponent', () => {
           } satisfies Partial<AuthService>,
         },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardLayoutComponent);
     component = fixture.componentInstance;

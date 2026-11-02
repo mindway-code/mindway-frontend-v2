@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import type {
   AnamnesisLanguageCommunicationRecord,
   UpsertAnamnesisLanguageCommunicationDTO,
-} from "../../../../api/interfaces/anamnesis.interface";
+} from '../../../../api/interfaces/anamnesis.interface';
 
 @Component({
-  selector: "app-language-communication-section",
+  selector: 'app-language-communication-section',
   standalone: false,
-  templateUrl: "./language-communication-section.component.html",
-  styleUrls: ["./language-communication-section.component.scss"],
+  templateUrl: './language-communication-section.component.html',
+  styleUrls: ['./language-communication-section.component.scss'],
 })
 export class LanguageCommunicationSectionComponent implements OnChanges {
   @Input() data: AnamnesisLanguageCommunicationRecord | null | undefined = null;
@@ -23,14 +23,14 @@ export class LanguageCommunicationSectionComponent implements OnChanges {
   readonly form = this.fb.group({
     firstWordsAgeMonths: [null as number | null],
     fullSentencesAgeMonths: [null as number | null],
-    comprehension: ["" as string],
-    currentCommunication: ["" as string],
+    comprehension: ['' as string],
+    currentCommunication: ['' as string],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
+    if (changes['data']) {
       this.patchFormFromData();
       if (this.editing) this.editing = false;
     }
@@ -63,10 +63,10 @@ export class LanguageCommunicationSectionComponent implements OnChanges {
       {
         firstWordsAgeMonths: this.data?.firstWordsAgeMonths ?? null,
         fullSentencesAgeMonths: this.data?.fullSentencesAgeMonths ?? null,
-        comprehension: this.data?.comprehension ?? "",
-        currentCommunication: this.data?.currentCommunication ?? "",
+        comprehension: this.data?.comprehension ?? '',
+        currentCommunication: this.data?.currentCommunication ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
@@ -75,4 +75,3 @@ export class LanguageCommunicationSectionComponent implements OnChanges {
     return trimmed ? trimmed : null;
   }
 }
-

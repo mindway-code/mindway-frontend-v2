@@ -30,7 +30,8 @@
   </div>
 
   <p class="child-list__hint" *ngIf="filteredChildren.length; else noMatchesTpl">
-    {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span> nesta visualização.
+    {{ filteredChildren.length }} resultado<span *ngIf="filteredChildren.length !== 1">s</span>
+    nesta visualização.
   </p>
 
   <ng-template #noMatchesTpl>

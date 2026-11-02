@@ -5,6 +5,7 @@
 This project is an Angular 19+ frontend application.
 
 Main goal:
+
 - Keep the code clean, modular, and easy to maintain.
 - Improve documentation so AI agents and developers understand the project quickly.
 - Gradually migrate service logic to an Observable-based pattern.
@@ -54,14 +55,16 @@ src/
    - `error$`
    - `profile$`
 10. Avoid unnecessary manual subscriptions in components. Prefer:
-   - `async` pipe in templates
-   - service-level `BehaviorSubject`
-   - RxJS operators
-   - `takeUntilDestroyed()` when subscription is required
+
+- `async` pipe in templates
+- service-level `BehaviorSubject`
+- RxJS operators
+- `takeUntilDestroyed()` when subscription is required
 
 ## Preferred Angular Direction
 
 The project currently has both:
+
 - `app.module.ts`
 - `app-routing.module.ts`
 - `app.config.ts`
@@ -70,6 +73,7 @@ The project currently has both:
 For Angular 19+, decide one main style and avoid mixing without reason.
 
 Recommended direction:
+
 - If keeping NgModule style, use `AppModule` + `AppRoutingModule`.
 - If migrating to standalone style later, use `app.config.ts` + `app.routes.ts`.
 
@@ -163,9 +167,7 @@ Template:
 ```html
 <section *ngIf="loading$ | async">Loading...</section>
 
-<section *ngIf="error$ | async as error">
-  {{ error }}
-</section>
+<section *ngIf="error$ | async as error">{{ error }}</section>
 
 <section *ngIf="data$ | async as data">
   <!-- render data -->
@@ -193,12 +195,13 @@ export class ExampleService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    this.http.get<Example[]>('/api/examples').pipe(
-      finalize(() => this.loadingSubject.next(false))
-    ).subscribe({
-      next: (data) => this.dataSubject.next(data),
-      error: () => this.errorSubject.next('Could not load examples.'),
-    });
+    this.http
+      .get<Example[]>('/api/examples')
+      .pipe(finalize(() => this.loadingSubject.next(false)))
+      .subscribe({
+        next: (data) => this.dataSubject.next(data),
+        error: () => this.errorSubject.next('Could not load examples.'),
+      });
   }
 }
 ```
@@ -216,8 +219,8 @@ ngOnInit(): void {
 Avoid untyped data:
 
 ```ts
-any
-object
+any;
+object;
 ```
 
 Avoid mixing page layout with global layout.

@@ -1,6 +1,6 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
-export type AppointmentStatus = "scheduled" | "confirmed" | "completed" | "canceled" | "no_show";
+export type AppointmentStatus = 'scheduled' | 'confirmed' | 'completed' | 'canceled' | 'no_show';
 
 export interface AppointmentRecord {
   id: string;
@@ -42,4 +42,3 @@ export interface ListAppointmentsResponse {
   items: AppointmentRecord[];
   meta: { pagination: PaginationMeta };
 }
-

@@ -1,11 +1,16 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, of, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { PaginationMeta, PaginationQuery, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
-import type { UpdateUserDTO, UserDTO, UserRecord } from "../api/interfaces/user.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, finalize, map, of, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import type {
+  PaginationMeta,
+  PaginationQuery,
+  SuccessResponse,
+  DeleteResult,
+} from '../api/interfaces/api-response.interface';
+import type { UpdateUserDTO, UserDTO, UserRecord } from '../api/interfaces/user.interface';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -33,10 +38,10 @@ export class UserService {
       map((res) => res.data),
       tap((me) => this.currentUserSubject.next(me)),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar o perfil.");
+        this.errorSubject.next('Não foi possível carregar o perfil.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -45,23 +50,21 @@ export class UserService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
-    return this.http
-      .get<SuccessResponse<UserRecord[]>>(`${this.apiUrl}/users`, { params })
-      .pipe(
-        tap((res) => {
-          this.itemsSubject.next(res.data);
-          this.paginationSubject.next(res.meta?.pagination ?? null);
-        }),
-        map((res) => res.data),
-        catchError((err) => {
-          this.errorSubject.next("Não foi possível carregar os usuários.");
-          return throwError(() => err);
-        }),
-        finalize(() => this.loadingSubject.next(false))
-      );
+    return this.http.get<SuccessResponse<UserRecord[]>>(`${this.apiUrl}/users`, { params }).pipe(
+      tap((res) => {
+        this.itemsSubject.next(res.data);
+        this.paginationSubject.next(res.meta?.pagination ?? null);
+      }),
+      map((res) => res.data),
+      catchError((err) => {
+        this.errorSubject.next('Não foi possível carregar os usuários.');
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSubject.next(false)),
+    );
   }
 
   createUser(dto: UserDTO): Observable<UserRecord> {
@@ -74,10 +77,10 @@ export class UserService {
         this.itemsSubject.next([created, ...this.itemsSubject.value]);
       }),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível criar o usuário.");
+        this.errorSubject.next('Não foi possível criar o usuário.');
         return throwError(() => err);
       }),
-      finalize(() => this.savingSubject.next(false))
+      finalize(() => this.savingSubject.next(false)),
     );
   }
 
@@ -89,24 +92,31 @@ export class UserService {
       map((res) => res.data),
       tap((updated) => this.currentUserSubject.next(updated)),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível atualizar o perfil.");
+        this.errorSubject.next('Não foi possível atualizar o perfil.');
         return throwError(() => err);
       }),
-      finalize(() => this.savingSubject.next(false))
+      finalize(() => this.savingSubject.next(false)),
     );
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<void> {
     this.savingSubject.next(true);
     this.errorSubject.next(null);
-    return this.http.patch<SuccessResponse<unknown>>(`${this.apiUrl}/users/me/password`, { currentPassword, newPassword }).pipe(
-      map(() => void 0),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível alterar a senha. Confira a senha atual e tente novamente.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.savingSubject.next(false))
-    );
+    return this.http
+      .patch<SuccessResponse<unknown>>(`${this.apiUrl}/users/me/password`, {
+        currentPassword,
+        newPassword,
+      })
+      .pipe(
+        map(() => void 0),
+        catchError((err) => {
+          this.errorSubject.next(
+            'Não foi possível alterar a senha. Confira a senha atual e tente novamente.',
+          );
+          return throwError(() => err);
+        }),
+        finalize(() => this.savingSubject.next(false)),
+      );
   }
 
   deleteMe(): Observable<DeleteResult> {
@@ -119,10 +129,10 @@ export class UserService {
         this.currentUserSubject.next(null);
       }),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível excluir o usuário.");
+        this.errorSubject.next('Não foi possível excluir o usuário.');
         return throwError(() => err);
       }),
-      finalize(() => this.savingSubject.next(false))
+      finalize(() => this.savingSubject.next(false)),
     );
   }
 }

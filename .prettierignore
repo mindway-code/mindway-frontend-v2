@@ -1,0 +1,15 @@
+# Dependencies and generated output
+node_modules/
+dist/
+out-tsc/
+tmp/
+.angular/
+coverage/
+
+# Logs and environment files
+*.log
+.env
+.env.*
+
+# Binary and generated documentation files
+*.docx

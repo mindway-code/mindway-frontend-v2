@@ -23,11 +23,11 @@
 }
 
 .messages-page__eyebrow {
-  margin: 0 0 .35rem;
+  margin: 0 0 0.35rem;
   color: var(--teal);
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .messages-page h1 {
-  margin-bottom: .35rem;
+  margin-bottom: 0.35rem;
   font-size: clamp(1.7rem, 3vw, 2.35rem);
   letter-spacing: 0;
 }
@@ -64,7 +64,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
-  box-shadow: 0 14px 40px rgba(21, 74, 79, .07);
+  box-shadow: 0 14px 40px rgba(21, 74, 79, 0.07);
 }
 
 .messages-page__contacts {
@@ -82,12 +82,12 @@
 
 .messages-page__section-heading div {
   display: grid;
-  gap: .25rem;
+  gap: 0.25rem;
 }
 
 .messages-page__section-heading span:first-child {
   color: var(--muted);
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .messages-page__section-heading strong {
@@ -102,7 +102,7 @@
   border-radius: 50%;
   background: #dff3f0;
   color: var(--teal-dark);
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -110,8 +110,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  gap: .75rem;
-  padding: .9rem 1.1rem;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
   border: 0;
   border-bottom: 1px solid #edf3f2;
   background: transparent;
@@ -128,7 +128,7 @@
 .messages-page__contact > i {
   margin-left: auto;
   color: #a7b9bc;
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .messages-page__avatar {
@@ -152,7 +152,7 @@
 .messages-page__contact-copy {
   display: grid;
   min-width: 0;
-  gap: .2rem;
+  gap: 0.2rem;
 }
 
 .messages-page__contact-copy strong,
@@ -163,12 +163,12 @@
 }
 
 .messages-page__contact-copy strong {
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .messages-page__contact-copy small {
   color: var(--muted);
-  font-size: .75rem;
+  font-size: 0.75rem;
   text-transform: capitalize;
 }
 
@@ -181,26 +181,26 @@
 .messages-page__conversation-header {
   display: flex;
   align-items: center;
-  gap: .8rem;
+  gap: 0.8rem;
   padding: 1rem 1.35rem;
   border-bottom: 1px solid var(--line);
 }
 
 .messages-page__conversation-header h2 {
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
   font-size: 1rem;
 }
 
 .messages-page__conversation-header span:last-child {
   color: var(--muted);
-  font-size: .78rem;
+  font-size: 0.78rem;
 }
 
 .messages-page__thread {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: .75rem;
+  gap: 0.75rem;
   min-height: 0;
   padding: 1.5rem;
   overflow-y: auto;
@@ -209,11 +209,11 @@
 
 .messages-page__bubble {
   max-width: min(75%, 480px);
-  padding: .8rem 1rem;
+  padding: 0.8rem 1rem;
   border: 1px solid #e1eeee;
   border-radius: 4px 14px 14px 14px;
   background: #fff;
-  box-shadow: 0 3px 12px rgba(21, 74, 79, .04);
+  box-shadow: 0 3px 12px rgba(21, 74, 79, 0.04);
 }
 
 .messages-page__bubble--own {
@@ -225,7 +225,7 @@
 }
 
 .messages-page__bubble p {
-  margin-bottom: .35rem;
+  margin-bottom: 0.35rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -233,7 +233,7 @@
 .messages-page__bubble time {
   display: block;
   color: var(--muted);
-  font-size: .68rem;
+  font-size: 0.68rem;
   text-align: right;
 }
 
@@ -243,7 +243,7 @@
 
 .messages-page__composer {
   display: flex;
-  gap: .75rem;
+  gap: 0.75rem;
   padding: 1rem 1.35rem;
   border-top: 1px solid var(--line);
   background: #fff;
@@ -254,7 +254,7 @@
   min-height: 2.75rem;
   max-height: 8rem;
   resize: vertical;
-  padding: .75rem .9rem;
+  padding: 0.75rem 0.9rem;
   border: 1px solid #d8e7e5;
   border-radius: 8px;
   color: var(--ink);
@@ -263,7 +263,7 @@
 
 .messages-page__composer textarea:focus {
   border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(8, 127, 131, .12);
+  box-shadow: 0 0 0 3px rgba(8, 127, 131, 0.12);
 }
 
 .messages-page__composer button {
@@ -278,7 +278,7 @@
 
 .messages-page__composer button:disabled {
   cursor: not-allowed;
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .messages-page__state {
@@ -287,7 +287,7 @@
   min-height: 180px;
   place-content: center;
   justify-items: center;
-  gap: .6rem;
+  gap: 0.6rem;
   color: var(--muted);
   text-align: center;
 }
@@ -323,7 +323,7 @@
 
 .messages-page__loading {
   display: grid;
-  gap: .75rem;
+  gap: 0.75rem;
   padding: 1.25rem;
 }
 
@@ -335,8 +335,12 @@
   animation: messages-pulse 1.4s ease-in-out infinite alternate;
 }
 
-.messages-page__loading span:nth-child(2) { animation-delay: .15s; }
-.messages-page__loading span:nth-child(3) { animation-delay: .3s; }
+.messages-page__loading span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.messages-page__loading span:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 .messages-page__conversation--empty {
   place-content: center;
@@ -347,32 +351,56 @@
 }
 
 .messages-page__conversation--empty i {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
   color: #9bcac5;
   font-size: 3rem;
 }
 
 .messages-page__conversation--empty h2 {
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
   color: var(--ink);
   font-size: 1.2rem;
 }
 
-.messages-page__conversation--empty p { margin-bottom: 0; }
+.messages-page__conversation--empty p {
+  margin-bottom: 0;
+}
 
 @keyframes messages-pulse {
-  from { opacity: .45; }
-  to { opacity: 1; }
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 760px) {
-  .messages-page { padding: 1rem; }
-  .messages-page__header-icon { display: none; }
-  .messages-page__workspace { grid-template-columns: 1fr; min-height: 0; }
-  .messages-page__contacts { border-right: 0; border-bottom: 1px solid var(--line); }
-  .messages-page__contact { display: none; }
+  .messages-page {
+    padding: 1rem;
+  }
+  .messages-page__header-icon {
+    display: none;
+  }
+  .messages-page__workspace {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .messages-page__contacts {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .messages-page__contact {
+    display: none;
+  }
   .messages-page__contact.is-selected,
-  .messages-page__contact:first-of-type { display: flex; }
-  .messages-page__conversation { min-height: 520px; }
-  .messages-page__bubble { max-width: 88%; }
+  .messages-page__contact:first-of-type {
+    display: flex;
+  }
+  .messages-page__conversation {
+    min-height: 520px;
+  }
+  .messages-page__bubble {
+    max-width: 88%;
+  }
 }

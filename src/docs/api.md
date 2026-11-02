@@ -196,7 +196,7 @@ Public
 Response:
 
 ```ts
-SuccessResponse<{}>
+SuccessResponse<{}>;
 ```
 
 ---
@@ -238,7 +238,7 @@ Response:
 ```ts
 SuccessResponse<{
   accessToken: string;
-}>
+}>;
 ```
 
 Side effect:
@@ -271,7 +271,7 @@ Response:
 ```ts
 SuccessResponse<{
   accessToken: string;
-}>
+}>;
 ```
 
 Side effect:
@@ -301,7 +301,7 @@ Response:
 ```ts
 SuccessResponse<{
   accessToken: string;
-}>
+}>;
 ```
 
 Side effect:
@@ -329,7 +329,7 @@ None
 Response:
 
 ```ts
-SuccessResponse<{}>
+SuccessResponse<{}>;
 ```
 
 Side effect:
@@ -345,7 +345,7 @@ Ping endpoint.
 Response:
 
 ```ts
-SuccessResponse<{}>
+SuccessResponse<{}>;
 ```
 
 ---
@@ -420,13 +420,13 @@ export interface ListUsersQuery {
 Response:
 
 ```ts
-SuccessResponse<UserRecord[]>
+SuccessResponse<UserRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/users`
@@ -442,13 +442,13 @@ Admin only
 Body:
 
 ```ts
-UserDTO
+UserDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<UserRecord>
+SuccessResponse<UserRecord>;
 ```
 
 ## GET `/users/me`
@@ -464,7 +464,7 @@ Authenticated
 Response:
 
 ```ts
-SuccessResponse<UserRecord>
+SuccessResponse<UserRecord>;
 ```
 
 ## PATCH `/users/me`
@@ -480,13 +480,13 @@ Authenticated
 Body:
 
 ```ts
-UpdateUserDTO
+UpdateUserDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<UserRecord>
+SuccessResponse<UserRecord>;
 ```
 
 ## DELETE `/users/me`
@@ -504,7 +504,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -572,13 +572,13 @@ export interface ListChildrenQuery {
 Response:
 
 ```ts
-SuccessResponse<ChildRecord[]>
+SuccessResponse<ChildRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/children`
@@ -594,7 +594,7 @@ Authenticated
 Body:
 
 ```ts
-CreateChildDTO
+CreateChildDTO;
 ```
 
 Important:
@@ -607,7 +607,7 @@ Important:
 Response:
 
 ```ts
-SuccessResponse<ChildRecord>
+SuccessResponse<ChildRecord>;
 ```
 
 ---
@@ -663,19 +663,19 @@ Authenticated
 Query:
 
 ```ts
-PaginationQuery
+PaginationQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyRecord[]>
+SuccessResponse<FamilyRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## GET `/families`
@@ -691,19 +691,19 @@ Admin only
 Query:
 
 ```ts
-PaginationQuery
+PaginationQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyRecord[]>
+SuccessResponse<FamilyRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/families`
@@ -719,13 +719,13 @@ Admin only
 Body:
 
 ```ts
-CreateFamilyDTO
+CreateFamilyDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyRecord>
+SuccessResponse<FamilyRecord>;
 ```
 
 ## PUT `/families/me`
@@ -741,13 +741,13 @@ Authenticated
 Body:
 
 ```ts
-UpdateFamilyDTO
+UpdateFamilyDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyRecord>
+SuccessResponse<FamilyRecord>;
 ```
 
 ### Backend Issue
@@ -791,7 +791,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ### Backend Issue
@@ -861,13 +861,13 @@ export interface ListFamilyMembersQuery {
 Response:
 
 ```ts
-SuccessResponse<FamilyMember[]>
+SuccessResponse<FamilyMember[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/family-members`
@@ -883,13 +883,13 @@ Admin only
 Body:
 
 ```ts
-CreateFamilyMemberDTO
+CreateFamilyMemberDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyMember>
+SuccessResponse<FamilyMember>;
 ```
 
 ## GET `/family-members/:id`
@@ -905,7 +905,7 @@ Authenticated
 Response:
 
 ```ts
-SuccessResponse<FamilyMember>
+SuccessResponse<FamilyMember>;
 ```
 
 ## PUT `/family-members/:id`
@@ -921,13 +921,13 @@ Authenticated
 Body:
 
 ```ts
-UpdateFamilyMemberDTO
+UpdateFamilyMemberDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<FamilyMember>
+SuccessResponse<FamilyMember>;
 ```
 
 ## DELETE `/family-members/:id`
@@ -945,7 +945,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -1026,13 +1026,13 @@ export interface ListTasksQuery {
 Response:
 
 ```ts
-SuccessResponse<TaskRecord[]>
+SuccessResponse<TaskRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## GET `/tasks/therapist`
@@ -1048,19 +1048,19 @@ Admin only
 Query:
 
 ```ts
-ListTasksQuery
+ListTasksQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<TaskRecord[]>
+SuccessResponse<TaskRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/tasks`
@@ -1076,13 +1076,13 @@ Admin only
 Body:
 
 ```ts
-CreateTaskDTO
+CreateTaskDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<TaskRecord>
+SuccessResponse<TaskRecord>;
 ```
 
 ## PUT `/tasks/:id`
@@ -1098,13 +1098,13 @@ Authenticated
 Body:
 
 ```ts
-UpdateTaskDTO
+UpdateTaskDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<TaskRecord>
+SuccessResponse<TaskRecord>;
 ```
 
 ## DELETE `/tasks/:id`
@@ -1122,7 +1122,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -1138,12 +1138,7 @@ Base module:
 ## Types
 
 ```ts
-export type AppointmentStatus =
-  | 'scheduled'
-  | 'confirmed'
-  | 'completed'
-  | 'canceled'
-  | 'no_show';
+export type AppointmentStatus = 'scheduled' | 'confirmed' | 'completed' | 'canceled' | 'no_show';
 ```
 
 ```ts
@@ -1211,13 +1206,13 @@ export interface ListAppointmentsQuery {
 Response:
 
 ```ts
-SuccessResponse<AppointmentRecord[]>
+SuccessResponse<AppointmentRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## GET `/appointments/therapist`
@@ -1233,19 +1228,19 @@ Admin only
 Query:
 
 ```ts
-ListAppointmentsQuery
+ListAppointmentsQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<AppointmentRecord[]>
+SuccessResponse<AppointmentRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/appointments`
@@ -1261,13 +1256,13 @@ Admin only
 Body:
 
 ```ts
-CreateAppointmentDTO
+CreateAppointmentDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<AppointmentRecord>
+SuccessResponse<AppointmentRecord>;
 ```
 
 ## PUT `/appointments/:id`
@@ -1283,13 +1278,13 @@ Authenticated
 Body:
 
 ```ts
-UpdateAppointmentDTO
+UpdateAppointmentDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<AppointmentRecord>
+SuccessResponse<AppointmentRecord>;
 ```
 
 ## DELETE `/appointments/:id`
@@ -1307,7 +1302,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -1391,7 +1386,7 @@ Authenticated + authTherapistmiddleware
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkRecord[]>
+SuccessResponse<SocialNetworkRecord[]>;
 ```
 
 ## POST `/social-networks`
@@ -1407,13 +1402,13 @@ Authenticated + authTherapistmiddleware
 Body:
 
 ```ts
-CreateSocialNetworkDTO
+CreateSocialNetworkDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkRecord>
+SuccessResponse<SocialNetworkRecord>;
 ```
 
 ## PUT `/social-networks/:id`
@@ -1429,13 +1424,13 @@ Authenticated + authTherapistmiddleware
 Body:
 
 ```ts
-UpdateSocialNetworkDTO
+UpdateSocialNetworkDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkRecord>
+SuccessResponse<SocialNetworkRecord>;
 ```
 
 ## DELETE `/social-networks/:id`
@@ -1453,7 +1448,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -1516,13 +1511,13 @@ export interface ListSocialNetworkUsersQuery {
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkUserRecord[]>
+SuccessResponse<SocialNetworkUserRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/social-network-users`
@@ -1538,13 +1533,13 @@ Requires authTherapistmiddleware
 Body:
 
 ```ts
-CreateSocialNetworkUserDTO
+CreateSocialNetworkUserDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkUserRecord>
+SuccessResponse<SocialNetworkUserRecord>;
 ```
 
 ## GET `/social-network-users/:id`
@@ -1560,7 +1555,7 @@ Requires authTherapistmiddleware
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkUserRecord>
+SuccessResponse<SocialNetworkUserRecord>;
 ```
 
 ## PUT `/social-network-users/:id`
@@ -1576,13 +1571,13 @@ Requires authTherapistmiddleware
 Body:
 
 ```ts
-UpdateSocialNetworkUserDTO
+UpdateSocialNetworkUserDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<SocialNetworkUserRecord>
+SuccessResponse<SocialNetworkUserRecord>;
 ```
 
 ## DELETE `/social-network-users/:id`
@@ -1600,7 +1595,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---
@@ -1640,7 +1635,7 @@ Ping endpoint.
 Response:
 
 ```ts
-SuccessResponse<{}>
+SuccessResponse<{}>;
 ```
 
 ## GET `/messages/dm/:userId`
@@ -1656,19 +1651,19 @@ Authenticated
 Query:
 
 ```ts
-PaginationQuery
+PaginationQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<MessageRecord[]>
+SuccessResponse<MessageRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/messages/dm/:userId`
@@ -1684,13 +1679,13 @@ Authenticated
 Body:
 
 ```ts
-CreateMessageDTO
+CreateMessageDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<MessageRecord>
+SuccessResponse<MessageRecord>;
 ```
 
 ## GET `/messages/social-networks/:socialNetworkId`
@@ -1706,19 +1701,19 @@ Authenticated
 Query:
 
 ```ts
-PaginationQuery
+PaginationQuery;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<MessageRecord[]>
+SuccessResponse<MessageRecord[]>;
 ```
 
 With:
 
 ```ts
-meta.pagination
+meta.pagination;
 ```
 
 ## POST `/messages/social-networks/:socialNetworkId`
@@ -1734,13 +1729,13 @@ Authenticated
 Body:
 
 ```ts
-CreateMessageDTO
+CreateMessageDTO;
 ```
 
 Response:
 
 ```ts
-SuccessResponse<MessageRecord>
+SuccessResponse<MessageRecord>;
 ```
 
 ## DELETE `/messages/:id`
@@ -1758,7 +1753,7 @@ Response:
 ```ts
 SuccessResponse<{
   id: string;
-}>
+}>;
 ```
 
 ---

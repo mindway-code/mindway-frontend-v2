@@ -32,7 +32,7 @@ Example:
 :root {
   margin: 0;
 
-  --font: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 
   /* backgrounds */
   --bg-green: #006c70;
@@ -114,9 +114,9 @@ body {
 In `styles.scss`, import shared UI files:
 
 ```scss
-@import "./app/shared/ui/button";
-@import "./app/shared/ui/card";
-@import "./app/shared/ui/input";
+@import './app/shared/ui/button';
+@import './app/shared/ui/card';
+@import './app/shared/ui/input';
 ```
 
 ## Button UI
@@ -267,18 +267,25 @@ Example:
 Use BEM-like class names:
 
 ```scss
-.profile-page {}
-.profile-page__header {}
-.profile-page__card {}
-.profile-page__actions {}
+.profile-page {
+}
+.profile-page__header {
+}
+.profile-page__card {
+}
+.profile-page__actions {
+}
 ```
 
 Avoid generic classes inside component files:
 
 ```scss
-.title {}
-.box {}
-.item {}
+.title {
+}
+.box {
+}
+.item {
+}
 ```
 
 ## CSS vs SCSS
@@ -286,14 +293,17 @@ Avoid generic classes inside component files:
 Some components currently use `.css`, others use `.scss`.
 
 Recommended:
+
 - Prefer `.scss` for consistency.
 - Do not rename everything at once.
 - Convert one component at a time if needed.
 
 Current `.css` files:
+
 - `register-options.component.css`
 - `dashboard-layout.component.css`
 - `profile.component.css`
 
 Suggested future:
+
 - Convert to `.scss` when refactoring those components.

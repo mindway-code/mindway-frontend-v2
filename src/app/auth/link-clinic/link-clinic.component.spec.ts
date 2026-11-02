@@ -1,12 +1,12 @@
-import { CommonModule } from "@angular/common";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ReactiveFormsModule } from "@angular/forms";
-import { RouterModule } from "@angular/router";
-import { of } from "rxjs";
-import { AuthService } from "../../services/auth.service";
-import { LinkClinicComponent } from "./link-clinic.component";
+import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { of } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { LinkClinicComponent } from './link-clinic.component';
 
-describe("LinkClinicComponent", () => {
+describe('LinkClinicComponent', () => {
   let component: LinkClinicComponent;
   let fixture: ComponentFixture<LinkClinicComponent>;
 
@@ -14,8 +14,8 @@ describe("LinkClinicComponent", () => {
     const authServiceMock = {
       loading$: of(false),
       error$: of(null),
-      register: jasmine.createSpy("register").and.returnValue(of("")),
-      loadCurrentUser: jasmine.createSpy("loadCurrentUser").and.returnValue(of(null)),
+      register: jasmine.createSpy('register').and.returnValue(of('')),
+      loadCurrentUser: jasmine.createSpy('loadCurrentUser').and.returnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe("LinkClinicComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

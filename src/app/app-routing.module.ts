@@ -46,34 +46,24 @@ const routes: Routes = [
   {
     path: 'profile',
     component: CommonLayoutComponent,
-     canActivate: [AuthGuard],
-    children: [
-      { path: '', component: ProfileComponent, pathMatch: 'full' },
-    ],
+    canActivate: [AuthGuard],
+    children: [{ path: '', component: ProfileComponent, pathMatch: 'full' }],
   },
   {
     path: 'link-school',
-    children: [
-      { path: '', component: LinkSchoolComponent, pathMatch: 'full' },
-    ],
+    children: [{ path: '', component: LinkSchoolComponent, pathMatch: 'full' }],
   },
   {
     path: 'link-clinic',
-    children: [
-      { path: '', component: LinkClinicComponent, pathMatch: 'full' },
-    ],
+    children: [{ path: '', component: LinkClinicComponent, pathMatch: 'full' }],
   },
   {
     path: 'link-professional',
-    children: [
-      { path: '', component: LinkProfessionalComponent, pathMatch: 'full' },
-    ],
+    children: [{ path: '', component: LinkProfessionalComponent, pathMatch: 'full' }],
   },
   {
     path: 'link-therapist',
-    children: [
-      { path: '', component: LinkTherapistComponent, pathMatch: 'full' },
-    ],
+    children: [{ path: '', component: LinkTherapistComponent, pathMatch: 'full' }],
   },
   {
     path: 'anamnesis',
@@ -133,6 +123,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

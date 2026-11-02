@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import type {
   AnamnesisMotorDevelopmentRecord,
   UpsertAnamnesisMotorDevelopmentDTO,
-} from "../../../../api/interfaces/anamnesis.interface";
+} from '../../../../api/interfaces/anamnesis.interface';
 
 @Component({
-  selector: "app-motor-development-section",
+  selector: 'app-motor-development-section',
   standalone: false,
-  templateUrl: "./motor-development-section.component.html",
-  styleUrls: ["./motor-development-section.component.scss"],
+  templateUrl: './motor-development-section.component.html',
+  styleUrls: ['./motor-development-section.component.scss'],
 })
 export class MotorDevelopmentSectionComponent implements OnChanges {
   @Input() data: AnamnesisMotorDevelopmentRecord | null | undefined = null;
@@ -25,13 +25,13 @@ export class MotorDevelopmentSectionComponent implements OnChanges {
     sittingAgeMonths: [null as number | null],
     crawlingAgeMonths: [null as number | null],
     firstStepsAgeMonths: [null as number | null],
-    fineCoordination: ["" as string],
+    fineCoordination: ['' as string],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
+    if (changes['data']) {
       this.patchFormFromData();
       if (this.editing) this.editing = false;
     }
@@ -67,9 +67,9 @@ export class MotorDevelopmentSectionComponent implements OnChanges {
         sittingAgeMonths: this.data?.sittingAgeMonths ?? null,
         crawlingAgeMonths: this.data?.crawlingAgeMonths ?? null,
         firstStepsAgeMonths: this.data?.firstStepsAgeMonths ?? null,
-        fineCoordination: this.data?.fineCoordination ?? "",
+        fineCoordination: this.data?.fineCoordination ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
@@ -78,4 +78,3 @@ export class MotorDevelopmentSectionComponent implements OnChanges {
     return trimmed ? trimmed : null;
   }
 }
-

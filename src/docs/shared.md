@@ -49,6 +49,7 @@ Responsibilities:
 - Responsive menu if needed
 
 Should not:
+
 - Submit forms
 - Fetch page-specific data
 - Duplicate dashboard sidebar behavior
@@ -71,6 +72,7 @@ Responsibilities:
 - Public navigation links
 
 Should not:
+
 - Contain page-specific content
 - Be copied manually into pages
 

@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import type { ReportsChildRecord } from "../../../../api/interfaces/reports-child.interface";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import type { ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
 
 @Component({
-  selector: "app-reports-child-card",
+  selector: 'app-reports-child-card',
   standalone: false,
-  templateUrl: "./reports-child-card.component.html",
-  styleUrls: ["./reports-child-card.component.scss"],
+  templateUrl: './reports-child-card.component.html',
+  styleUrls: ['./reports-child-card.component.scss'],
 })
 export class ReportsChildCardComponent {
   @Input({ required: true }) report!: ReportsChildRecord;
@@ -15,16 +15,16 @@ export class ReportsChildCardComponent {
   @Output() delete = new EventEmitter<ReportsChildRecord>();
 
   get creatorLabel(): string {
-    return this.report.user?.name || this.report.user?.email || "Usuário não identificado";
+    return this.report.user?.name || this.report.user?.email || 'Usuário não identificado';
   }
 
   get roleLabel(): string {
-    const labels: Record<ReportsChildRecord["userRole"], string> = {
-      admin: "Administrador",
-      common: "Responsável",
-      enterprise: "Escola",
-      professional: "Profissional",
-      therapist: "Terapeuta",
+    const labels: Record<ReportsChildRecord['userRole'], string> = {
+      admin: 'Administrador',
+      common: 'Responsável',
+      enterprise: 'Escola',
+      professional: 'Profissional',
+      therapist: 'Terapeuta',
     };
 
     return labels[this.report.userRole] ?? this.report.userRole;

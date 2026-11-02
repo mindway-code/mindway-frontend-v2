@@ -114,7 +114,7 @@ These are existing or recent rules already reflected in the codebase.
 - Frontend must never ask the user for:
   - `userId`
   - `childId`
-  when the business flow is access-code based
+    when the business flow is access-code based
 - Do not bypass backend validation of the access code
 - Do not create duplicate association logic on the frontend
 
@@ -241,4 +241,3 @@ Useful details to include:
 ```md
 [Write your request here]
 ```
-

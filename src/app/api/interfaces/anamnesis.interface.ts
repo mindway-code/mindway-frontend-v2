@@ -137,4 +137,3 @@ export interface AnamnesisRecord {
   behavior?: AnamnesisBehaviorRecord | null;
   routine?: AnamnesisRoutineRecord | null;
 }
-

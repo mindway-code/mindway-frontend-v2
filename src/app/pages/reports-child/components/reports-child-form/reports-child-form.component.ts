@@ -1,42 +1,42 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import type {
   CreateReportsChildDTO,
   ReportsChildRecord,
   UpdateReportsChildDTO,
-} from "../../../../api/interfaces/reports-child.interface";
+} from '../../../../api/interfaces/reports-child.interface';
 
 @Component({
-  selector: "app-reports-child-form",
+  selector: 'app-reports-child-form',
   standalone: false,
-  templateUrl: "./reports-child-form.component.html",
-  styleUrls: ["./reports-child-form.component.scss"],
+  templateUrl: './reports-child-form.component.html',
+  styleUrls: ['./reports-child-form.component.scss'],
 })
 export class ReportsChildFormComponent implements OnChanges {
   @Input() report: ReportsChildRecord | null = null;
   @Input() saving = false;
-  @Input() mode: "create" | "edit" = "create";
+  @Input() mode: 'create' | 'edit' = 'create';
 
   @Output() submitReport = new EventEmitter<CreateReportsChildDTO | UpdateReportsChildDTO>();
   @Output() cancel = new EventEmitter<void>();
 
   readonly form = this.fb.group({
-    title: ["", [Validators.required]],
-    behavior: [""],
-    difficulty: [""],
-    recommendation: [""],
+    title: ['', [Validators.required]],
+    behavior: [''],
+    difficulty: [''],
+    recommendation: [''],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["report"] || changes["mode"]) {
+    if (changes['report'] || changes['mode']) {
       const r = this.report;
       this.form.reset({
-        title: r?.title ?? "",
-        behavior: r?.behavior ?? "",
-        difficulty: r?.difficulty ?? "",
-        recommendation: r?.recommendation ?? "",
+        title: r?.title ?? '',
+        behavior: r?.behavior ?? '',
+        difficulty: r?.difficulty ?? '',
+        recommendation: r?.recommendation ?? '',
       });
     }
   }
@@ -48,9 +48,9 @@ export class ReportsChildFormComponent implements OnChanges {
     }
 
     const value = this.form.getRawValue();
-    const title = (value.title ?? "").trim();
+    const title = (value.title ?? '').trim();
 
-    if (this.mode === "create") {
+    if (this.mode === 'create') {
       const payload: CreateReportsChildDTO = {
         title,
         behavior: value.behavior?.trim() ? value.behavior.trim() : null,
@@ -71,4 +71,3 @@ export class ReportsChildFormComponent implements OnChanges {
     this.submitReport.emit(payload);
   }
 }
-

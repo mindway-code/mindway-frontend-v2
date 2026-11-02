@@ -14,17 +14,32 @@
     <div class="child-create__grid">
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="name" type="text" placeholder="Nome da criança" />
+          <input
+            class="input-ui__control"
+            formControlName="name"
+            type="text"
+            placeholder="Nome da criança"
+          />
           <label class="input-ui__label">Nome</label>
         </div>
-        <p class="child-create__hint" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+        <p
+          class="child-create__hint"
+          *ngIf="form.controls.name.touched && form.controls.name.invalid"
+        >
           Informe um nome (pelo menos 2 caracteres).
         </p>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="age" type="number" placeholder="Idade" min="0" readonly />
+          <input
+            class="input-ui__control"
+            formControlName="age"
+            type="number"
+            placeholder="Idade"
+            min="0"
+            readonly
+          />
           <label class="input-ui__label">Idade</label>
         </div>
         <p class="child-create__hint">Calculada automaticamente pela data de nascimento.</p>
@@ -32,10 +47,18 @@
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="birthDate" type="date" placeholder="Data de nascimento" />
+          <input
+            class="input-ui__control"
+            formControlName="birthDate"
+            type="date"
+            placeholder="Data de nascimento"
+          />
           <label class="input-ui__label">Data de nascimento</label>
         </div>
-        <p class="child-create__hint" *ngIf="form.controls.birthDate.touched && form.controls.birthDate.invalid">
+        <p
+          class="child-create__hint"
+          *ngIf="form.controls.birthDate.touched && form.controls.birthDate.invalid"
+        >
           Selecione uma data de nascimento.
         </p>
       </div>
@@ -54,7 +77,12 @@
     </div>
 
     <footer class="child-create__footer">
-      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancel.emit()" [disabled]="saving">
+      <button
+        class="btn-ui btn-ui--light btn-ui--sm"
+        type="button"
+        (click)="cancel.emit()"
+        [disabled]="saving"
+      >
         Cancelar
       </button>
 

@@ -1,48 +1,42 @@
-/* =========================================================
-   ANAMNESE �?" PÁGINA
-   ========================================================= */
-
+/* Page foundation */
 .anamnesis-page {
+  --anamnesis-primary: #078b92;
+  --anamnesis-primary-hover: #06757b;
+  --anamnesis-heading: #102f56;
+  --anamnesis-text: #718096;
+  --anamnesis-surface: #fff;
+  --anamnesis-border: #dfe7eb;
+  --anamnesis-focus: 2px solid var(--anamnesis-primary);
+
+  box-sizing: border-box;
   width: 100%;
   max-width: none;
   margin: 0 auto;
   padding: 0 0 2rem;
-  box-sizing: border-box;
 }
 
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
+/* Hero */
 .anamnesis-page__hero {
+  box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-
-  background: #ffffff;
   border: 1px solid #dce5ea;
   border-radius: 14px;
+  background: var(--anamnesis-surface);
+}
 
-  box-sizing: border-box;
+.anamnesis-page__hero--child {
+  margin-bottom: 16px;
 }
 
 .anamnesis-page__hero-content {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   min-height: 170px;
-
   padding: 28px 30px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f8fcfd 100%
-    );
-
-  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff 0%, #f8fcfd 100%);
 }
 
 .anamnesis-page__hero-text {
@@ -52,24 +46,18 @@
 
 .anamnesis-page__eyebrow {
   display: block;
-
   margin-bottom: 6px;
-
   color: #087f8c;
-
   font-size: 11px;
   font-weight: 700;
   line-height: 1.4;
-
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
 .anamnesis-page__title {
   margin: 0;
-
-  color: #102f56;
-
+  color: var(--anamnesis-heading);
   font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
@@ -77,226 +65,104 @@
 
 .anamnesis-page__subtitle {
   max-width: 650px;
-
   margin: 8px 0 0;
-
-  color: #718096;
-
+  color: var(--anamnesis-text);
   font-size: 13px;
   line-height: 1.55;
 }
-
-
-/* =========================================================
-   ILUSTRA�?�fO
-   ========================================================= */
 
 .anamnesis-page__hero-image {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 130px;
   height: 120px;
-
-  flex-shrink: 0;
-
   margin-left: 24px;
+  flex-shrink: 0;
 }
 
 .anamnesis-page__hero-image img {
   display: block;
-
   width: 115px;
   height: 115px;
-
   object-fit: contain;
 }
 
-
-/* =========================================================
-   SELETOR �?" PÁGINA 1
-   ========================================================= */
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * O componente app-child-selector possui
- * sua própria estrutura.
- *
- * Aqui somente garantimos que ele ocupe
- * a largura disponível.
- */
-
-
-
-
-/* =========================================================
-   PÁGINA 2 �?" HERO DA CRIAN�?A
-   ========================================================= */
-
-.anamnesis-page__hero--child {
-  margin-bottom: 16px;
-}
-
-
-/* =========================================================
-   ETAPAS DA ANAMNESE
-   ========================================================= */
-
+/* Progress steps */
 .anamnesis-page__steps {
+  position: relative;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-
-  position: relative;
-
   padding: 16px 28px 18px;
-
   border-top: 1px solid #edf1f4;
-
-  box-sizing: border-box;
 }
-
-
-/*
- * Linha que passa por trás dos números.
- */
 
 .anamnesis-page__steps::before {
-  content: "";
-
   position: absolute;
-
-  top: 30px;
-  left: 9%;
-  right: 9%;
-
-  height: 1px;
-
-  background: #d7e2e7;
-
   z-index: 0;
+  top: 30px;
+  right: 9%;
+  left: 9%;
+  height: 1px;
+  background: #d7e2e7;
+  content: '';
 }
-
-
-/* =========================================================
-   CADA ETAPA
-   ========================================================= */
 
 .anamnesis-page__step {
   position: relative;
-
+  z-index: 1;
   display: flex;
+  min-width: 0;
   flex-direction: column;
   align-items: center;
-
-  min-width: 0;
-
   text-align: center;
-
-  z-index: 1;
 }
 
 .anamnesis-page__step-number {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 26px;
   height: 26px;
-
+  border: 2px solid #fff;
   border-radius: 50%;
-
   background: #e8edf1;
   color: #425466;
-
-  border: 2px solid #ffffff;
-
   font-size: 11px;
   font-weight: 700;
-
-  box-sizing: border-box;
 }
 
 .anamnesis-page__step-label {
   max-width: 100px;
-
   margin-top: 6px;
-
   color: #64748b;
-
   font-size: 9px;
   font-weight: 600;
   line-height: 1.25;
 }
 
-
-/* =========================================================
-   ETAPA ATIVA
-   ========================================================= */
-
-.anamnesis-page__step--active
-  .anamnesis-page__step-number {
-  background: #078b92;
-  color: #ffffff;
-}
-
-.anamnesis-page__step--active
-  .anamnesis-page__step-label {
-  color: #078b92;
-}
-
-
-/* =========================================================
-   ETAPA CONCLUÍDA
-   ========================================================= */
-
-.anamnesis-page__step--complete
-  .anamnesis-page__step-number {
+.anamnesis-page__step--complete .anamnesis-page__step-number {
   background: #d9f3e8;
   color: #17845f;
 }
 
-.anamnesis-page__step--complete
-  .anamnesis-page__step-label {
+.anamnesis-page__step--complete .anamnesis-page__step-label {
   color: #357a65;
 }
 
-
-/*
- * Se estiver ativa e concluída,
- * damos prioridade ao estado ativo.
- */
-
-.anamnesis-page__step--active
-  .anamnesis-page__step-number {
-  background: #078b92;
-  color: #ffffff;
+.anamnesis-page__step--active .anamnesis-page__step-number {
+  background: var(--anamnesis-primary);
+  color: #fff;
 }
 
-
-/* =========================================================
-   ERROS
-   ========================================================= */
-
-.anamnesis-page__error {
-  margin-top: 18px;
+.anamnesis-page__step--active .anamnesis-page__step-label {
+  color: var(--anamnesis-primary);
 }
 
-
-/* =========================================================
-   LOADING
-   ========================================================= */
-
+/* Loading and error states */
+.anamnesis-page__error,
 .anamnesis-page__loading {
   margin-top: 18px;
 }
@@ -304,24 +170,17 @@
 .loading-ui {
   display: flex;
   flex-direction: column;
-
   gap: 12px;
-
   padding: 24px;
-
-  background: #ffffff;
-
   border: 1px solid #e0e8ec;
   border-radius: 12px;
+  background: var(--anamnesis-surface);
 }
 
 .loading-ui__line {
   display: block;
-
   height: 11px;
-
   border-radius: 6px;
-
   background: #edf2f4;
 }
 
@@ -335,173 +194,21 @@
 
 .loading-ui__block {
   display: block;
-
   width: 100%;
   height: 120px;
-
   margin-top: 5px;
-
   border-radius: 9px;
-
   background: #f3f6f7;
 }
 
-
-/* =========================================================
-   CARD DA CRIAN�?A
-   ========================================================= */
-
-.anamnesis-page__child-card {
-  display: flex;
-  align-items: center;
-
-  gap: 13px;
-
-  width: 100%;
-
-  margin-bottom: 20px;
-
-  padding: 13px 16px;
-
-  background: #ffffff;
-
-  border: 1px solid #dfe7eb;
-  border-radius: 10px;
-
-  box-sizing: border-box;
-
-  box-shadow:
-    0 2px 8px rgba(30, 70, 90, 0.035);
-}
-
-.anamnesis-page__child-avatar {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
-  min-height: 40px;
-  aspect-ratio: 1;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-  overflow: hidden;
-
-  background: #e5f4fb;
-  color: #14558b;
-
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.anamnesis-page__child-avatar img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  border-radius: inherit;
-  object-fit: cover;
-  object-position: center;
-}
-
-.anamnesis-page__child-copy {
-  min-width: 0;
-  flex: 1;
-}
-
-.anamnesis-page__child-copy h2 {
-  margin: 0 0 3px;
-
-  color: #102f56;
-
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.anamnesis-page__child-copy p {
-  margin: 0;
-
-  color: #718096;
-
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.anamnesis-page__child-copy .anamnesis-page__child-meta,
-.anamnesis-page__child-copy .anamnesis-page__child-progress {
-  margin-top: 3px;
-}
-
-.anamnesis-page__diagnoses {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 6px;
-}
-
-.anamnesis-page__diagnoses > span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  padding: 0 9px;
-  border-radius: 999px;
-  background: #eef8ff;
-  color: #1766a8;
-  font-size: 10px;
-  line-height: 1.2;
-}
-
-.anamnesis-page__child-status {
-  flex-shrink: 0;
-
-  padding: 6px 10px;
-
-  border-radius: 7px;
-
-  background: #fff4df;
-  color: #a56800;
-
-  font-size: 10px;
-  font-weight: 600;
-
-  white-space: nowrap;
-}
-
-.anamnesis-page__child-status--complete {
-  background: #e5f6ed;
-  color: #247653;
-}
-
+/* Child selection */
 .anamnesis-page__children-loading {
   padding: 1rem 1.25rem;
-  color: #718096;
+  color: var(--anamnesis-text);
 }
 
 .anamnesis-page__children {
   margin-top: 1.1rem;
-}
-
-.anamnesis-page__children-heading {
-  margin-bottom: 1rem;
-}
-
-.anamnesis-page__children-heading h2 {
-  margin: 0;
-  color: #14253d;
-  font-size: 1.25rem;
-}
-
-.anamnesis-page__children-heading p {
-  margin: .35rem 0 0;
-  color: #718096;
-  font-size: .88rem;
 }
 
 .anamnesis-page__children-grid {
@@ -518,26 +225,30 @@
   align-items: center;
   padding: 1.35rem;
   border: 1px solid #e1e8e9;
-  border-radius: .8rem;
-  background: #fff;
-  box-shadow: 0 4px 18px rgba(22, 50, 67, .04);
+  border-radius: 0.8rem;
+  background: var(--anamnesis-surface);
+  box-shadow: 0 4px 18px rgba(22, 50, 67, 0.04);
   text-align: center;
 }
 
-.anamnesis-page__child-option-avatar {
-  box-sizing: border-box;
+.anamnesis-page__child-option-avatar,
+.anamnesis-page__child-avatar {
   position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+.anamnesis-page__child-option-avatar {
   display: grid;
+  place-items: center;
   width: 88px;
   min-width: 88px;
   height: 88px;
   min-height: 88px;
-  aspect-ratio: 1;
+  margin-bottom: 0.75rem;
   flex: 0 0 88px;
-  overflow: hidden;
-  place-items: center;
-  margin-bottom: .75rem;
-  border-radius: 50%;
   background: linear-gradient(145deg, #d8f4f7, #eaf8fa);
   color: #008b91;
   font-size: 2rem;
@@ -549,21 +260,25 @@
   color: #ad5287;
 }
 
-.anamnesis-page__child-option-avatar img {
-  position: absolute;
-  inset: 0;
+.anamnesis-page__child-option-avatar img,
+.anamnesis-page__child-avatar img {
   display: block;
   width: 100%;
-  height: 100%;
   max-width: none;
+  height: 100%;
   max-height: none;
   border-radius: inherit;
   object-fit: cover;
   object-position: center;
 }
 
+.anamnesis-page__child-option-avatar img {
+  position: absolute;
+  inset: 0;
+}
+
 .anamnesis-page__child-option h3 {
-  margin: .15rem 0 .45rem;
+  margin: 0.15rem 0 0.45rem;
   color: #14253d;
   font-size: 1.1rem;
   font-weight: 600;
@@ -571,13 +286,13 @@
 
 .anamnesis-page__child-option-meta {
   margin: 0;
-  color: #718096;
-  font-size: .8rem;
+  color: var(--anamnesis-text);
+  font-size: 0.8rem;
   line-height: 1.5;
 }
 
 .anamnesis-page__child-option-meta span {
-  padding: 0 .2rem;
+  padding: 0 0.2rem;
 }
 
 .anamnesis-page__diagnoses {
@@ -585,48 +300,119 @@
   min-height: 2rem;
   flex-wrap: wrap;
   justify-content: center;
-  gap: .35rem;
-  margin: .75rem 0;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
 }
 
-.anamnesis-page__diagnoses span {
-  padding: .25rem .55rem;
+.anamnesis-page__diagnoses > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0.25rem 0.55rem;
   border-radius: 999px;
   background: #eef8ff;
   color: #1463b8;
-  font-size: .72rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
 .anamnesis-page__no-diagnosis {
-  margin: .75rem 0;
+  margin: 0.75rem 0;
   color: #8a9aaa;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .anamnesis-page__child-action {
   width: 100%;
   margin-top: auto;
+  padding: 0.65rem 0.9rem;
   border: 1px solid #008b91;
-  border-radius: .55rem;
-  padding: .65rem .9rem;
+  border-radius: 0.55rem;
   background: #008b91;
   color: #fff;
   font: inherit;
-  font-size: .84rem;
+  font-size: 0.84rem;
   font-weight: 600;
   cursor: pointer;
 }
 
 .anamnesis-page__children-empty {
-  color: #718096;
-  font-size: .9rem;
+  color: var(--anamnesis-text);
+  font-size: 0.9rem;
 }
 
+/* Selected child summary */
+.anamnesis-page__child-card {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border: 1px solid var(--anamnesis-border);
+  border-radius: 10px;
+  background: var(--anamnesis-surface);
+  box-shadow: 0 2px 8px rgba(30, 70, 90, 0.035);
+}
 
-/* =========================================================
-   CABE�?ALHO DAS SE�?�.ES
-   ========================================================= */
+.anamnesis-page__child-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+  background: #e5f4fb;
+  color: #14558b;
+  font-size: 16px;
+  font-weight: 700;
+}
 
+.anamnesis-page__child-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.anamnesis-page__child-copy h2 {
+  margin: 0 0 3px;
+  color: var(--anamnesis-heading);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.anamnesis-page__child-copy p {
+  margin: 0;
+  color: var(--anamnesis-text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.anamnesis-page__child-copy .anamnesis-page__child-meta,
+.anamnesis-page__child-copy .anamnesis-page__child-progress {
+  margin-top: 3px;
+}
+
+.anamnesis-page__child-status {
+  padding: 6px 10px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: #fff4df;
+  color: #a56800;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.anamnesis-page__child-status--complete {
+  background: #e5f6ed;
+  color: #247653;
+}
+
+/* Section list */
 .anamnesis-page__section-header {
   margin-bottom: 10px;
 }
@@ -634,7 +420,6 @@
 .anamnesis-page__section-heading {
   display: flex;
   align-items: center;
-
   gap: 11px;
 }
 
@@ -642,25 +427,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 36px;
   height: 36px;
-
   flex-shrink: 0;
-
   border-radius: 50%;
-
   background: #e5f7f6;
-  color: #078b92;
-
+  color: var(--anamnesis-primary);
   font-size: 17px;
 }
 
 .anamnesis-page__section-title {
   margin: 0;
-
-  color: #102f56;
-
+  color: var(--anamnesis-heading);
   font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
@@ -668,56 +446,32 @@
 
 .anamnesis-page__section-copy {
   margin: 3px 0 0;
-
-  color: #718096;
-
+  color: var(--anamnesis-text);
   font-size: 11px;
   line-height: 1.4;
 }
 
-
-/* =========================================================
-   LISTA DAS SE�?�.ES
-   ========================================================= */
-
 .anamnesis-page__section-list {
   display: flex;
   flex-direction: column;
-
   gap: 7px;
 }
 
-
-/* =========================================================
-   ITEM
-   ========================================================= */
-
 .anamnesis-page__section-item {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-
+  gap: 12px;
   width: 100%;
   min-height: 62px;
-
-  gap: 12px;
-
   padding: 9px 12px;
-
   appearance: none;
-
-  border: 1px solid #dfe7eb;
+  border: 1px solid var(--anamnesis-border);
   border-radius: 9px;
-
-  background: #ffffff;
-
+  background: var(--anamnesis-surface);
   color: inherit;
-
   text-align: left;
-
   cursor: pointer;
-
-  box-sizing: border-box;
-
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
@@ -726,13 +480,9 @@
 }
 
 .anamnesis-page__section-item:hover {
-  background: #fbfdfe;
-
   border-color: #b9d7dc;
-
-  box-shadow:
-    0 3px 9px rgba(30, 70, 90, 0.05);
-
+  background: #fbfdfe;
+  box-shadow: 0 3px 9px rgba(30, 70, 90, 0.05);
   transform: translateY(-1px);
 }
 
@@ -740,33 +490,16 @@
   transform: translateY(0);
 }
 
-.anamnesis-page__section-item:focus-visible {
-  outline: 2px solid #078b92;
-  outline-offset: 2px;
-}
-
-
-/* =========================================================
-   ÍCONE DA SE�?�fO
-   ========================================================= */
-
 .anamnesis-page__section-item-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 36px;
   height: 36px;
-
   flex-shrink: 0;
-
   border-radius: 50%;
-
   font-size: 16px;
 }
-
-
-/* Cores suaves por categoria */
 
 .anamnesis-page__section-item-icon--birth {
   background: #ffe9ed;
@@ -803,11 +536,6 @@
   color: #24986a;
 }
 
-
-/* =========================================================
-   TEXTO DA SE�?�fO
-   ========================================================= */
-
 .anamnesis-page__section-item-content {
   min-width: 0;
   flex: 1;
@@ -815,9 +543,7 @@
 
 .anamnesis-page__section-item-content h3 {
   margin: 0 0 2px;
-
-  color: #102f56;
-
+  color: var(--anamnesis-heading);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.35;
@@ -825,40 +551,26 @@
 
 .anamnesis-page__section-item-content p {
   margin: 0;
-
-  color: #718096;
-
+  color: var(--anamnesis-text);
   font-size: 10px;
   line-height: 1.4;
 }
 
-
-/* =========================================================
-   STATUS
-   ========================================================= */
-
 .anamnesis-page__section-item-status {
   display: flex;
   align-items: center;
-
   gap: 8px;
-
   flex-shrink: 0;
 }
 
 .anamnesis-page__section-item-badge {
   display: inline-flex;
   align-items: center;
-
   gap: 4px;
-
   padding: 5px 8px;
-
   border-radius: 7px;
-
   font-size: 9px;
   font-weight: 600;
-
   white-space: nowrap;
 }
 
@@ -876,52 +588,33 @@
   color: #64748b;
 }
 
-.anamnesis-page__section-item-status
-  > .bi-chevron-right {
+.anamnesis-page__section-item-status > .bi-chevron-right {
   color: #8ca0ad;
-
   font-size: 13px;
 }
 
-
-/* =========================================================
-   SE�?�fO ABERTA
-   ========================================================= */
-
+/* Open section and navigation */
 .anamnesis-page__opened-section {
   width: 100%;
   margin-top: 18px;
 }
 
-
-/* =========================================================
-   BOT�fO VOLTAR
-   ========================================================= */
-
 .anamnesis-page__back-button {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   margin: 0 0 14px;
   padding: 8px 12px;
-
   border: 1px solid #d6e2e7;
   border-radius: 8px;
-
-  background: #ffffff;
-
+  background: var(--anamnesis-surface);
   color: #426174;
-
+  font: inherit;
   font-size: 12px;
   font-weight: 600;
-
   cursor: pointer;
-
-  box-sizing: border-box;
-
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
@@ -930,64 +623,39 @@
 }
 
 .anamnesis-page__back-button:hover {
-  background: #f7fafb;
-
   border-color: #b9d7dc;
-
-  color: #078b92;
-
-  box-shadow:
-    0 2px 7px rgba(30, 70, 90, 0.05);
+  background: #f7fafb;
+  color: var(--anamnesis-primary);
+  box-shadow: 0 2px 7px rgba(30, 70, 90, 0.05);
 }
-
-.anamnesis-page__back-button:focus-visible {
-  outline: 2px solid #078b92;
-  outline-offset: 2px;
-}
-
-
-/* =========================================================
-   NAVEGA�?�fO AP�"S SALVAR
-   ========================================================= */
 
 .anamnesis-page__section-navigation {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: flex-end;
-
+  gap: 12px;
   margin-top: 20px;
   padding-top: 18px;
-
   border-top: 1px solid #e5ecef;
 }
 
 .anamnesis-page__navigation-button {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   gap: 8px;
-
-  min-height: 40px;
   min-width: 120px;
-
+  min-height: 40px;
   padding: 0 16px;
-
-  border: 1px solid #078b92;
+  border: 1px solid var(--anamnesis-primary);
   border-radius: 8px;
-
-  background: #078b92;
-
-  color: #ffffff;
-
+  background: var(--anamnesis-primary);
+  color: #fff;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
-
   cursor: pointer;
-
-  box-sizing: border-box;
-
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
@@ -995,33 +663,59 @@
     transform 0.15s ease;
 }
 
-.anamnesis-page__navigation-button:hover {
-  background: #06757b;
-
-  border-color: #06757b;
-
-  box-shadow:
-    0 3px 8px rgba(7, 139, 146, 0.18);
-
+.anamnesis-page__navigation-button:hover:not(:disabled) {
+  border-color: var(--anamnesis-primary-hover);
+  background: var(--anamnesis-primary-hover);
+  box-shadow: 0 3px 8px rgba(7, 139, 146, 0.18);
   transform: translateY(-1px);
 }
 
-.anamnesis-page__navigation-button:active {
+.anamnesis-page__navigation-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
+.anamnesis-page__navigation-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.anamnesis-page__navigation-button--secondary,
+.anamnesis-page__navigation-button--sections {
+  border-color: #d6e2e7;
+  background: var(--anamnesis-surface);
+  color: #426174;
+}
+
+.anamnesis-page__navigation-button--secondary {
+  justify-self: start;
+}
+
+.anamnesis-page__navigation-button--sections {
+  justify-self: center;
+}
+
+.anamnesis-page__section-navigation .anamnesis-page__navigation-button:last-child {
+  justify-self: end;
+}
+
+.anamnesis-page__navigation-button--secondary:hover:not(:disabled),
+.anamnesis-page__navigation-button--sections:hover:not(:disabled) {
+  border-color: #b9d7dc;
+  background: #f7fafb;
+  color: var(--anamnesis-primary);
+}
+
+/* Interactive focus */
+.anamnesis-page__child-action:focus-visible,
+.anamnesis-page__section-item:focus-visible,
+.anamnesis-page__back-button:focus-visible,
 .anamnesis-page__navigation-button:focus-visible {
-  outline: 2px solid #078b92;
+  outline: var(--anamnesis-focus);
   outline-offset: 2px;
 }
 
-
-/* =========================================================
-   RESPONSIVIDADE �?" TABLET
-   ========================================================= */
-
+/* Tablet */
 @media (max-width: 900px) {
-
   .anamnesis-page {
     padding-bottom: 1.5rem;
   }
@@ -1031,37 +725,25 @@
   }
 
   .anamnesis-page__steps {
-    padding-left: 18px;
     padding-right: 18px;
+    padding-left: 18px;
   }
 
   .anamnesis-page__step-label {
     font-size: 8px;
   }
-
 }
 
-
-/* =========================================================
-   RESPONSIVIDADE �?" MOBILE
-   ========================================================= */
-
+/* Mobile */
 @media (max-width: 700px) {
-
-  .anamnesis-page {
-    padding-bottom: 1.5rem;
-  }
-
   .anamnesis-page__hero-content {
     min-height: auto;
-
     padding: 20px;
   }
 
   .anamnesis-page__hero-image {
     width: 90px;
     height: 90px;
-
     margin-left: 10px;
   }
 
@@ -1078,24 +760,11 @@
     font-size: 12px;
   }
 
-
-  /* Seleção */
-
-
-
-
-  /* Etapas */
-
   .anamnesis-page__steps {
-    overflow-x: auto;
-
     display: flex;
-
     gap: 18px;
-
+    overflow-x: auto;
     padding: 14px 16px 16px;
-
-    scrollbar-width: thin;
   }
 
   .anamnesis-page__steps::before {
@@ -1107,9 +776,6 @@
     min-width: 70px;
   }
 
-
-  /* Criança */
-
   .anamnesis-page__child-card {
     align-items: flex-start;
   }
@@ -1117,9 +783,6 @@
   .anamnesis-page__child-status {
     margin-left: auto;
   }
-
-
-  /* Seções */
 
   .anamnesis-page__section-item {
     min-height: 60px;
@@ -1129,32 +792,27 @@
     font-size: 9px;
   }
 
-
   .anamnesis-page__section-navigation {
-    justify-content: stretch;
+    grid-template-columns: 1fr;
   }
 
-  .anamnesis-page__navigation-button {
+  .anamnesis-page__navigation-button,
+  .anamnesis-page__navigation-button--secondary,
+  .anamnesis-page__navigation-button--sections,
+  .anamnesis-page__section-navigation .anamnesis-page__navigation-button:last-child {
     width: 100%;
+    justify-self: stretch;
   }
-
 }
 
-
-/* =========================================================
-   RESPONSIVIDADE �?" CELULAR PEQUENO
-   ========================================================= */
-
+/* Small mobile */
 @media (max-width: 500px) {
-
   .anamnesis-page {
     padding-bottom: 1.5rem;
-  }
-
-  .anamnesis-page__hero-content {
-    align-items: flex-start;
-
-    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .anamnesis-page__hero-image {
@@ -1179,149 +837,60 @@
     font-size: 11px;
   }
 
-
-  /* Seleção */
-
-
-
-
-
-
-  /* Criança */
-
   .anamnesis-page__child-card {
+    width: 100%;
     flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
+    font-size: var(--font-size-sm);
   }
 
   .anamnesis-page__child-status {
-    width: 100%;
+    width: calc(100% - 53px);
     margin-left: 53px;
-
     text-align: center;
   }
-
-
-  /* Seções */
 
   .anamnesis-page__section-heading {
     align-items: flex-start;
   }
 
   .anamnesis-page__section-title {
-    font-size: 16px;
+    font-size: var(--font-size-md) !important;
   }
 
   .anamnesis-page__section-copy {
-    font-size: 10px;
+    font-size: var(--font-size-sm) !important;
   }
 
   .anamnesis-page__section-item {
-    padding: 9px;
     gap: 9px;
+    padding: 9px;
   }
 
   .anamnesis-page__section-item-icon {
     width: 32px;
     height: 32px;
-
     font-size: 14px;
   }
 
   .anamnesis-page__section-item-content h3 {
-    font-size: 11px;
+    font-size: var(--font-size-md) !important;
   }
 
-  .anamnesis-page__section-item-content p {
-    display: none;
-  }
-
+  .anamnesis-page__section-item-content p,
   .anamnesis-page__section-item-badge {
     display: none;
   }
 
-  .anamnesis-page__section-item-status
-    > .bi-chevron-right {
-    font-size: 12px;
+  .anamnesis-page__section-item-status > .bi-chevron-right {
+    font-size: var(--font-size-md) !important;
   }
-
 }
 
-/* =========================================================
-   SELETOR DE CRIAN�?A �?" SETA
-   ========================================================= */
-
-
-
-
-
-
-
-
-/* =========================================================
-   NAVEGA�?�fO �?" ANTERIOR / VOLTAR / PR�"XIMO
-   ========================================================= */
-
-.anamnesis-page__section-navigation {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid #e5ecef;
-}
-
-.anamnesis-page__navigation-button {
-  min-height: 40px;
-}
-
-.anamnesis-page__navigation-button--secondary,
-.anamnesis-page__navigation-button--sections {
-  background: #ffffff;
-  border-color: #d6e2e7;
-  color: #426174;
-}
-
-.anamnesis-page__navigation-button--secondary {
-  justify-self: start;
-}
-
-.anamnesis-page__navigation-button--sections {
-  justify-self: center;
-}
-
-.anamnesis-page__section-navigation
-.anamnesis-page__navigation-button:last-child {
-  justify-self: end;
-}
-
-.anamnesis-page__navigation-button--secondary:hover:not(:disabled),
-.anamnesis-page__navigation-button--sections:hover:not(:disabled) {
-  background: #f7fafb;
-  border-color: #b9d7dc;
-  color: #078b92;
-}
-
-/* Remove somente o botão Excluir da interface. */
-.anamnesis-page
-.anamnesis-section-shell__actions
-.btn-ui--accent {
-  display: none !important;
-}
-
-@media (max-width: 650px) {
-  .anamnesis-page__section-navigation {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .anamnesis-page__navigation-button--sections {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    justify-self: center;
-  }
-
-  .anamnesis-page__section-navigation
-  .anamnesis-page__navigation-button:last-child {
-    justify-self: end;
+@media (prefers-reduced-motion: reduce) {
+  .anamnesis-page__section-item,
+  .anamnesis-page__back-button,
+  .anamnesis-page__navigation-button {
+    transition: none;
   }
 }

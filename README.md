@@ -43,7 +43,7 @@ Set API endpoint in `src/environments/environment.ts` and `src/environments/envi
 
 ```typescript
 export const environment = {
-  apiUrl: 'http://localhost:3333/api'
+  apiUrl: 'http://localhost:3333/api',
 };
 ```
 
@@ -167,13 +167,13 @@ All services use RxJS `BehaviorSubject` for reactive state management.
 
 ✅ Angular 19 build passes  
 ✅ No TypeScript errors  
-✅ No hardcoded mock data in production code  
+✅ No hardcoded mock data in production code
 
 ---
 
 ## API Integration
 
-The frontend expects the backend API at the URL defined in `environment.ts`. 
+The frontend expects the backend API at the URL defined in `environment.ts`.
 
 ### Key Endpoints Used
 
@@ -191,20 +191,24 @@ Full API documentation available at `http://localhost:3333/api/openapi.json` (wh
 ## Troubleshooting
 
 **"Cannot find module @angular/..."**
+
 - Run `npm ci` to install exact dependencies from lock file
 
 **Port 4207 already in use**
+
 - Change in `angular.json` or use:
   ```powershell
   ng serve --port 4208
   ```
 
 **Backend API not responding**
+
 - Ensure backend is running: `npm run dev` in `mindway-api/`
 - Check `environment.ts` has correct `apiUrl`
 - Verify CORS settings in backend
 
 **Build fails with TypeScript errors**
+
 - Run `npm run lint` to see strict mode violations
 - Most common: null/undefined access without safe navigation (`?.`)
 

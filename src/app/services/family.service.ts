@@ -1,11 +1,20 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { PaginationMeta, PaginationQuery, SuccessResponse, DeleteResult } from "../api/interfaces/api-response.interface";
-import type { CreateFamilyDTO, FamilyRecord, UpdateFamilyDTO } from "../api/interfaces/family.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+import type {
+  PaginationMeta,
+  PaginationQuery,
+  SuccessResponse,
+  DeleteResult,
+} from '../api/interfaces/api-response.interface';
+import type {
+  CreateFamilyDTO,
+  FamilyRecord,
+  UpdateFamilyDTO,
+} from '../api/interfaces/family.interface';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class FamilyService {
   private readonly apiUrl = environment.apiUrl;
 
@@ -28,8 +37,8 @@ export class FamilyService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
     return this.http
       .get<SuccessResponse<FamilyRecord[]>>(`${this.apiUrl}/families/me`, { params })
@@ -40,10 +49,10 @@ export class FamilyService {
         }),
         map((res) => res.data),
         catchError((err) => {
-          this.errorSubject.next("Não foi possível carregar as famílias.");
+          this.errorSubject.next('Não foi possível carregar as famílias.');
           return throwError(() => err);
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       );
   }
 
@@ -52,8 +61,8 @@ export class FamilyService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
     return this.http
       .get<SuccessResponse<FamilyRecord[]>>(`${this.apiUrl}/families`, { params })
@@ -64,10 +73,10 @@ export class FamilyService {
         }),
         map((res) => res.data),
         catchError((err) => {
-          this.errorSubject.next("Não foi possível carregar as famílias.");
+          this.errorSubject.next('Não foi possível carregar as famílias.');
           return throwError(() => err);
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       );
   }
 
@@ -79,10 +88,10 @@ export class FamilyService {
       map((res) => res.data),
       tap((created) => this.itemsSubject.next([created, ...this.itemsSubject.value])),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível criar a família.");
+        this.errorSubject.next('Não foi possível criar a família.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -93,12 +102,12 @@ export class FamilyService {
    * Treat these as TODO until backend is fixed.
    */
   updateMyFamily(_dto: UpdateFamilyDTO): Observable<FamilyRecord> {
-    this.errorSubject.next("Não foi possível atualizar a família no momento.");
-    return throwError(() => new Error("Backend route PUT /families/me is not usable yet."));
+    this.errorSubject.next('Não foi possível atualizar a família no momento.');
+    return throwError(() => new Error('Backend route PUT /families/me is not usable yet.'));
   }
 
   deleteMyFamily(): Observable<DeleteResult> {
-    this.errorSubject.next("Não foi possível excluir a família no momento.");
-    return throwError(() => new Error("Backend route DELETE /families/me is not usable yet."));
+    this.errorSubject.next('Não foi possível excluir a família no momento.');
+    return throwError(() => new Error('Backend route DELETE /families/me is not usable yet.'));
   }
 }

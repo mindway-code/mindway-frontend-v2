@@ -1,4 +1,4 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
 export interface FamilyRecord {
   id: string;
@@ -19,4 +19,3 @@ export interface ListFamiliesResponse {
   items: FamilyRecord[];
   meta: { pagination: PaginationMeta };
 }
-

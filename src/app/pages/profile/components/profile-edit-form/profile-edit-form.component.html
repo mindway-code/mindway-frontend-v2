@@ -45,7 +45,10 @@
           <label class="input-ui__label">Nome</label>
         </div>
 
-        <p class="profile-edit__hint" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+        <p
+          class="profile-edit__hint"
+          *ngIf="form.controls.name.touched && form.controls.name.invalid"
+        >
           Informe seu nome (pelo menos 2 caracteres).
         </p>
       </div>
@@ -62,7 +65,10 @@
           <label class="input-ui__label">E-mail</label>
         </div>
 
-        <p class="profile-edit__hint" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <p
+          class="profile-edit__hint"
+          *ngIf="form.controls.email.touched && form.controls.email.invalid"
+        >
           Informe um endereço de e-mail válido.
         </p>
       </div>

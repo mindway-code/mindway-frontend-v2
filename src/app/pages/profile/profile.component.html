@@ -8,9 +8,9 @@
     </div>
 
     <div class="profile-page__hero-actions" *ngIf="editMode">
-        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
-          Fechar
-        </button>
+      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
+        Fechar
+      </button>
     </div>
   </header>
 
@@ -18,8 +18,14 @@
     {{ flashMessage }}
   </div>
 
-  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">Carregando seu perfil...</div>
-  <div *ngIf="userError$ | async as userError" class="profile-page__state profile-page__state--error" role="alert">
+  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">
+    Carregando seu perfil...
+  </div>
+  <div
+    *ngIf="userError$ | async as userError"
+    class="profile-page__state profile-page__state--error"
+    role="alert"
+  >
     {{ userError }}
   </div>
 
@@ -87,7 +93,8 @@
           Compartilhar acesso
         </h2>
         <p class="profile-page__subtitle">
-          Convide instituições e profissionais para acessar informações de forma segura e colaborativa.
+          Convide instituições e profissionais para acessar informações de forma segura e
+          colaborativa.
         </p>
       </div>
     </header>
@@ -103,7 +110,11 @@
           <p>{{ invite.description }}</p>
         </div>
 
-        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="copyInviteLink(invite.path)">
+        <button
+          class="btn-ui btn-ui--light btn-ui--sm"
+          type="button"
+          (click)="copyInviteLink(invite.path)"
+        >
           Copiar código
         </button>
       </article>

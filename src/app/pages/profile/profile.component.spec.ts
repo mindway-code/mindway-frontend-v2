@@ -36,7 +36,8 @@ describe('ProfileComponent', () => {
             currentUser$: of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
             loading$: of(false),
             error$: of(null),
-            loadCurrentUser: () => of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
+            loadCurrentUser: () =>
+              of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
           } satisfies Partial<AuthService>,
         },
         {
@@ -44,7 +45,8 @@ describe('ProfileComponent', () => {
           useValue: {
             saving$: of(false),
             error$: of(null),
-            updateMe: () => of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
+            updateMe: () =>
+              of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
           } satisfies Partial<UserService>,
         },
         {
@@ -69,8 +71,7 @@ describe('ProfileComponent', () => {
           } satisfies Partial<ChildService>,
         },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;

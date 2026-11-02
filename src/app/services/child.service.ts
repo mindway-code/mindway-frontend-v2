@@ -1,16 +1,29 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError, timeout } from "rxjs";
-import { environment } from "../../environments/environment";
-import type { SuccessResponse, PaginationMeta } from "../api/interfaces/api-response.interface";
-import type { ChildRecord, CreateChildDTO, UpdateChildDTO } from "../api/interfaces/child.interface";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  finalize,
+  map,
+  tap,
+  throwError,
+  timeout,
+} from 'rxjs';
+import { environment } from '../../environments/environment';
+import type { SuccessResponse, PaginationMeta } from '../api/interfaces/api-response.interface';
+import type {
+  ChildRecord,
+  CreateChildDTO,
+  UpdateChildDTO,
+} from '../api/interfaces/child.interface';
 
 export interface ListChildrenQuery {
   page?: number;
   pageSize?: number;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class ChildService {
   private readonly apiUrl = environment.apiUrl;
   private readonly childrenUrl = `${this.apiUrl}/children`;
@@ -41,8 +54,8 @@ export class ChildService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
     return this.http.get<SuccessResponse<ChildRecord[]>>(this.myChildrenUrl, { params }).pipe(
       timeout(12_000),
@@ -57,10 +70,10 @@ export class ChildService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar as crianças.");
+        this.errorSubject.next('Não foi possível carregar as crianças.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -69,8 +82,8 @@ export class ChildService {
     this.errorSubject.next(null);
 
     let params = new HttpParams();
-    if (query.page !== undefined) params = params.set("page", String(query.page));
-    if (query.pageSize !== undefined) params = params.set("pageSize", String(query.pageSize));
+    if (query.page !== undefined) params = params.set('page', String(query.page));
+    if (query.pageSize !== undefined) params = params.set('pageSize', String(query.pageSize));
 
     return this.http.get<SuccessResponse<ChildRecord[]>>(this.childrenUrl, { params }).pipe(
       timeout(12_000),
@@ -80,10 +93,10 @@ export class ChildService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível carregar as crianças.");
+        this.errorSubject.next('Não foi possível carregar as crianças.');
         return throwError(() => err);
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -92,7 +105,7 @@ export class ChildService {
   }
 
   selectChildById(childId: string | null): void {
-    const normalized = childId?.trim() ?? "";
+    const normalized = childId?.trim() ?? '';
     if (!normalized) {
       this.selectedChildSubject.next(null);
       return;
@@ -114,18 +127,23 @@ export class ChildService {
     this.savingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.http.patch<SuccessResponse<ChildRecord>>(`${this.childrenUrl}/${childId}`, payload).pipe(
-      map((res) => res.data),
-      tap((updated) => {
-        this.childrenSubject.next(this.childrenSubject.value.map((child) => child.id === childId ? updated : child));
-        if (this.selectedChildSubject.value?.id === childId) this.selectedChildSubject.next(updated);
-      }),
-      catchError((err) => {
-        this.errorSubject.next("Não foi possível atualizar o perfil da criança.");
-        return throwError(() => err);
-      }),
-      finalize(() => this.savingSubject.next(false))
-    );
+    return this.http
+      .patch<SuccessResponse<ChildRecord>>(`${this.childrenUrl}/${childId}`, payload)
+      .pipe(
+        map((res) => res.data),
+        tap((updated) => {
+          this.childrenSubject.next(
+            this.childrenSubject.value.map((child) => (child.id === childId ? updated : child)),
+          );
+          if (this.selectedChildSubject.value?.id === childId)
+            this.selectedChildSubject.next(updated);
+        }),
+        catchError((err) => {
+          this.errorSubject.next('Não foi possível atualizar o perfil da criança.');
+          return throwError(() => err);
+        }),
+        finalize(() => this.savingSubject.next(false)),
+      );
   }
 
   createChild(payload: CreateChildDTO): Observable<ChildRecord> {
@@ -138,10 +156,10 @@ export class ChildService {
         this.childrenSubject.next([created, ...this.childrenSubject.value]);
       }),
       catchError((err) => {
-        this.errorSubject.next("Não foi possível criar o perfil infantil.");
+        this.errorSubject.next('Não foi possível criar o perfil infantil.');
         return throwError(() => err);
       }),
-      finalize(() => this.savingSubject.next(false))
+      finalize(() => this.savingSubject.next(false)),
     );
   }
 }

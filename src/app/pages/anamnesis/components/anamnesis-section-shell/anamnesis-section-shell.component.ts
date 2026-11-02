@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: "app-anamnesis-section-shell",
+  selector: 'app-anamnesis-section-shell',
   standalone: false,
-  templateUrl: "./anamnesis-section-shell.component.html",
-  styleUrls: ["./anamnesis-section-shell.component.scss"],
+  templateUrl: './anamnesis-section-shell.component.html',
+  styleUrls: ['./anamnesis-section-shell.component.scss'],
 })
 export class AnamnesisSectionShellComponent {
-  @Input() title = "";
-  @Input() subtitle = "";
+  @Input() title = '';
+  @Input() subtitle = '';
   @Input() exists = false;
   @Input() editing = false;
   @Input() saving = false;
@@ -18,4 +18,3 @@ export class AnamnesisSectionShellComponent {
   @Output() cancel = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 }
-

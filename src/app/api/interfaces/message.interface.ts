@@ -1,4 +1,4 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
 export interface MessageRecord {
   id: string;
@@ -22,4 +22,3 @@ export interface ListMessagesResponse {
   items: MessageRecord[];
   meta: { pagination: PaginationMeta };
 }
-

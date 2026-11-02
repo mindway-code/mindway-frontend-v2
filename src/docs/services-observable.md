@@ -27,10 +27,10 @@ Component -> Service -> HttpClient -> Observable state -> Template async pipe
 Always use `$` suffix for Observable variables:
 
 ```ts
-users$
-currentUser$
-loading$
-error$
+users$;
+currentUser$;
+loading$;
+error$;
 ```
 
 ## Basic Service Template
@@ -60,15 +60,18 @@ export class ExampleService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    this.http.get<Example[]>(this.apiUrl).pipe(
-      catchError(() => {
-        this.errorSubject.next('Could not load items.');
-        return of([]);
-      }),
-      finalize(() => this.loadingSubject.next(false))
-    ).subscribe((items) => {
-      this.itemsSubject.next(items);
-    });
+    this.http
+      .get<Example[]>(this.apiUrl)
+      .pipe(
+        catchError(() => {
+          this.errorSubject.next('Could not load items.');
+          return of([]);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+      )
+      .subscribe((items) => {
+        this.itemsSubject.next(items);
+      });
   }
 }
 ```
@@ -100,18 +103,12 @@ export class ExampleComponent implements OnInit {
 ## Template With Async Pipe
 
 ```html
-<section *ngIf="loading$ | async" class="loading">
-  Loading...
-</section>
+<section *ngIf="loading$ | async" class="loading">Loading...</section>
 
-<section *ngIf="error$ | async as error" class="error">
-  {{ error }}
-</section>
+<section *ngIf="error$ | async as error" class="error">{{ error }}</section>
 
 <section *ngIf="items$ | async as items">
-  <article *ngFor="let item of items">
-    {{ item.name }}
-  </article>
+  <article *ngFor="let item of items">{{ item.name }}</article>
 </section>
 ```
 
@@ -132,9 +129,7 @@ export class AuthService {
   readonly loading$ = this.loadingSubject.asObservable();
   readonly error$ = this.errorSubject.asObservable();
 
-  readonly isAuthenticated$ = this.currentUser$.pipe(
-    map((user) => Boolean(user))
-  );
+  readonly isAuthenticated$ = this.currentUser$.pipe(map((user) => Boolean(user)));
 
   constructor(private readonly http: HttpClient) {}
 
@@ -149,7 +144,7 @@ export class AuthService {
         this.errorSubject.next('Invalid email or password.');
         throw error;
       }),
-      finalize(() => this.loadingSubject.next(false))
+      finalize(() => this.loadingSubject.next(false)),
     );
   }
 
@@ -211,9 +206,10 @@ this.authService.login(payload).subscribe(() => {
 Prefer:
 
 ```ts
-this.authService.login(payload).pipe(
-  switchMap(() => this.profileService.getProfile())
-).subscribe();
+this.authService
+  .login(payload)
+  .pipe(switchMap(() => this.profileService.getProfile()))
+  .subscribe();
 ```
 
 ## Using `takeUntilDestroyed`

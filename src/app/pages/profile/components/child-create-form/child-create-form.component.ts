@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { Subscription } from "rxjs";
-import type { CreateChildDTO } from "../../../../api/interfaces/child.interface";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import type { CreateChildDTO } from '../../../../api/interfaces/child.interface';
 
 @Component({
-  selector: "app-child-create-form",
+  selector: 'app-child-create-form',
   standalone: false,
-  templateUrl: "./child-create-form.component.html",
-  styleUrl: "./child-create-form.component.css",
+  templateUrl: './child-create-form.component.html',
+  styleUrl: './child-create-form.component.css',
 })
 export class ChildCreateFormComponent {
   @Input() saving = false;
@@ -17,18 +17,20 @@ export class ChildCreateFormComponent {
   @Output() cancel = new EventEmitter<void>();
 
   readonly form = this.fb.group({
-    name: ["", [Validators.required, Validators.minLength(2)]],
+    name: ['', [Validators.required, Validators.minLength(2)]],
     age: [null as number | null],
-    birthDate: ["", [Validators.required]],
-    observation: [""],
+    birthDate: ['', [Validators.required]],
+    observation: [''],
   });
 
   private readonly birthDateSubscription: Subscription;
 
   constructor(private readonly fb: FormBuilder) {
-    this.birthDateSubscription = this.form.controls.birthDate.valueChanges.subscribe((birthDate) => {
-      this.form.controls.age.setValue(this.calculateAge(birthDate), { emitEvent: false });
-    });
+    this.birthDateSubscription = this.form.controls.birthDate.valueChanges.subscribe(
+      (birthDate) => {
+        this.form.controls.age.setValue(this.calculateAge(birthDate), { emitEvent: false });
+      },
+    );
   }
 
   ngOnDestroy(): void {
@@ -50,9 +52,9 @@ export class ChildCreateFormComponent {
     }
 
     const payload: CreateChildDTO = {
-      name: raw.name?.trim() ?? "",
+      name: raw.name?.trim() ?? '',
       age: calculatedAge,
-      birthDate: raw.birthDate ?? "",
+      birthDate: raw.birthDate ?? '',
       observation: raw.observation?.trim() ? raw.observation.trim() : null,
     };
 
@@ -60,7 +62,7 @@ export class ChildCreateFormComponent {
   }
 
   reset(): void {
-    this.form.reset({ name: "", age: null, birthDate: "", observation: "" });
+    this.form.reset({ name: '', age: null, birthDate: '', observation: '' });
   }
 
   private calculateAge(birthDate: string | null | undefined): number | null {

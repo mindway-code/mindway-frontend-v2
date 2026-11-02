@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class TokenService {
-  private accessToken: string | null = sessionStorage.getItem("accessToken");
+  private accessToken: string | null = sessionStorage.getItem('accessToken');
 
   getAccessToken(): string | null {
     return this.accessToken;
@@ -10,12 +10,11 @@ export class TokenService {
 
   setAccessToken(token: string): void {
     this.accessToken = token;
-    sessionStorage.setItem("accessToken", token);
+    sessionStorage.setItem('accessToken', token);
   }
 
   clearAccessToken(): void {
     this.accessToken = null;
-    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem('accessToken');
   }
 }
-

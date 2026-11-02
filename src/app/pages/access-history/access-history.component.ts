@@ -1,22 +1,22 @@
-import { Component, OnInit } from "@angular/core";
-import { ChildRecord } from "../../api/interfaces/child.interface";
-import { ChildService } from "../../services/child.service";
+import { Component, OnInit } from '@angular/core';
+import { ChildRecord } from '../../api/interfaces/child.interface';
+import { ChildService } from '../../services/child.service';
 
 @Component({
-  selector: "app-access-history",
+  selector: 'app-access-history',
   standalone: false,
-  templateUrl: "./access-history.component.html",
-  styleUrls: ["./access-history.component.scss"],
+  templateUrl: './access-history.component.html',
+  styleUrls: ['./access-history.component.scss'],
 })
 export class AccessHistoryComponent implements OnInit {
   children: ChildRecord[] = [];
-  selectedChildId = "";
-  searchTerm = "";
-  userFilter = "all";
-  institutionFilter = "all";
-  periodFilter = "";
+  selectedChildId = '';
+  searchTerm = '';
+  userFilter = 'all';
+  institutionFilter = 'all';
+  periodFilter = '';
   loading = true;
-  errorMessage = "";
+  errorMessage = '';
 
   constructor(private readonly childService: ChildService) {}
 
@@ -24,11 +24,11 @@ export class AccessHistoryComponent implements OnInit {
     this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 }).subscribe({
       next: (children) => {
         this.children = children;
-        this.selectedChildId = children[0]?.id ?? "";
+        this.selectedChildId = children[0]?.id ?? '';
         this.loading = false;
       },
       error: () => {
-        this.errorMessage = "Não foi possível carregar as crianças agora.";
+        this.errorMessage = 'Não foi possível carregar as crianças agora.';
         this.loading = false;
       },
     });
@@ -39,15 +39,15 @@ export class AccessHistoryComponent implements OnInit {
   }
 
   getChildInitial(child: ChildRecord): string {
-    return child.name?.trim().charAt(0).toUpperCase() || "C";
+    return child.name?.trim().charAt(0).toUpperCase() || 'C';
   }
 
   getChildPhoto(child: ChildRecord): string | null {
-    if (typeof localStorage === "undefined") return null;
+    if (typeof localStorage === 'undefined') return null;
     try {
       const saved = localStorage.getItem(`mindway-child-profile-${child.id}`);
       const profile = saved ? JSON.parse(saved) : null;
-      return typeof profile?.photo === "string" ? profile.photo : null;
+      return typeof profile?.photo === 'string' ? profile.photo : null;
     } catch {
       return null;
     }
@@ -55,13 +55,15 @@ export class AccessHistoryComponent implements OnInit {
 
   formatBirthDate(value: string): string {
     const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? "Nascimento não informado" : new Intl.DateTimeFormat("pt-BR").format(date);
+    return Number.isNaN(date.getTime())
+      ? 'Nascimento não informado'
+      : new Intl.DateTimeFormat('pt-BR').format(date);
   }
 
   clearFilters(): void {
-    this.searchTerm = "";
-    this.userFilter = "all";
-    this.institutionFilter = "all";
-    this.periodFilter = "";
+    this.searchTerm = '';
+    this.userFilter = 'all';
+    this.institutionFilter = 'all';
+    this.periodFilter = '';
   }
 }

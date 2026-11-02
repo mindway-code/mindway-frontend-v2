@@ -13,7 +13,8 @@
       <p class="link-school__eyebrow">Cadastro da escola</p>
       <h2>Você foi convidado(a) para entrar no MindWay</h2>
       <p>
-        Crie a conta da escola para organizar acompanhamentos, colaborar com profissionais e acessar os recursos da plataforma.
+        Crie a conta da escola para organizar acompanhamentos, colaborar com profissionais e acessar
+        os recursos da plataforma.
       </p>
     </div>
 
@@ -40,20 +41,38 @@
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="name" type="text" autocomplete="organization" placeholder=" " />
+          <input
+            class="input-ui__control"
+            formControlName="name"
+            type="text"
+            autocomplete="organization"
+            placeholder=" "
+          />
           <label class="input-ui__label">Nome da escola</label>
         </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+        <p
+          class="input-ui__hint input-ui__hint--error"
+          *ngIf="form.controls.name.touched && form.controls.name.invalid"
+        >
           Informe o nome da escola.
         </p>
       </div>
 
       <div class="input-ui">
         <div class="input-ui__field">
-          <input class="input-ui__control" formControlName="email" type="email" autocomplete="email" placeholder=" " />
+          <input
+            class="input-ui__control"
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            placeholder=" "
+          />
           <label class="input-ui__label">E-mail institucional</label>
         </div>
-        <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <p
+          class="input-ui__hint input-ui__hint--error"
+          *ngIf="form.controls.email.touched && form.controls.email.invalid"
+        >
           Informe um e-mail válido.
         </p>
       </div>
@@ -61,10 +80,19 @@
       <div class="link-school__form-grid">
         <div class="input-ui">
           <div class="input-ui__field">
-            <input class="input-ui__control" formControlName="password" type="password" autocomplete="new-password" placeholder=" " />
+            <input
+              class="input-ui__control"
+              formControlName="password"
+              type="password"
+              autocomplete="new-password"
+              placeholder=" "
+            />
             <label class="input-ui__label">Senha</label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.password.touched && form.controls.password.invalid"
+          >
             Use pelo menos 6 caracteres.
           </p>
         </div>
@@ -80,7 +108,10 @@
             />
             <label class="input-ui__label">Confirmar senha</label>
           </div>
-          <p class="input-ui__hint input-ui__hint--error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid">
+          <p
+            class="input-ui__hint input-ui__hint--error"
+            *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid"
+          >
             Confirme a senha.
           </p>
         </div>
@@ -94,8 +125,14 @@
         {{ error }}
       </p>
 
-      <button class="btn-ui btn-ui--green link-school__submit" type="submit" [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)">
-        <ng-container *ngIf="!(loading$ | async); else loadingTpl">Criar conta da escola</ng-container>
+      <button
+        class="btn-ui btn-ui--green link-school__submit"
+        type="submit"
+        [disabled]="form.invalid || passwordsDoNotMatch || (loading$ | async)"
+      >
+        <ng-container *ngIf="!(loading$ | async); else loadingTpl"
+          >Criar conta da escola</ng-container
+        >
         <ng-template #loadingTpl>Criando conta...</ng-template>
       </button>
 

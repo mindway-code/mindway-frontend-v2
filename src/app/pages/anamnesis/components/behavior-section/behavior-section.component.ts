@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import type {
   AnamnesisBehaviorRecord,
   UpsertAnamnesisBehaviorDTO,
-} from "../../../../api/interfaces/anamnesis.interface";
+} from '../../../../api/interfaces/anamnesis.interface';
 
 @Component({
-  selector: "app-behavior-section",
+  selector: 'app-behavior-section',
   standalone: false,
-  templateUrl: "./behavior-section.component.html",
-  styleUrls: ["./behavior-section.component.scss"],
+  templateUrl: './behavior-section.component.html',
+  styleUrls: ['./behavior-section.component.scss'],
 })
 export class BehaviorSectionComponent implements OnChanges {
   @Input() data: AnamnesisBehaviorRecord | null | undefined = null;
@@ -21,17 +21,17 @@ export class BehaviorSectionComponent implements OnChanges {
   editing = false;
 
   readonly form = this.fb.group({
-    concentrationDifficulty: ["" as string],
-    interaction: ["" as string],
-    activityPreference: ["" as string],
-    anxiety: ["" as string],
-    hyperactivity: ["" as string],
+    concentrationDifficulty: ['' as string],
+    interaction: ['' as string],
+    activityPreference: ['' as string],
+    anxiety: ['' as string],
+    hyperactivity: ['' as string],
   });
 
   constructor(private readonly fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"]) {
+    if (changes['data']) {
       this.patchFormFromData();
       if (this.editing) this.editing = false;
     }
@@ -63,13 +63,13 @@ export class BehaviorSectionComponent implements OnChanges {
   private patchFormFromData(): void {
     this.form.patchValue(
       {
-        concentrationDifficulty: this.data?.concentrationDifficulty ?? "",
-        interaction: this.data?.interaction ?? "",
-        activityPreference: this.data?.activityPreference ?? "",
-        anxiety: this.data?.anxiety ?? "",
-        hyperactivity: this.data?.hyperactivity ?? "",
+        concentrationDifficulty: this.data?.concentrationDifficulty ?? '',
+        interaction: this.data?.interaction ?? '',
+        activityPreference: this.data?.activityPreference ?? '',
+        anxiety: this.data?.anxiety ?? '',
+        hyperactivity: this.data?.hyperactivity ?? '',
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
   }
 
@@ -78,4 +78,3 @@ export class BehaviorSectionComponent implements OnChanges {
     return trimmed ? trimmed : null;
   }
 }
-

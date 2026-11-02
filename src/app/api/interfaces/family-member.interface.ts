@@ -1,6 +1,6 @@
-import type { PaginationMeta } from "./api-response.interface";
+import type { PaginationMeta } from './api-response.interface';
 
-export type FamilyMemberRole = "child" | "enterprise" | "manager" | "therapist" | "professional";
+export type FamilyMemberRole = 'child' | 'enterprise' | 'manager' | 'therapist' | 'professional';
 
 export interface FamilyMemberRecord {
   id: string;
@@ -30,4 +30,3 @@ export interface ListFamilyMembersResponse {
   items: FamilyMemberRecord[];
   meta: { pagination: PaginationMeta };
 }
-

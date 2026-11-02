@@ -1,12 +1,12 @@
-import { Component, OnInit } from "@angular/core";
-import { take } from "rxjs";
-import { AuthService } from "./services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { take } from 'rxjs';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: false,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   title = 'mindway-frontend';

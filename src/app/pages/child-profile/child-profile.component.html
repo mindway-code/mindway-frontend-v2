@@ -223,32 +223,24 @@
           </aside>
         </div>
         <div class="profile-preview__grid">
-          <article
+          <button
             class="profile-preview__section"
-            *ngFor="let section of visibleProfileSections; let i = index"
+            *ngFor="let section of visibleProfileSections; let i = index" (click)="selectSection(i)"
           >
             <i class="profile-preview__section-icon bi" [ngClass]="section.icon"></i>
             <div class="profile-preview__section-content">
               <h3>
                 {{ section.title }}
-                <small [class.is-pending]="getSectionPreviewStatus(i, child) === 'Pendente'">{{
-                  getSectionPreviewStatus(i, child)
-                }}</small>
               </h3>
+              <small [class.is-pending]="getSectionPreviewStatus(i, child) === 'Pendente'">
+                
+                {{
+                  getSectionPreviewStatus(i, child)
+                }}
+              </small>
               <p>{{ section.description }}</p>
-              <ul *ngIf="getSectionPreviewLines(i, child).length; else sectionEmpty">
-                <li *ngFor="let line of getSectionPreviewLines(i, child)">{{ line }}</li>
-              </ul>
-              <ng-template #sectionEmpty
-                ><p class="profile-preview__empty">
-                  Nenhuma informa&#231;&#227;o registrada.
-                </p></ng-template
-              >
             </div>
-            <button type="button" class="profile-preview__details" (click)="selectSection(i)">
-              Ver detalhes <i class="bi bi-chevron-right"></i>
-            </button>
-          </article>
+          </button>
         </div>
         <footer class="profile-preview__footer">
           <button type="button" class="button-secondary" (click)="onBackToChildren()">
@@ -260,16 +252,27 @@
       </section>
 
       <section class="section-card" *ngIf="!previewMode">
-        <header class="section-header">
-          <div class="section-icon">{{ profileSections[activeSection].icon }}</div>
-          <div>
-            <h2>{{ profileSections[activeSection].title }}</h2>
-            <p>{{ profileSections[activeSection].description }}</p>
-          </div>
-          <span class="saved-message" *ngIf="savedMessage">{{ savedMessage }}</span>
-        </header>
+        
+        <span class="saved-message" *ngIf="savedMessage">{{ savedMessage }}</span>
 
-        <div class="profile-form" *ngIf="activeSection === 0">
+        <app-child-form-preview
+          *ngIf="activeSection >= 0 && activeSection <= 6 && !isActiveSectionEditing"
+          [activeSection]="activeSection"
+          [name]="getChildName(child)"
+          [birthDate]="formatBirthDate(child)"
+          [gender]="sectionData[0]['G&#234;nero'] || ''"
+          [accessCode]="isProfessionalView ? '' : getChildAccessCode(child)"
+          [observations]="sectionData[0]['observacoes'] || ''"
+          [sectionData]="sectionData[activeSection]"
+          [medications]="medicationEntries"
+          [careProviders]="careProviders"
+          [weekRoutine]="weekRoutine"
+          [weekDays]="weekDays"
+          [editable]="!isProfessionalView"
+          (editRequested)="openSectionEditor()"
+        ></app-child-form-preview>
+
+        <div class="profile-form" *ngIf="activeSection === 0 && isActiveSectionEditing">
           <label class="field"
             ><span>Nome completo</span><input [value]="getChildName(child)" readonly
           /></label>
@@ -307,7 +310,7 @@
           </label>
         </div>
 
-        <section class="health-section" *ngIf="activeSection === 2">
+        <section class="health-section" *ngIf="activeSection === 2 && isActiveSectionEditing">
           <div class="health-fields profile-form">
             <label class="field"
               ><span>Alergias</span
@@ -434,7 +437,7 @@
             </label>
           </div>
         </section>
-        <div class="care-providers" *ngIf="activeSection === 3">
+        <div class="care-providers" *ngIf="activeSection === 3 && isActiveSectionEditing">
           <p class="care-providers__intro">
             Cadastre cada terapia, cl&#237;nica ou profissional que acompanha a crian&#231;a.
           </p>
@@ -528,7 +531,7 @@
           </button>
         </div>
 
-        <div class="weekly-routine" *ngIf="activeSection === 5">
+        <div class="weekly-routine" *ngIf="activeSection === 5 && isActiveSectionEditing">
           <p class="weekly-routine__intro">
             Organize os compromissos e atividades habituais da crian&#231;a ao longo da semana.
             Voc&#234; pode incluir v&#225;rios hor&#225;rios em cada dia.
@@ -726,6 +729,7 @@
           class="profile-form"
           *ngIf="
             activeSection > 0 &&
+            isActiveSectionEditing &&
             activeSection !== 2 &&
             activeSection !== 3 &&
             activeSection !== 5 &&
@@ -752,7 +756,10 @@
           /></label>
         </div>
 
-        <footer class="section-footer" *ngIf="activeSection !== 7">
+        <footer
+          class="section-footer"
+          *ngIf="activeSection !== 7 && (isActiveSectionEditing || isProfessionalView)"
+        >
           <button
             type="button"
             class="button-secondary"

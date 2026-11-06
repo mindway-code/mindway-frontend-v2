@@ -52,6 +52,7 @@ import { ChildAccessCodeFormComponent } from './pages/child-profile/components/c
 import { ChildListComponent } from './pages/child-profile/components/child-list/child-list.component';
 import { ChildProfileCardComponent } from './pages/child-profile/components/child-card/child-card.component';
 import { ChildDetailsPanelComponent } from './pages/child-profile/components/child-details-panel/child-details-panel.component';
+import { ChildFormPreviewComponent } from './pages/child-profile/components/child-form-preview/child-form-preview.component';
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 import { ReportsChildSelectorComponent } from './pages/reports-child/components/reports-child-selector/reports-child-selector.component';
 import { ReportsChildListComponent } from './pages/reports-child/components/reports-child-list/reports-child-list.component';
@@ -111,6 +112,7 @@ registerLocaleData(localePt);
     ChildListComponent,
     ChildProfileCardComponent,
     ChildDetailsPanelComponent,
+    ChildFormPreviewComponent,
     ReportsChildComponent,
     ReportsChildSelectorComponent,
     ReportsChildListComponent,

@@ -1,0 +1,153 @@
+<section class="child-form-preview" [attr.aria-label]="sectionTitle">
+  <header class="child-form-preview__hero">
+    <div class="child-form-preview__hero-content">
+      <span class="child-form-preview__hero-icon" aria-hidden="true">
+        <i class="bi" [ngClass]="sectionIcon"></i>
+      </span>
+      <span class="child-form-preview__hero-divider" aria-hidden="true"></span>
+      <div>
+        <h3>{{ sectionDisplayTitle }}</h3>
+        <p>{{ sectionSubtitle }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="child-form-preview__body">
+    <div class="child-form-preview__actions" *ngIf="editable">
+      <button class="button-primary" type="button" (click)="editRequested.emit()">
+        <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        {{ editButtonLabel }}
+      </button>
+    </div>
+
+    <dl class="child-form-preview__facts" *ngIf="previewFields.length">
+      <div class="child-form-preview__fact" *ngFor="let field of previewFields">
+        <span class="child-form-preview__fact-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="field.icon"></i>
+        </span>
+        <div>
+          <dt>{{ field.label }}</dt>
+          <dd>{{ field.value }}</dd>
+        </div>
+      </div>
+    </dl>
+
+    <section class="child-form-preview__collection" *ngIf="activeSection === 2">
+      <header class="child-form-preview__collection-heading">
+        <span aria-hidden="true"><i class="bi bi-capsule-pill"></i></span>
+        <div>
+          <h4>Medicamentos em uso</h4>
+          <p>{{ displayMedications.length }} medicamento(s) cadastrado(s)</p>
+        </div>
+      </header>
+
+      <div class="child-form-preview__empty" *ngIf="!displayMedications.length">
+        Nenhum medicamento cadastrado.
+      </div>
+
+      <div class="child-form-preview__cards" *ngIf="displayMedications.length">
+        <article class="child-form-preview__card" *ngFor="let medication of displayMedications">
+          <h5>{{ medication.name || 'Medicamento sem nome' }}</h5>
+          <dl>
+            <div *ngIf="medication.concentration">
+              <dt>Concentra&#231;&#227;o</dt>
+              <dd>{{ medication.concentration }}</dd>
+            </div>
+            <div *ngIf="medication.dosage">
+              <dt>Posologia</dt>
+              <dd>{{ medication.dosage }}</dd>
+            </div>
+            <div *ngIf="medication.schedule">
+              <dt>Hor&#225;rio</dt>
+              <dd>{{ medication.schedule }}</dd>
+            </div>
+            <div *ngIf="medication.route">
+              <dt>Via</dt>
+              <dd>{{ medication.route }}</dd>
+            </div>
+          </dl>
+          <p *ngIf="medication.notes">{{ medication.notes }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="child-form-preview__collection" *ngIf="activeSection === 3">
+      <header class="child-form-preview__collection-heading">
+        <span aria-hidden="true"><i class="bi bi-activity"></i></span>
+        <div>
+          <h4>Rede de cuidado</h4>
+          <p>{{ displayCareProviders.length }} acompanhamento(s) cadastrado(s)</p>
+        </div>
+      </header>
+
+      <div class="child-form-preview__empty" *ngIf="!displayCareProviders.length">
+        Nenhuma cl&#237;nica, terapia ou profissional cadastrado.
+      </div>
+
+      <div class="child-form-preview__cards" *ngIf="displayCareProviders.length">
+        <article class="child-form-preview__card" *ngFor="let provider of displayCareProviders">
+          <h5>{{ provider.professional || provider.clinic || provider.type }}</h5>
+          <p class="child-form-preview__card-subtitle">
+            {{ provider.specialty || provider.type }}
+          </p>
+          <dl>
+            <div *ngIf="provider.clinic">
+              <dt>Local</dt>
+              <dd>{{ provider.clinic }}</dd>
+            </div>
+            <div *ngIf="provider.clinicPhone">
+              <dt>Telefone</dt>
+              <dd>{{ provider.clinicPhone }}</dd>
+            </div>
+            <div *ngIf="provider.frequency">
+              <dt>Frequ&#234;ncia</dt>
+              <dd>{{ provider.frequency }}</dd>
+            </div>
+            <div *ngIf="provider.schedule">
+              <dt>Dias e hor&#225;rios</dt>
+              <dd>{{ provider.schedule }}</dd>
+            </div>
+          </dl>
+          <p *ngIf="provider.notes">{{ provider.notes }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="child-form-preview__collection" *ngIf="activeSection === 5">
+      <header class="child-form-preview__collection-heading">
+        <span aria-hidden="true"><i class="bi bi-calendar-week"></i></span>
+        <div>
+          <h4>Agenda semanal</h4>
+          <p>{{ routineDays.length }} dia(s) com atividades cadastradas</p>
+        </div>
+      </header>
+
+      <div class="child-form-preview__empty" *ngIf="!routineDays.length">
+        Nenhuma atividade semanal cadastrada.
+      </div>
+
+      <div class="child-form-preview__routine" *ngIf="routineDays.length">
+        <article *ngFor="let day of routineDays">
+          <h5>{{ day.label }}</h5>
+          <ul>
+            <li *ngFor="let item of day.activities">
+              <time *ngIf="item.time">{{ item.time }}</time>
+              <span>{{ item.activity || 'Atividade sem descri&#231;&#227;o' }}</span>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <article class="child-form-preview__observations" *ngIf="hasObservationPanel">
+      <span class="child-form-preview__observations-icon" aria-hidden="true">
+        <i class="bi bi-card-text"></i>
+      </span>
+      <span class="child-form-preview__observations-divider" aria-hidden="true"></span>
+      <div>
+        <h4>{{ observationTitle }}</h4>
+        <p>{{ displayObservations }}</p>
+      </div>
+    </article>
+  </div>
+</section>

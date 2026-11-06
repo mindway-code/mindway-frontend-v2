@@ -86,49 +86,48 @@ export class ChildProfileComponent implements OnInit {
   /**
    * Seções do perfil da criança.
    */
-readonly profileSections = [
-  {
-    title: 'Informações básicas',
-    icon: 'bi-person-vcard', // Substituiu 👤
-    description: 'Dados principais da criança.',
-  },
-  {
-    title: 'Diagnósticos',
-    icon: 'bi-puzzle', // Substituiu 🧩
-    description: 'Diagnósticos e informações relacionadas.',
-  },
-  {
-    title: 'Saúde',
-    icon: 'bi-heart-pulse', // Substituiu ❤️
-    description: 'Informações importantes de saúde.',
-  },
-  {
-    title: 'Clínica e terapias',
-    icon: 'bi-activity', // Substituiu 🧩 (Usei 'activity' para diferenciar do diagnóstico)
-    description: 'Clínicas, profissionais e terapias.',
-  },
-  {
-    title: 'Escola',
-    icon: 'bi-mortarboard', // Substituiu 🏫 (Fica excelente para contexto escolar)
-    description: 'Informações escolares da criança.',
-  },
-  {
-    title: 'Rotina e interesses',
-    icon: 'bi-calendar-week', // Substituiu 📅
-    description: 'Rotina, preferências e interesses.',
-  },
-  {
-    title: 'Observações',
-    icon: 'bi-sticky', // Substituiu 📝
-    description: 'Outras informações importantes.',
-  },
-  {
-    title: 'Histórico de atividades',
-    icon: 'bi-clock-history', // Substituiu 🕒
-    description: 'Acompanhe as alterações registradas neste dispositivo.',
-  },
-];
-
+  readonly profileSections = [
+    {
+      title: 'Informações básicas',
+      icon: 'bi-person-vcard', // Substituiu 👤
+      description: 'Dados principais da criança.',
+    },
+    {
+      title: 'Diagnósticos',
+      icon: 'bi-puzzle', // Substituiu 🧩
+      description: 'Diagnósticos e informações relacionadas.',
+    },
+    {
+      title: 'Saúde',
+      icon: 'bi-heart-pulse', // Substituiu ❤️
+      description: 'Informações importantes de saúde.',
+    },
+    {
+      title: 'Clínica e terapias',
+      icon: 'bi-activity', // Substituiu 🧩 (Usei 'activity' para diferenciar do diagnóstico)
+      description: 'Clínicas, profissionais e terapias.',
+    },
+    {
+      title: 'Escola',
+      icon: 'bi-mortarboard', // Substituiu 🏫 (Fica excelente para contexto escolar)
+      description: 'Informações escolares da criança.',
+    },
+    {
+      title: 'Rotina e interesses',
+      icon: 'bi-calendar-week', // Substituiu 📅
+      description: 'Rotina, preferências e interesses.',
+    },
+    {
+      title: 'Observações',
+      icon: 'bi-sticky', // Substituiu 📝
+      description: 'Outras informações importantes.',
+    },
+    {
+      title: 'Histórico de atividades',
+      icon: 'bi-clock-history', // Substituiu 🕒
+      description: 'Acompanhe as alterações registradas neste dispositivo.',
+    },
+  ];
 
   readonly visibleProfileSections = this.profileSections.slice(0, 7);
 
@@ -137,6 +136,11 @@ readonly profileSections = [
    */
   activeSection = 0;
   previewMode = true;
+  editingSection: number | null = null;
+
+  get isActiveSectionEditing(): boolean {
+    return this.editingSection === this.activeSection;
+  }
 
   sectionFields: Record<number, string[]> = {
     1: [
@@ -280,6 +284,7 @@ readonly profileSections = [
 
     this.activeSection = 0;
     this.previewMode = true;
+    this.editingSection = null;
     this.loadSectionData(child?.id);
 
     this.syncRouteSelection(child?.id ?? null);
@@ -377,6 +382,7 @@ readonly profileSections = [
 
     this.activeSection = index;
     this.previewMode = false;
+    this.editingSection = null;
     this.savedMessage = '';
 
     window.scrollTo({
@@ -387,13 +393,21 @@ readonly profileSections = [
 
   showProfilePreview(): void {
     this.previewMode = true;
+    this.editingSection = null;
     this.savedMessage = '';
   }
 
   continueProfileEdit(): void {
     this.previewMode = false;
     this.activeSection = 0;
+    this.editingSection = null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  openSectionEditor(): void {
+    if (this.isProfessionalView) return;
+    this.editingSection = this.activeSection;
+    this.savedMessage = '';
   }
 
   getSectionPreviewLines(index: number, child: ChildRecord): string[] {
@@ -460,6 +474,7 @@ readonly profileSections = [
 
     if (!this.saveSection()) return;
     this.activeSection++;
+    this.editingSection = null;
   }
 
   finishProfile(): void {
@@ -478,6 +493,7 @@ readonly profileSections = [
   previousSection(): void {
     if (this.activeSection > 0) {
       this.activeSection--;
+      this.editingSection = null;
     } else {
       this.showProfilePreview();
     }

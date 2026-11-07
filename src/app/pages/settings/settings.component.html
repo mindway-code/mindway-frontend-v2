@@ -6,7 +6,7 @@
     </div>
   </header>
 
-  <ng-container *ngIf="currentUser$ | async as user">
+  <ng-container *ngIf="currentUser$ | async as user; else settingsLoading">
     <ng-container *ngIf="!activeSection; else sectionView">
       <header class="settings-heading">
         <p class="settings-eyebrow">CONFIGURA&Ccedil;&Otilde;ES</p>
@@ -809,4 +809,12 @@
       </section>
     </ng-template>
   </ng-container>
+
+  <ng-template #settingsLoading>
+    <app-page-skeleton
+      variant="detail"
+      [rows]="4"
+      label="Carregando configura&#231;&#245;es"
+    ></app-page-skeleton>
+  </ng-template>
 </main>

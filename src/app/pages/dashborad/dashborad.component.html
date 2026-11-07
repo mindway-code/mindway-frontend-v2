@@ -1,4 +1,4 @@
-<section class="dashborad-page" *ngIf="viewModel$ | async as vm">
+<section class="dashborad-page" *ngIf="viewModel$ | async as vm; else dashboardLoading">
   <header class="dashboard-brand" aria-labelledby="dashboard-brand-tagline">
     <img class="dashboard-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
   </header>
@@ -22,7 +22,18 @@
     </section>
 
     <ng-container *ngIf="children$ | async as children">
-      <section class="professional-stats" aria-label="Resumo do acompanhamento">
+      <app-page-skeleton
+        *ngIf="childrenLoading$ | async"
+        variant="page"
+        [rows]="4"
+        label="Carregando o painel"
+      ></app-page-skeleton>
+
+      <section
+        class="professional-stats"
+        *ngIf="!(childrenLoading$ | async)"
+        aria-label="Resumo do acompanhamento"
+      >
         <article class="summary-card summary-card--children">
           <span class="summary-card__icon" aria-hidden="true">
             <i class="bi bi-people"></i>
@@ -46,7 +57,7 @@
         </a>
       </section>
 
-      <div class="professional-workspace">
+      <div class="professional-workspace" *ngIf="!(childrenLoading$ | async)">
         <section class="dashboard-panel" aria-labelledby="professional-children-title">
           <header class="dashboard-panel__header">
             <div>
@@ -149,7 +160,7 @@
         </aside>
       </div>
 
-      <footer class="dashboard-privacy-note">
+      <footer class="dashboard-privacy-note" *ngIf="!(childrenLoading$ | async)">
         <i class="bi bi-shield-check" aria-hidden="true"></i>
         <span>
           As informa&#231;&#245;es s&#227;o exibidas conforme as permiss&#245;es do seu perfil e
@@ -161,7 +172,14 @@
 
   <ng-template #familyHome>
     <ng-container *ngIf="children$ | async as children">
-      <div class="family-workspace">
+      <app-page-skeleton
+        *ngIf="childrenLoading$ | async"
+        variant="page"
+        [rows]="4"
+        label="Carregando crian&#231;as e atalhos"
+      ></app-page-skeleton>
+
+      <div class="family-workspace" *ngIf="!(childrenLoading$ | async)">
         <section
           class="dashboard-panel dashboard-panel--children"
           aria-labelledby="family-children-title"
@@ -177,21 +195,23 @@
               </p>
             </div>
           </header>
-          <div class="action-bar">  
+          <div class="action-bar">
             <div class="search-children">
               <label for="search"><i class="bi bi-search me-2"></i></label>
-              <input type="text" id="search" placeholder="Ex: João Silva"> 
+              <input type="text" id="search" placeholder="Ex: João Silva" />
             </div>
             <a class="dashboard-outline-action" routerLink="/child-profile">
               <i class="bi bi-person-add" aria-hidden="true"></i>
             </a>
           </div>
-          
+
           <div class="family-child-list" *ngIf="children.length; else noFamilyChildren">
-            <a class="family-child" *ngFor="let child of children" 
-                  [routerLink]="['/child-profile']"
-                  [queryParams]="{ childId: child.id }"
-                  >
+            <a
+              class="family-child"
+              *ngFor="let child of children"
+              [routerLink]="['/child-profile']"
+              [queryParams]="{ childId: child.id }"
+            >
               <div class="family-child__identity">
                 <span class="family-child__avatar" aria-hidden="true">
                   <img
@@ -264,3 +284,7 @@
     </ng-container>
   </ng-template>
 </section>
+
+<ng-template #dashboardLoading>
+  <app-page-skeleton variant="page" [rows]="4" label="Carregando painel"></app-page-skeleton>
+</ng-template>

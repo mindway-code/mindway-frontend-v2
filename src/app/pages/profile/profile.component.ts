@@ -24,7 +24,6 @@ interface InviteLink {
 })
 export class ProfileComponent implements OnInit {
   readonly user$ = this.authService.currentUser$;
-  readonly userLoading$ = this.authService.loading$;
   readonly userError$ = this.authService.error$;
   readonly profileSaving$ = this.userService.saving$;
   readonly profileError$ = this.userService.error$;

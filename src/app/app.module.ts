@@ -67,6 +67,7 @@ import { DashboradComponent } from './pages/dashborad/dashborad.component';
 import { MessagesComponent } from './pages/messages/messages.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AccessHistoryComponent } from './pages/access-history/access-history.component';
+import { PageSkeletonComponent } from './shared/page-skeleton/page-skeleton.component';
 
 registerLocaleData(localePt);
 
@@ -127,6 +128,7 @@ registerLocaleData(localePt);
     MessagesComponent,
     SettingsComponent,
     AccessHistoryComponent,
+    PageSkeletonComponent,
   ],
   imports: [
     BrowserModule,

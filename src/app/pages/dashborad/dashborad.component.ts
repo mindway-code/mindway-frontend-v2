@@ -343,6 +343,7 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
 })
 export class DashboradComponent implements OnInit {
   readonly children$ = this.childService.children$;
+  readonly childrenLoading$ = this.childService.loading$;
   readonly today = new Date();
   readonly viewModel$ = this.authService.currentUser$.pipe(
     map((user): DashboardViewModel => {

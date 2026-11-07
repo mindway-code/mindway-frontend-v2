@@ -32,9 +32,12 @@
     </header>
 
     <ng-container *ngIf="children$ | async as children">
-      <div class="anamnesis-page__children-loading" *ngIf="childrenLoading$ | async">
-        Carregando crian&#231;as...
-      </div>
+      <app-page-skeleton
+        *ngIf="childrenLoading$ | async"
+        variant="list"
+        [rows]="4"
+        label="Carregando crian&#231;as"
+      ></app-page-skeleton>
 
       <section class="anamnesis-page__children" *ngIf="!(childrenLoading$ | async)">
         <div class="anamnesis-page__children-grid">
@@ -108,15 +111,11 @@
          ======================================================= -->
 
     <ng-container *ngIf="loading$ | async; else loadedAnamnesis">
-      <section class="anamnesis-page__loading">
-        <div class="loading-ui">
-          <span class="loading-ui__line loading-ui__line--sm"></span>
-
-          <span class="loading-ui__line loading-ui__line--lg"></span>
-
-          <span class="loading-ui__block"></span>
-        </div>
-      </section>
+      <app-page-skeleton
+        variant="detail"
+        [rows]="4"
+        label="Carregando anamnese"
+      ></app-page-skeleton>
     </ng-container>
 
     <!-- =======================================================

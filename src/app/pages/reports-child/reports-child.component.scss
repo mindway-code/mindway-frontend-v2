@@ -581,6 +581,11 @@
   margin-top: 0.65rem;
   padding-bottom: 0.05rem;
 }
+
+.reports-child-picker__skeleton {
+  min-width: min(100%, 34rem);
+  flex: 1;
+}
 .reports-child-pill {
   min-width: 9.5rem;
   display: flex;
@@ -643,11 +648,6 @@
   margin-top: 0.1rem;
   color: #788aa0;
   font-size: 0.65rem;
-}
-.reports-child-picker__loading {
-  padding: 0.6rem;
-  color: #788aa0;
-  font-size: 0.75rem;
 }
 .reports-toolbar {
   display: flex;
@@ -799,7 +799,6 @@
   color: #55718a;
   font-size: 0.7rem;
 }
-.reports-loading,
 .reports-no-results {
   margin: auto;
   padding: 1rem;

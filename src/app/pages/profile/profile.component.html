@@ -18,9 +18,6 @@
     {{ flashMessage }}
   </div>
 
-  <div *ngIf="userLoading$ | async" class="profile-page__state text-muted">
-    Carregando seu perfil...
-  </div>
   <div
     *ngIf="userError$ | async as userError"
     class="profile-page__state profile-page__state--error"
@@ -49,24 +46,12 @@
     </ng-container>
 
     <ng-template #profileLoadingCards>
-      <section class="card-ui card-ui--md profile-page__loading-card">
-        <div class="card-ui__body loading-ui">
-          <span class="loading-ui__line loading-ui__line--sm"></span>
-          <span class="loading-ui__line loading-ui__line--md"></span>
-          <span class="loading-ui__line loading-ui__line--lg"></span>
-          <span class="loading-ui__block profile-page__loading-avatar"></span>
-          <span class="loading-ui__line loading-ui__line--md"></span>
-        </div>
-      </section>
-
-      <section class="card-ui card-ui--md profile-page__loading-card">
-        <div class="card-ui__body loading-ui">
-          <span class="loading-ui__line loading-ui__line--sm"></span>
-          <span class="loading-ui__line loading-ui__line--lg"></span>
-          <span class="loading-ui__line loading-ui__line--lg"></span>
-          <span class="loading-ui__block loading-ui__block--sm"></span>
-        </div>
-      </section>
+      <app-page-skeleton
+        class="profile-page__skeleton"
+        variant="detail"
+        [rows]="4"
+        label="Carregando perfil"
+      ></app-page-skeleton>
     </ng-template>
   </div>
 

@@ -18,9 +18,13 @@
         <span class="messages-page__count" *ngIf="!loadingContacts">{{ contacts.length }}</span>
       </div>
 
-      <div class="messages-page__loading" *ngIf="loadingContacts" aria-label="Carregando contatos">
-        <span></span><span></span><span></span>
-      </div>
+      <app-page-skeleton
+        *ngIf="loadingContacts"
+        variant="list"
+        [rows]="4"
+        [compact]="true"
+        label="Carregando contatos"
+      ></app-page-skeleton>
 
       <div
         class="messages-page__state messages-page__state--small"
@@ -70,10 +74,13 @@
       </header>
 
       <div class="messages-page__thread">
-        <div class="messages-page__state" *ngIf="loadingMessages" aria-label="Carregando mensagens">
-          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
-          <p>Carregando conversa...</p>
-        </div>
+        <app-page-skeleton
+          *ngIf="loadingMessages"
+          variant="list"
+          [rows]="4"
+          [compact]="true"
+          label="Carregando conversa"
+        ></app-page-skeleton>
 
         <div class="messages-page__state" *ngIf="!loadingMessages && messagesError">
           <i class="bi bi-exclamation-circle" aria-hidden="true"></i>

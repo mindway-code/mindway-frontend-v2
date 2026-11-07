@@ -12,7 +12,7 @@
       </p>
     </div>
     <div class="page-heading__illustration" *ngIf="!(selectedChild$ | async)" aria-hidden="true">
-          <img src="assets/img/child-page.webp" alt="child" />
+      <img src="assets/img/child-page.webp" alt="child" />
     </div>
   </header>
 
@@ -24,7 +24,12 @@
     (cancel)="closeCreateChild()"
   ></app-child-create-form>
 
-  <div *ngIf="childrenLoading$ | async" class="notice">Carregando crian&#231;as...</div>
+  <app-page-skeleton
+    *ngIf="childrenLoading$ | async"
+    variant="list"
+    [rows]="4"
+    label="Carregando crian&#231;as"
+  ></app-page-skeleton>
   <div *ngIf="childrenError$ | async as error" class="notice notice--error" role="alert">
     {{ error }}
   </div>
@@ -199,7 +204,8 @@
         <div class="profile-preview__grid">
           <button
             class="profile-preview__section"
-            *ngFor="let section of visibleProfileSections; let i = index" (click)="selectSection(i)"
+            *ngFor="let section of visibleProfileSections; let i = index"
+            (click)="selectSection(i)"
           >
             <i class="profile-preview__section-icon bi" [ngClass]="section.icon"></i>
             <div class="profile-preview__section-content">
@@ -207,10 +213,7 @@
                 {{ section.title }}
               </h3>
               <small [class.is-pending]="getSectionPreviewStatus(i, child) === 'Pendente'">
-                
-                {{
-                  getSectionPreviewStatus(i, child)
-                }}
+                {{ getSectionPreviewStatus(i, child) }}
               </small>
               <p>{{ section.description }}</p>
             </div>
@@ -226,7 +229,6 @@
       </section>
 
       <section class="section-card" *ngIf="!previewMode">
-        
         <span class="saved-message" *ngIf="savedMessage">{{ savedMessage }}</span>
 
         <app-child-form-preview

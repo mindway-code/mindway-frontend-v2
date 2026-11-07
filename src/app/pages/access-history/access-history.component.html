@@ -59,11 +59,18 @@
           ><i class="bi bi-chevron-right access-child__arrow"></i>
         </button>
       </div>
-      <ng-template #noChildren
-        ><p class="access-overview__empty">
-          {{ loading ? 'Carregando crianças…' : 'Nenhuma criança disponível para sua conta.' }}
-        </p></ng-template
-      >
+      <ng-template #noChildren>
+        <app-page-skeleton
+          *ngIf="loading; else noAvailableChildren"
+          variant="list"
+          [rows]="3"
+          [compact]="true"
+          label="Carregando crian&#231;as"
+        ></app-page-skeleton>
+        <ng-template #noAvailableChildren>
+          <p class="access-overview__empty">Nenhuma crian&#231;a dispon&#237;vel para sua conta.</p>
+        </ng-template>
+      </ng-template>
     </div>
     <div class="access-overview__stats">
       <article class="access-stat">

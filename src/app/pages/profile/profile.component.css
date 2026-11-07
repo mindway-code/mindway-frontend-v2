@@ -150,13 +150,8 @@
 .profile-page__tip {
   grid-column: 1 / -1;
 }
-.profile-page__loading-card {
-  min-height: 12rem;
-}
-.profile-page__loading-avatar {
-  min-height: 4rem;
-  max-width: 4rem;
-  border-radius: 999px;
+.profile-page__skeleton {
+  grid-column: 1 / -1;
 }
 @media (max-width: 850px) {
   .profile-page {

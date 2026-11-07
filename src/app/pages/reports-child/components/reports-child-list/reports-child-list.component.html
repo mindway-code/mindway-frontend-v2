@@ -1,12 +1,10 @@
 <section class="reports-child-list">
   <ng-container *ngIf="loading">
-    <section class="reports-child-list__grid card-ui card-ui--md">
-      <div class="card-ui__body loading-ui">
-        <span class="loading-ui__line loading-ui__line--sm"></span>
-        <span class="loading-ui__line loading-ui__line--lg"></span>
-        <span class="loading-ui__block"></span>
-      </div>
-    </section>
+    <app-page-skeleton
+      variant="list"
+      [rows]="4"
+      label="Carregando relat&#243;rios"
+    ></app-page-skeleton>
   </ng-container>
 
   <ng-container *ngIf="!loading">

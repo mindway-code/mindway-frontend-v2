@@ -52,13 +52,12 @@
     </div>
   </section>
 
-  <section *ngIf="loading" class="card-ui card-ui--md children-section__loading">
-    <div class="card-ui__body loading-ui">
-      <span class="loading-ui__line loading-ui__line--sm"></span>
-      <span class="loading-ui__line loading-ui__line--lg"></span>
-      <span class="loading-ui__block"></span>
-    </div>
-  </section>
+  <app-page-skeleton
+    *ngIf="loading"
+    variant="list"
+    [rows]="4"
+    label="Carregando crian&#231;as"
+  ></app-page-skeleton>
 
   <div
     *ngIf="!loading && error && !showCreate"

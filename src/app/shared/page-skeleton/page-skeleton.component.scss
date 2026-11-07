@@ -1,0 +1,224 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.page-skeleton {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  contain: layout paint style;
+  overflow: hidden;
+  border: 1px solid #dfe8ec;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 0.5rem 1.5rem rgba(22, 66, 88, 0.05);
+  pointer-events: none;
+}
+
+.page-skeleton::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.72) 42%,
+    transparent 60%
+  );
+  content: '';
+  transform: translateX(-100%);
+  animation: page-skeleton-shimmer 1.45s ease-in-out infinite;
+  will-change: transform;
+}
+
+.page-skeleton__announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page-skeleton__header,
+.page-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.page-skeleton__header {
+  min-height: 4.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.page-skeleton__icon,
+.page-skeleton__avatar,
+.page-skeleton__line,
+.page-skeleton__action,
+.page-skeleton__control {
+  display: block;
+  border-radius: 0.55rem;
+  background: #e8eff1;
+}
+
+.page-skeleton__icon {
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  border-radius: 0.8rem;
+  background: #dff3f1;
+}
+
+.page-skeleton__heading,
+.page-skeleton__copy {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.page-skeleton__line {
+  height: 0.7rem;
+}
+
+.page-skeleton__line--title {
+  width: min(16rem, 65%);
+  height: 1rem;
+}
+
+.page-skeleton__line--subtitle {
+  width: min(28rem, 85%);
+}
+
+.page-skeleton__line--medium {
+  width: min(18rem, 72%);
+}
+
+.page-skeleton__line--short {
+  width: min(11rem, 48%);
+  height: 0.58rem;
+}
+
+.page-skeleton__action,
+.page-skeleton__control {
+  width: 6.5rem;
+  height: 2.4rem;
+  flex: 0 0 6.5rem;
+}
+
+.page-skeleton__body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.page-skeleton__row {
+  min-width: 0;
+  min-height: 5rem;
+  padding: 0.85rem;
+  border: 1px solid #e8eff2;
+  border-radius: 0.75rem;
+  background: #fbfdfe;
+}
+
+.page-skeleton__avatar {
+  width: 2.8rem;
+  height: 2.8rem;
+  flex: 0 0 2.8rem;
+  border-radius: 50%;
+  background: #e2f2f1;
+}
+
+.page-skeleton--list .page-skeleton__body,
+.page-skeleton--table .page-skeleton__body {
+  grid-template-columns: 1fr;
+}
+
+.page-skeleton--table .page-skeleton__row {
+  display: grid;
+  grid-template-columns: 8rem minmax(10rem, 1fr) minmax(8rem, 0.7fr) 5rem;
+  min-height: 3.4rem;
+}
+
+.page-skeleton--table .page-skeleton__avatar {
+  width: 75%;
+  height: 0.7rem;
+  border-radius: 0.4rem;
+}
+
+.page-skeleton--detail .page-skeleton__body {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.page-skeleton--detail .page-skeleton__row {
+  min-height: 7rem;
+}
+
+.page-skeleton--compact {
+  gap: 0.65rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  box-shadow: none;
+}
+
+.page-skeleton--compact .page-skeleton__header {
+  display: none;
+}
+
+.page-skeleton--compact .page-skeleton__body {
+  gap: 0.5rem;
+}
+
+.page-skeleton--compact .page-skeleton__row {
+  min-height: 3.6rem;
+  padding: 0.55rem;
+}
+
+.page-skeleton--compact .page-skeleton__avatar {
+  width: 2rem;
+  height: 2rem;
+  flex-basis: 2rem;
+}
+
+.page-skeleton--compact .page-skeleton__control {
+  width: 3.5rem;
+  height: 1.8rem;
+  flex-basis: 3.5rem;
+}
+
+@media (max-width: 700px) {
+  .page-skeleton__body,
+  .page-skeleton--detail .page-skeleton__body {
+    grid-template-columns: 1fr;
+  }
+
+  .page-skeleton__action {
+    display: none;
+  }
+
+  .page-skeleton--table .page-skeleton__row {
+    grid-template-columns: 5rem minmax(0, 1fr) 3rem;
+  }
+
+  .page-skeleton--table .page-skeleton__control {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-skeleton::after {
+    animation: none;
+  }
+}
+
+@keyframes page-skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}

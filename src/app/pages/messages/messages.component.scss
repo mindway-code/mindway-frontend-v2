@@ -321,27 +321,6 @@
   cursor: pointer;
 }
 
-.messages-page__loading {
-  display: grid;
-  gap: 0.75rem;
-  padding: 1.25rem;
-}
-
-.messages-page__loading span {
-  display: block;
-  height: 2.8rem;
-  border-radius: 8px;
-  background: #edf5f4;
-  animation: messages-pulse 1.4s ease-in-out infinite alternate;
-}
-
-.messages-page__loading span:nth-child(2) {
-  animation-delay: 0.15s;
-}
-.messages-page__loading span:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
 .messages-page__conversation--empty {
   place-content: center;
   justify-items: center;
@@ -364,15 +343,6 @@
 
 .messages-page__conversation--empty p {
   margin-bottom: 0;
-}
-
-@keyframes messages-pulse {
-  from {
-    opacity: 0.45;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 @media (max-width: 760px) {

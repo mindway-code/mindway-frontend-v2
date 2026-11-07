@@ -43,11 +43,14 @@
           ><small>{{ child.age }} anos</small></span
         >
       </button>
-      <span
-        class="reports-child-picker__loading"
+      <app-page-skeleton
+        class="reports-child-picker__skeleton"
         *ngIf="(childrenLoading$ | async) && !children.length"
-        >Carregando crian&ccedil;as...</span
-      >
+        variant="list"
+        [rows]="2"
+        [compact]="true"
+        label="Carregando crian&#231;as"
+      ></app-page-skeleton>
     </div>
   </header>
 
@@ -104,9 +107,13 @@
       <section class="reports-workspace">
         <div class="reports-list-panel">
           <ng-container *ngIf="visibleReports$ | async as reports">
-            <div class="reports-loading" *ngIf="reportsLoading$ | async">
-              Carregando relat&oacute;rios...
-            </div>
+            <app-page-skeleton
+              *ngIf="reportsLoading$ | async"
+              variant="list"
+              [rows]="4"
+              [compact]="true"
+              label="Carregando relat&#243;rios"
+            ></app-page-skeleton>
             <p
               class="reports-no-results"
               *ngIf="!(reportsLoading$ | async) && reports.length === 0"

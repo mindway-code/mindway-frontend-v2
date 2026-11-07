@@ -1,0 +1,31 @@
+<section
+  class="page-skeleton"
+  [class.page-skeleton--compact]="compact"
+  [ngClass]="'page-skeleton--' + variant"
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  [attr.aria-label]="label"
+>
+  <span class="page-skeleton__announcement">{{ label }}</span>
+
+  <header class="page-skeleton__header" aria-hidden="true">
+    <span class="page-skeleton__icon"></span>
+    <span class="page-skeleton__heading">
+      <span class="page-skeleton__line page-skeleton__line--title"></span>
+      <span class="page-skeleton__line page-skeleton__line--subtitle"></span>
+    </span>
+    <span class="page-skeleton__action"></span>
+  </header>
+
+  <div class="page-skeleton__body" aria-hidden="true">
+    <article class="page-skeleton__row" *ngFor="let row of rowPlaceholders | slice: 0 : rows">
+      <span class="page-skeleton__avatar"></span>
+      <span class="page-skeleton__copy">
+        <span class="page-skeleton__line page-skeleton__line--medium"></span>
+        <span class="page-skeleton__line page-skeleton__line--short"></span>
+      </span>
+      <span class="page-skeleton__control"></span>
+    </article>
+  </div>
+</section>

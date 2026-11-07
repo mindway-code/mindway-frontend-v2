@@ -150,6 +150,9 @@ body {
   button, a, li {
     font-size: var(--font-size-sm) !important;
   }
+  a {
+    text-decoration: none;
+  }
   // margin-top: 2rem;
   @media (max-width: 900px) {
     h1 {

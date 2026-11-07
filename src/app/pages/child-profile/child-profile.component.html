@@ -12,25 +12,7 @@
       </p>
     </div>
     <div class="page-heading__illustration" *ngIf="!(selectedChild$ | async)" aria-hidden="true">
-      <i class="bi bi-clipboard2-pulse"></i>
-    </div>
-    <div class="page-heading__actions">
-      <!-- <button
-        *ngIf="selectedChild$ | async"
-        class="button-secondary"
-        type="button"
-        (click)="onBackToChildren()"
-      >
-        &#8592; Voltar para crian&#231;as
-      </button> -->
-      <button
-        *ngIf="!(selectedChild$ | async) && !isProfessionalView"
-        class="button-primary"
-        type="button"
-        (click)="toggleCreateChild()"
-      >
-        + Adicionar crian&#231;a
-      </button>
+          <img src="assets/img/child-page.webp" alt="child" />
     </div>
   </header>
 
@@ -59,21 +41,23 @@
             <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="" />
             <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
           </div>
-          <h2>{{ getChildName(child) }}</h2>
-          <p class="child-meta">
-            {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child)
-            }}<ng-container *ngIf="getChildGender(child) as gender"
-              ><span aria-hidden="true">|</span> {{ gender }}</ng-container
+          <div class="child-card--content">
+            <h2>{{ getChildName(child) }}</h2>
+            <p class="child-meta">
+              {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child)
+              }}<ng-container *ngIf="getChildGender(child) as gender"
+                ><span aria-hidden="true">|</span> {{ gender }}</ng-container
+              >
+            </p>
+            <div class="diagnoses" *ngIf="getChildDiagnoses(child).length > 0; else noDiagnosis">
+              <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
+            </div>
+            <ng-template #noDiagnosis
+              ><p class="muted child-card__diagnosis-empty">
+                Sem diagn&#243;stico informado
+              </p></ng-template
             >
-          </p>
-          <div class="diagnoses" *ngIf="getChildDiagnoses(child).length > 0; else noDiagnosis">
-            <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
           </div>
-          <ng-template #noDiagnosis
-            ><p class="muted child-card__diagnosis-empty">
-              Sem diagn&#243;stico informado
-            </p></ng-template
-          >
           <button
             type="button"
             class="button-primary child-card__action"
@@ -175,22 +159,12 @@
       </nav>
 
       <section class="profile-preview" *ngIf="previewMode">
-        <!-- <header class="profile-preview__heading">
-          <span class="profile-preview__eye"><i class="bi bi-eye" aria-hidden="true"></i></span>
-          <div class="profile-preview__heading_title">
-            <h2>Pr&#233;via do perfil</h2>
-            <p>
-              Veja como as informa&#231;&#245;es da crian&#231;a ser&#227;o apresentadas aos
-              profissionais autorizados.
-            </p>
-          </div>
-        </header> -->
         <div class="profile-preview__child">
           <div class="child-avatar child-avatar--large">
             <img
               *ngIf="getChildPhoto(child) as photo; else previewChildInitial"
               [src]="photo"
-              alt=""
+              alt="photo"
             /><ng-template #previewChildInitial>{{ getChildInitial(child) }}</ng-template>
           </div>
           <div class="profile-preview__identity">

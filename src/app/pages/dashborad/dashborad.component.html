@@ -1,10 +1,6 @@
 <section class="dashborad-page" *ngIf="viewModel$ | async as vm">
   <header class="dashboard-brand" aria-labelledby="dashboard-brand-tagline">
     <img class="dashboard-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
-    <!-- <time class="dashboard-brand__date" [attr.datetime]="today | date: 'yyyy-MM-dd'">
-      <i class="bi bi-calendar3" aria-hidden="true"></i>
-      {{ today | date: "d 'de' MMMM 'de' y" : '' : 'pt-BR' }}
-    </time> -->
   </header>
 
   <ng-container *ngIf="vm.isProfessionalHome; else familyHome">
@@ -180,11 +176,17 @@
                 }}
               </p>
             </div>
-            <a class="dashboard-outline-action" routerLink="/child-profile">
-              <i class="bi bi-plus-lg" aria-hidden="true"></i> Adicionar crian&#231;a
-            </a>
           </header>
-
+          <div class="action-bar">  
+            <div class="search-children">
+              <label for="search"><i class="bi bi-search me-2"></i></label>
+              <input type="text" id="search" placeholder="Ex: João Silva"> 
+            </div>
+            <a class="dashboard-outline-action" routerLink="/child-profile">
+              <i class="bi bi-person-add" aria-hidden="true"></i>
+            </a>
+          </div>
+          
           <div class="family-child-list" *ngIf="children.length; else noFamilyChildren">
             <a class="family-child" *ngFor="let child of children" 
                   [routerLink]="['/child-profile']"

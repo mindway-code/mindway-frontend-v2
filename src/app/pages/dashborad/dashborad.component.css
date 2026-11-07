@@ -10,14 +10,12 @@
   --color-light: #74829a;
   --color-medium: #415473;
   --color-dark: #0d2c59;
-  --transition-fast: 160ms ease;
-  --transition-normal: 240ms ease;
-  --focus-ring: 3px solid rgba(0, 155, 147, 0.25);
 
   display: flex;
   flex-direction: column;
   gap: var(--gap-md);
-  align-items: stretch;
+  align-items: center;
+  justify-content: stretch;
   padding-bottom: 2.5rem;
   color: var(--color-dark);
 }
@@ -60,7 +58,7 @@
 
 /* Shared panels and controls */
 .dashboard-panel {
-  min-width: 400px;
+  max-width: 400px;
   padding: var(--padding-lg);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
@@ -120,18 +118,21 @@
 .dashboard-outline-action {
   gap: 0.55rem;
   min-height: 2.75rem;
-  padding: 0.65rem 1rem;
+  padding: var(--padding-sm) var(--padding-md);
   flex: 0 0 auto;
   border: none;
   border-radius: var(--radius-md);
   background: var(--bg-lighter);
   color: var(--brand-dark);
-  font-size: 0.82rem;
   font-weight: 700;
   transition:
     background-color var(--transition-fast),
     color var(--transition-fast),
     transform var(--transition-fast);
+
+    i {
+      font-size: var(--font-size-xlg) !important;
+    }
 }
 
 .dashboard-outline-action:hover {
@@ -165,6 +166,40 @@
 .dashboard-empty-state h3 {
   color: var(--color-dark);
   font-size: 1rem;
+}
+
+.action-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: var(--gap-md);
+}
+
+.search-children {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: var(--gap-md);
+  color: var(--brand-light);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid var(--border-light);
+  padding: 0 var(--padding-md);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+
+    input {
+      border: none;
+      width: 100%;
+      min-height: 40px;
+      &:focus {
+        outline: none;
+      }
+    }
 }
 
 /* Family dashboard */
@@ -299,7 +334,6 @@
 .quick-links {
   display: flex;
   flex-wrap: wrap;
-  max-width: 450px;
   gap: 0.65rem;
   padding-top: 1rem;
 }
@@ -709,21 +743,6 @@
 
   .dashboard-brand__logo {
     width: min(100%, 24rem);
-  }
-
-  .dashboard-panel__header,
-  .professional-intro {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .dashboard-outline-action {
-    width: 100%;
-  }
-
-  .quick-links,
-  .professional-stats {
-    grid-template-columns: 1fr;
   }
 
   .professional-intro__role {

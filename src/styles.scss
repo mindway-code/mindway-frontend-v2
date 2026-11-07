@@ -68,6 +68,9 @@
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
 
   --primary-hover: #006f75;
+  --transition-fast: 160ms ease;
+  --transition-normal: 240ms ease;
+  --focus-ring: 3px solid rgba(0, 155, 147, 0.25);
 }
 
 /* O seletor sem nada antes pega o body E qualquer elemento com scroll nos navegadores WebKit */
@@ -204,6 +207,33 @@ body {
     }
 
   }
+}
+
+.input-primary {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: var(--gap-md);
+  color: var(--brand-light);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid var(--border-light);
+  padding: 0 var(--padding-md);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+
+    input {
+      border: none;
+      width: 100%;
+      min-height: 40px;
+      &:focus {
+        outline: none;
+      }
+    }
 }
 
 .button-primary {

@@ -173,10 +173,12 @@
   flex-direction: row;
   align-items: baseline;
   gap: var(--gap-md);
+  width: 100%;
 }
 
 .search-children {
   display: flex;
+  width: 100%;
   flex-direction: row;
   align-items: baseline;
   margin-top: var(--gap-md);
@@ -224,10 +226,10 @@
   justify-content: space-between;
   gap: var(--space-lg);
   min-width: 0;
-  max-width: max-content;
+  width: 100%;
   padding: 0.8rem;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
+  border-bottom: 1px solid var(--border-medium);
+  border-radius: 0;
   background: linear-gradient(110deg, #fff, #fbfefe);
   transition:
     border-color var(--transition-fast),
@@ -290,7 +292,6 @@
 }
 
 .family-child__identity p {
-  margin-top: 0.25rem;
   overflow: hidden;
   color: var(--color-light);
   font-size: 0.78rem;
@@ -703,6 +704,11 @@
   .dashboard-brand__date {
     justify-self: center;
   }
+
+  .dashboard-panel--children {
+    width: 100%;
+  }
+
 
   .family-child {
     align-items: flex-start;

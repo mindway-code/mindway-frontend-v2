@@ -24,7 +24,7 @@ export class HomeComponent {
       img: 'assets/webp/family.webp',
       alt: 'Ilustração da área de perfil',
       buttonText: 'Acessar perfil',
-      route: '/profile',
+      route: '/dashboard',
     },
     {
       title: 'Relatórios',

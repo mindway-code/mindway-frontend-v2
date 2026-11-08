@@ -217,7 +217,7 @@
                   <img
                     *ngIf="getChildPhoto(child) as photo; else familyChildInitial"
                     [src]="photo"
-                    alt=""
+                    alt="photo"
                   />
                   <ng-template #familyChildInitial>{{ getInitial(child) }}</ng-template>
                 </span>

@@ -1,0 +1,154 @@
+<section class="professional-intro" aria-labelledby="professional-dashboard-title">
+  <div>
+    <p class="dashboard-eyebrow">{{ viewModel.eyebrow }}</p>
+    <h1 id="professional-dashboard-title">Olá, {{ viewModel.displayName }}!</h1>
+    <h2>{{ viewModel.title }}</h2>
+    <p>{{ viewModel.description }}</p>
+  </div>
+  <span class="professional-intro__role">
+    <i
+      class="bi"
+      [ngClass]="viewModel.isInstitutionHome ? 'bi-buildings' : 'bi-person-badge'"
+      aria-hidden="true"
+    ></i>
+    {{ viewModel.roleLabel }}
+  </span>
+</section>
+
+<app-page-skeleton
+  *ngIf="loading; else professionalContent"
+  variant="page"
+  [rows]="4"
+  label="Carregando o painel"
+></app-page-skeleton>
+
+<ng-template #professionalContent>
+  <section class="professional-stats" aria-label="Resumo do acompanhamento">
+    <article class="summary-card summary-card--children">
+      <span class="summary-card__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+      <div>
+        <strong>{{ children.length }}</strong>
+        <p>Crianças acompanhadas</p>
+        <small>Perfis vinculados ao seu acesso.</small>
+      </div>
+    </article>
+
+    <a class="summary-card summary-card--action" [routerLink]="viewModel.primaryActionRoute">
+      <span class="summary-card__icon" aria-hidden="true">
+        <i class="bi bi-arrow-up-right"></i>
+      </span>
+      <div>
+        <strong>Acessar</strong>
+        <p>{{ viewModel.primaryActionLabel }}</p>
+        <small>Continue pela principal ação do seu perfil.</small>
+      </div>
+    </a>
+  </section>
+
+  <div class="professional-workspace">
+    <section class="dashboard-panel" aria-labelledby="professional-children-title">
+      <header class="dashboard-panel__header">
+        <div>
+          <p class="dashboard-eyebrow">Acompanhamento</p>
+          <h2 id="professional-children-title">Crianças vinculadas</h2>
+          <p>
+            {{ children.length }}
+            {{ children.length === 1 ? 'criança disponível' : 'crianças disponíveis' }}
+          </p>
+        </div>
+        <a class="dashboard-outline-action" routerLink="/child-profile">
+          Ver todas <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </header>
+
+      <div class="professional-child-list" *ngIf="children.length; else noProfessionalChildren">
+        <article
+          class="professional-child"
+          *ngFor="let child of children | slice: 0 : 5; trackBy: trackChildById"
+        >
+          <span class="professional-child__avatar" aria-hidden="true">{{ getInitial(child) }}</span>
+          <div class="professional-child__identity">
+            <h3>{{ getName(child) }}</h3>
+            <p>
+              {{ getAge(child) }}
+              <ng-container *ngIf="getGender(child)">
+                <span aria-hidden="true">&middot;</span> {{ getGender(child) }}
+              </ng-container>
+            </p>
+            <div class="professional-child__tags" *ngIf="getDiagnosisList(child).length">
+              <span *ngFor="let diagnosis of getDiagnosisList(child) | slice: 0 : 3">
+                {{ diagnosis }}
+              </span>
+            </div>
+          </div>
+          <nav
+            class="professional-child__actions"
+            [attr.aria-label]="'Ações para ' + getName(child)"
+          >
+            <a [routerLink]="['/child-profile']" [queryParams]="{ childId: child.id }">
+              <i class="bi bi-eye" aria-hidden="true"></i><span>Perfil</span>
+            </a>
+            <a [routerLink]="['/anamnesis']" [queryParams]="{ childId: child.id }">
+              <i class="bi bi-clipboard2-pulse" aria-hidden="true"></i><span>Anamnese</span>
+            </a>
+            <a [routerLink]="['/reports-child']" [queryParams]="{ childId: child.id }">
+              <i class="bi bi-file-earmark-plus" aria-hidden="true"></i><span>Relatório</span>
+            </a>
+          </nav>
+        </article>
+      </div>
+
+      <ng-template #noProfessionalChildren>
+        <div class="dashboard-empty-state">
+          <i class="bi bi-people" aria-hidden="true"></i>
+          <h3>Nenhuma criança vinculada</h3>
+          <p>Os perfis autorizados aparecerão aqui quando estiverem disponíveis.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <aside
+      class="dashboard-panel dashboard-panel--quick"
+      aria-labelledby="professional-quick-title"
+    >
+      <header class="dashboard-panel__header dashboard-panel__header--stacked">
+        <div>
+          <p class="dashboard-eyebrow">Seu perfil</p>
+          <h2 id="professional-quick-title">Acesso rápido</h2>
+          <p>
+            Funcionalidades disponíveis para {{ viewModel.roleLabel.toLocaleLowerCase('pt-BR') }}.
+          </p>
+        </div>
+      </header>
+
+      <nav class="quick-links" aria-label="Atalhos do perfil">
+        <a class="quick-link" *ngFor="let action of viewModel.actions" [routerLink]="action.route">
+          <span class="quick-link__icon" aria-hidden="true">
+            <i class="bi" [ngClass]="action.icon"></i>
+          </span>
+          <span>
+            <strong>{{ action.label }}</strong>
+            <small>{{ action.description }}</small>
+          </span>
+          <i class="bi bi-chevron-right quick-link__arrow" aria-hidden="true"></i>
+        </a>
+      </nav>
+
+      <div class="dashboard-guidance">
+        <i class="bi bi-lightbulb" aria-hidden="true"></i>
+        <div>
+          <strong>{{ viewModel.focusTitle }}</strong>
+          <p>{{ viewModel.focusDescription }}</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="dashboard-privacy-note">
+    <i class="bi bi-shield-check" aria-hidden="true"></i>
+    <span>
+      As informações são exibidas conforme as permissões do seu perfil e devem ser usadas somente
+      para o acompanhamento da criança.
+    </span>
+  </footer>
+</ng-template>

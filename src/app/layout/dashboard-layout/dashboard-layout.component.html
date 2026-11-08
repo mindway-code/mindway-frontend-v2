@@ -74,25 +74,37 @@
   </aside>
 
   <main class="dashboard-layout__main">
-
-    <button
-      class="dashboard-layout__menu-button"
-      type="button"
-      (click)="toggleSidebar()"
-      [attr.aria-expanded]="isMobileViewport ? isMobileSidebarOpen : isDesktopSidebarExpanded"
-    >
-      <i class="bi bi-list" aria-hidden="true"></i>
-      <span>{{
-        isMobileViewport
-          ? 'Menu'
-          : isDesktopSidebarExpanded
-            ? 'Ocultar menu lateral'
-            : 'Mostrar menu lateral'
-      }}</span>
-    </button>
-
     <div class="dashboard-layout__panel">
       <router-outlet></router-outlet>
     </div>
+
+    <nav class="dashboard-bottom-nav" aria-label="Navegação principal">
+      <div class="dashboard-bottom-nav__primary">
+        <a
+          *ngFor="let item of mobileNavItems"
+          class="dashboard-bottom-nav__link"
+          [routerLink]="item.route"
+          routerLinkActive="dashboard-bottom-nav__link--active"
+          ariaCurrentWhenActive="page"
+        >
+          <i class="bi" [ngClass]="item.icon" aria-hidden="true"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </div>
+
+      <button
+        class="dashboard-bottom-nav__more"
+        type="button"
+        (click)="toggleSidebar()"
+        [attr.aria-expanded]="isMobileSidebarOpen"
+        [attr.aria-label]="isMobileSidebarOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
+      >
+        <i
+          class="bi"
+          [ngClass]="isMobileSidebarOpen ? 'bi-x-lg' : 'bi-grid'"
+          aria-hidden="true"
+        ></i>
+      </button>
+    </nav>
   </main>
 </section>

@@ -64,6 +64,8 @@ import { LinkProfessionalComponent } from './auth/link-professional/link-profess
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
 import { LinkClinicComponent } from './auth/link-clinic/link-clinic.component';
 import { DashboradComponent } from './pages/dashborad/dashborad.component';
+import { FamilyDashboardComponent } from './pages/dashborad/components/family-dashboard/family-dashboard.component';
+import { ProfessionalDashboardComponent } from './pages/dashborad/components/professional-dashboard/professional-dashboard.component';
 import { MessagesComponent } from './pages/messages/messages.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AccessHistoryComponent } from './pages/access-history/access-history.component';
@@ -125,6 +127,8 @@ registerLocaleData(localePt);
     LinkProfessionalComponent,
     LinkTherapistComponent,
     DashboradComponent,
+    FamilyDashboardComponent,
+    ProfessionalDashboardComponent,
     MessagesComponent,
     SettingsComponent,
     AccessHistoryComponent,

@@ -1,42 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import type { UserRole } from '../../api/interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { ChildService } from '../../services/child.service';
-import type { ChildRecord } from '../../api/interfaces/child.interface';
-
-interface DashboardAction {
-  icon: string;
-  label: string;
-  description: string;
-  route: string;
-}
-
-interface DashboardTip {
-  icon: string;
-  title: string;
-  description: string;
-}
-
-interface DashboardProfile {
-  roleLabel: string;
-  eyebrow: string;
-  title: string;
-  description: string;
-  focusTitle: string;
-  focusDescription: string;
-  primaryActionLabel: string;
-  primaryActionRoute: string;
-  actions: DashboardAction[];
-  tips: DashboardTip[];
-}
-
-interface DashboardViewModel extends DashboardProfile {
-  displayName: string;
-  isProfessionalHome: boolean;
-  isInstitutionHome: boolean;
-}
+import type { DashboardProfile, DashboardViewModel } from './dashboard.models';
 
 const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
   common: {
@@ -339,18 +306,20 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
   selector: 'app-dashborad',
   standalone: false,
   templateUrl: './dashborad.component.html',
-  styleUrl: './dashborad.component.css',
+  styleUrl: './dashborad.component.scss',
 })
 export class DashboradComponent implements OnInit {
   readonly children$ = this.childService.children$;
   readonly childrenLoading$ = this.childService.loading$;
-  readonly today = new Date();
   readonly viewModel$ = this.authService.currentUser$.pipe(
     map((user): DashboardViewModel => {
-      const profile = dashboardProfiles[user?.role ?? 'default'] ?? dashboardProfiles.default;
+      const role = user?.role ?? 'default';
+      const profile = dashboardProfiles[role] ?? dashboardProfiles.default;
 
       return {
         ...profile,
+        userId: user?.id ?? null,
+        role,
         displayName: user?.name?.trim() || user?.email?.trim() || 'seja bem-vindo(a)',
         isProfessionalHome:
           user?.role === 'therapist' ||
@@ -363,7 +332,6 @@ export class DashboradComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router,
     private readonly childService: ChildService,
   ) {}
 
@@ -371,83 +339,5 @@ export class DashboradComponent implements OnInit {
     this.childService
       .loadAccessibleChildren({ page: 1, pageSize: 50 })
       .subscribe({ error: () => {} });
-  }
-
-  getName(child: ChildRecord): string {
-    const data = child as any;
-    return data.name ?? data.fullName ?? data.nome ?? 'Criança';
-  }
-
-  getInitial(child: ChildRecord): string {
-    return this.getName(child).trim().charAt(0).toUpperCase() || 'C';
-  }
-
-  getChildPhoto(child: ChildRecord): string | null {
-    const data = child as any;
-    const photo = data.photoUrl ?? data.avatarUrl ?? data.imageUrl ?? data.photo;
-    if (typeof photo === 'string' && photo.trim()) return photo;
-    if (typeof localStorage !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(`mindway-child-profile-${child.id}`);
-        const profile = saved ? JSON.parse(saved) : null;
-        const savedPhoto = profile?.photo ?? profile?.photoUrl;
-        return typeof savedPhoto === 'string' && savedPhoto.trim() ? savedPhoto : null;
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  getAge(child: ChildRecord): string {
-    const data = child as any;
-    if (data.age !== undefined && data.age !== null) return `${data.age} anos`;
-    const birthDate = data.birthDate ?? data.dateOfBirth ?? data.birth_date ?? data.dataNascimento;
-    if (!birthDate) return 'Idade não informada';
-    const birth = new Date(birthDate);
-    if (Number.isNaN(birth.getTime())) return 'Idade não informada';
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    if (
-      today.getMonth() < birth.getMonth() ||
-      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
-    )
-      age--;
-    return `${age} anos`;
-  }
-
-  getDiagnoses(child: ChildRecord): string {
-    const data = child as any;
-    const diagnoses = data.diagnoses ?? data.diagnosis ?? data.diagnosticos;
-    if (Array.isArray(diagnoses))
-      return diagnoses
-        .map((item: any) => (typeof item === 'string' ? item : (item?.name ?? item?.title ?? '')))
-        .filter(Boolean)
-        .join(' • ');
-    return typeof diagnoses === 'string' ? diagnoses : '';
-  }
-
-  getDiagnosisList(child: ChildRecord): string[] {
-    const data = child as any;
-    const diagnoses = data.diagnoses ?? data.diagnosis ?? data.diagnosticos;
-    if (Array.isArray(diagnoses))
-      return diagnoses
-        .map((item: any) => (typeof item === 'string' ? item : (item?.name ?? item?.title ?? '')))
-        .filter(Boolean);
-    return typeof diagnoses === 'string'
-      ? diagnoses
-          .split(/[,;|]/)
-          .map((item: string) => item.trim())
-          .filter(Boolean)
-      : [];
-  }
-
-  getGender(child: ChildRecord): string {
-    const data = child as any;
-    return data.gender ?? data.sex ?? data.genero ?? '';
-  }
-
-  navigateTo(route: string): void {
-    void this.router.navigate([route]);
   }
 }

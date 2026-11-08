@@ -23,6 +23,11 @@ export class DashboardLayoutComponent {
     { label: 'Histórico', route: '/access-history', icon: 'bi-clock-history' },
     { label: 'Configurações', route: '/settings', icon: 'bi-gear' },
   ];
+  readonly mobileNavItems: DashboardNavItem[] = [
+    { label: 'Início', route: '/dashboard', icon: 'bi-house-door' },
+    { label: 'Crianças', route: '/child-profile', icon: 'bi-people' },
+    { label: 'Anamnese', route: '/anamnesis', icon: 'bi-journal-text' },
+  ];
 
   isDesktopSidebarExpanded = true;
   isMobileSidebarOpen = false;

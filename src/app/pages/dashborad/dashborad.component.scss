@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+.dashborad-page {
+  --brand-lighter: #e5f8f5;
+  --brand-light: #80d4c9;
+  --brand-medium: #009b93;
+  --brand-dark: #007b77;
+  --color-light: #74829a;
+  --color-medium: #415473;
+  --color-dark: #0d2c59;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: stretch;
+  gap: var(--gap-md);
+  padding-bottom: 2.5rem;
+  color: var(--color-dark);
+}
+
+.dashboard-brand {
+  display: grid;
+  justify-items: center;
+  padding-bottom: var(--padding-lg);
+  text-align: center;
+}
+
+.dashboard-brand__logo {
+  display: block;
+  width: min(100%, 10rem);
+  height: auto;
+  aspect-ratio: 1280 / 420;
+  object-fit: contain;
+}
+
+@media (max-width: 680px) {
+  .dashborad-page {
+    gap: 1.5rem;
+  }
+
+  .dashboard-brand {
+    padding-top: 0.5rem;
+  }
+
+  .dashboard-brand__logo {
+    width: min(100%, 12rem);
+  }
+}

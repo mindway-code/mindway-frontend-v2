@@ -182,27 +182,8 @@
   background: linear-gradient(105deg, #fff 0%, #f8fcfd 70%, #e0f7f5 100%);
 }
 
-.dashboard-layout__menu-button {
+.dashboard-bottom-nav {
   display: none;
-  align-items: center;
-  gap: 0.65rem;
-  min-height: 2.7rem;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid var(--border-light);
-  background: var(--bg-white);
-  color: var(--text-dark);
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background-color var(--dashboard-interaction-duration) ease,
-    color var(--dashboard-interaction-duration) ease,
-    transform var(--dashboard-interaction-duration) ease;
-}
-
-.dashboard-layout__menu-button:hover {
-  background: var(--bg-green);
-  color: var(--text-light);
-  transform: translateY(-1px);
 }
 
 .dashboard-layout__panel {
@@ -219,7 +200,8 @@
 .dashboard-aside__toggle:focus-visible,
 .dashboard-aside__link:focus-visible,
 .dashboard-aside__home-link:focus-visible,
-.dashboard-layout__menu-button:focus-visible {
+.dashboard-bottom-nav__link:focus-visible,
+.dashboard-bottom-nav__more:focus-visible {
   outline: var(--dashboard-focus-ring);
   outline-offset: 2px;
 }
@@ -241,6 +223,10 @@
     padding: var(--padding-sm);
     box-shadow: var(--shadow-lg);
     transform: translateX(-100%);
+  }
+
+  .dashboard-layout__overlay {
+    z-index: 900;
   }
 
   .dashboard-layout--mobile-open .dashboard-aside {
@@ -278,14 +264,97 @@
     min-height: 2.6rem;
   }
 
-  .dashboard-layout__menu-button {
-    position: sticky;
-    z-index: 100;
-    top: 2px;
+  .dashboard-layout__main {
+    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom));
+  }
+
+  .dashboard-bottom-nav {
+    position: fixed;
+    z-index: 800;
+    left: 50%;
+    bottom: max(0.65rem, env(safe-area-inset-bottom));
     display: flex;
+    align-items: stretch;
+    gap: var(--gap-sm);
+    width: min(calc(100% - 1rem), 31rem);
+    transform: translateX(-50%);
+  }
+
+  .dashboard-bottom-nav__primary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-width: 0;
+    flex: 1;
+    padding: 0.35rem;
+    border: 1px solid rgba(223, 229, 228, 0.9);
+    border-radius: var(--border-pill);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(12px);
+  }
+
+  .dashboard-bottom-nav__link {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    width: 100%;
-    border-bottom-color: var(--border-medium);
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+    min-height: 3.25rem;
+    padding: 0.35rem 0.25rem;
+    border-radius: var(--border-pill);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition:
+      background-color var(--dashboard-interaction-duration) ease,
+      color var(--dashboard-interaction-duration) ease;
+  }
+
+  .dashboard-bottom-nav__link i {
+    font-size: 1.05rem !important;
+  }
+
+  .dashboard-bottom-nav__link span {
+    overflow: hidden;
+    max-width: 100%;
+    font-size: 0.62rem !important;
+    font-weight: var(--fw-md);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dashboard-bottom-nav__link:hover,
+  .dashboard-bottom-nav__link--active {
+    background: var(--bg-green-light);
+    color: var(--text-green);
+  }
+
+  .dashboard-bottom-nav__more {
+    display: grid;
+    place-items: center;
+    width: 3.95rem;
+    min-width: 3.95rem;
+    height: 3.95rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--bg-green);
+    color: var(--text-light);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition:
+      background-color var(--dashboard-interaction-duration) ease,
+      transform var(--dashboard-interaction-duration) ease;
+  }
+
+  .dashboard-bottom-nav__more i {
+    font-size: 1.15rem !important;
+  }
+
+  .dashboard-bottom-nav__more:hover,
+  .dashboard-bottom-nav__more[aria-expanded='true'] {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
   }
 
   .dashboard-layout__panel {
@@ -299,7 +368,8 @@
   .dashboard-aside__toggle,
   .dashboard-aside__link,
   .dashboard-aside__home-link,
-  .dashboard-layout__menu-button {
+  .dashboard-bottom-nav__link,
+  .dashboard-bottom-nav__more {
     transition: none;
   }
 }

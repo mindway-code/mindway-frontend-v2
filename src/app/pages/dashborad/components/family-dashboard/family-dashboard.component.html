@@ -1,0 +1,238 @@
+<header class="family-brand" aria-label="Cabeçalho da família">
+  <span class="family-brand__balance" aria-hidden="true"></span>
+
+  <img class="family-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
+
+  <div class="family-brand__utilities">
+    <a class="family-brand__notification" routerLink="/messages" aria-label="Ver notificações">
+      <i class="bi bi-bell" aria-hidden="true"></i>
+    </a>
+
+    <time class="family-brand__date" [attr.datetime]="today | date: 'yyyy-MM-dd'">
+      {{ today | date: 'dd MMM' : '' : 'pt-BR' }}
+    </time>
+
+    <span class="family-brand__divider" aria-hidden="true"></span>
+
+    <div class="family-brand__greeting">
+      <span>Olá, {{ firstName }}</span>
+      <span class="family-brand__avatar" aria-hidden="true">
+        <img *ngIf="profilePhoto; else headerProfileInitial" [src]="profilePhoto" alt="" />
+        <ng-template #headerProfileInitial>{{ profileInitial }}</ng-template>
+      </span>
+    </div>
+  </div>
+</header>
+
+<app-page-skeleton
+  *ngIf="loading; else familyContent"
+  variant="page"
+  [rows]="4"
+  label="Carregando crianças e atalhos"
+></app-page-skeleton>
+
+<ng-template #familyContent>
+  <div class="family-dashboard">
+    <section class="family-search" aria-label="Buscar e adicionar crianças">
+      <div class="input-primary family-search__field">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <label class="visually-hidden" for="family-child-search">Buscar criança</label>
+        <input
+          id="family-child-search"
+          type="search"
+          autocomplete="off"
+          placeholder="Buscar criança por nome ou diagnóstico"
+          [value]="searchTerm"
+          (input)="updateSearchTerm($event)"
+        />
+        <button
+          *ngIf="searchTerm"
+          class="family-search__clear"
+          type="button"
+          (click)="clearSearch()"
+          aria-label="Limpar busca"
+        >
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <a class="family-add-action" routerLink="/child-profile">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        <span>Nova criança</span>
+      </a>
+    </section>
+
+    <div class="family-workspace">
+      <aside class="family-profile" aria-labelledby="family-profile-title">
+        <div class="family-profile__photo">
+          <span class="family-profile__avatar">
+            <img *ngIf="profilePhoto; else responsibleInitial" [src]="profilePhoto" alt="" />
+            <ng-template #responsibleInitial>{{ profileInitial }}</ng-template>
+          </span>
+          <button
+            class="family-profile__camera"
+            type="button"
+            (click)="responsiblePhotoInput.click()"
+            aria-label="Adicionar ou alterar foto do responsável"
+          >
+            <i class="bi bi-camera-fill" aria-hidden="true"></i>
+          </button>
+          <input
+            #responsiblePhotoInput
+            class="family-profile__file-input"
+            type="file"
+            accept="image/*"
+            (change)="onProfilePhotoSelected($event)"
+          />
+        </div>
+        <div class="family-profile__identity">
+          <h2 id="family-profile-title">{{ viewModel.displayName }}</h2>
+          <p>{{ viewModel.roleLabel }}</p>
+        </div>
+
+        <p class="family-profile__photo-error" *ngIf="photoError" role="alert">
+          {{ photoError }}
+        </p>
+
+        <div class="family-profile__summary">
+          <span>Perfis das crianças</span>
+          <strong>{{ children.length }}</strong>
+        </div>
+
+        <div class="family-profile__status" *ngIf="children.length; else noLinkedProfiles">
+          <div class="family-profile__avatars" aria-hidden="true">
+            <span *ngFor="let child of children | slice: 0 : 3; trackBy: trackChildById">
+              {{ getInitial(child) }}
+            </span>
+          </div>
+          <p>Acompanhamento disponível</p>
+        </div>
+
+        <ng-template #noLinkedProfiles>
+          <div class="family-profile__status family-profile__status--empty">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <p>Adicione um perfil para começar.</p>
+          </div>
+        </ng-template>
+      </aside>
+
+      <section class="family-children" aria-labelledby="family-children-title">
+        <header class="family-section-heading">
+          <div>
+            <p class="family-eyebrow">Perfis vinculados</p>
+            <h2 id="family-children-title">Crianças</h2>
+            <p>Selecione uma criança para acessar suas informações.</p>
+          </div>
+        </header>
+
+        <div *ngIf="children.length; else noFamilyChildren">
+          <div class="family-child-list" *ngIf="filteredChildren.length; else noSearchResults">
+            <a
+              class="family-child"
+              *ngFor="let child of filteredChildren; trackBy: trackChildById"
+              [routerLink]="['/child-profile']"
+              [queryParams]="{ childId: child.id }"
+            >
+              <span class="family-child__avatar" aria-hidden="true">
+                <img
+                  *ngIf="getPhoto(child) as photo; else familyChildInitial"
+                  [src]="photo"
+                  alt=""
+                />
+                <ng-template #familyChildInitial>{{ getInitial(child) }}</ng-template>
+              </span>
+
+              <div class="family-child__identity">
+                <h3>{{ getName(child) }}</h3>
+                <p>
+                  {{ getAge(child) }}
+                  <ng-container *ngIf="getDiagnoses(child)">
+                    <span aria-hidden="true">&middot;</span> {{ getDiagnoses(child) }}
+                  </ng-container>
+                </p>
+              </div>
+
+              <span class="family-child__action">
+                Ver perfil <i class="bi bi-arrow-right" aria-hidden="true"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <ng-template #noSearchResults>
+          <div class="family-empty-state family-empty-state--search">
+            <span class="family-empty-state__icon" aria-hidden="true">
+              <i class="bi bi-search"></i>
+            </span>
+            <div>
+              <h3>Nenhuma criança encontrada</h3>
+              <p>Tente buscar por outro nome ou diagnóstico.</p>
+            </div>
+            <button type="button" class="family-search-reset" (click)="clearSearch()">
+              Limpar busca
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #noFamilyChildren>
+          <div class="family-empty-state">
+            <span class="family-empty-state__icon" aria-hidden="true">
+              <i class="bi bi-person-plus"></i>
+            </span>
+            <div>
+              <h3>Nenhuma criança cadastrada</h3>
+              <p>Use o botão “Adicionar criança” para criar o primeiro perfil.</p>
+            </div>
+          </div>
+        </ng-template>
+      </section>
+
+      <aside class="family-sidebar" aria-label="Ações e orientações">
+        <section class="family-actions" aria-labelledby="family-actions-title">
+          <header class="family-section-heading family-section-heading--compact">
+            <div>
+              <p class="family-eyebrow">Acesso rápido</p>
+              <h2 id="family-actions-title">Ações</h2>
+            </div>
+          </header>
+
+          <nav class="family-action-list" aria-label="Ações da família">
+            <a
+              class="family-action"
+              *ngFor="let action of viewModel.actions"
+              [routerLink]="action.route"
+            >
+              <span class="family-action__icon" aria-hidden="true">
+                <i class="bi" [ngClass]="action.icon"></i>
+              </span>
+              <span class="family-action__copy">
+                <strong>{{ action.label }}</strong>
+                <small>{{ action.description }}</small>
+              </span>
+              <i class="bi bi-chevron-right family-action__arrow" aria-hidden="true"></i>
+            </a>
+          </nav>
+        </section>
+
+        <section class="family-tips" aria-labelledby="family-tips-title">
+          <header class="family-section-heading family-section-heading--compact">
+            <div>
+              <p class="family-eyebrow">Orientações</p>
+              <h2 id="family-tips-title">Dicas rápidas</h2>
+            </div>
+          </header>
+
+          <ul class="family-tip-list">
+            <li *ngFor="let tip of viewModel.tips | slice: 0 : 2">
+              <i class="bi" [ngClass]="tip.icon" aria-hidden="true"></i>
+              <div>
+                <strong>{{ tip.title }}</strong>
+                <p>{{ tip.description }}</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</ng-template>

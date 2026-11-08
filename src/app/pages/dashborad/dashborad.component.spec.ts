@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { ChildService } from '../../services/child.service';
 import { DashboradComponent } from './dashborad.component';
 
 describe('DashboradComponent', () => {
@@ -18,11 +20,20 @@ describe('DashboradComponent', () => {
         role: 'common',
       }),
     };
+    const childServiceMock = {
+      children$: of([]),
+      loading$: of(false),
+      loadAccessibleChildren: () => of([]),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [DashboradComponent],
       imports: [CommonModule, RouterModule.forRoot([])],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: ChildService, useValue: childServiceMock },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboradComponent);

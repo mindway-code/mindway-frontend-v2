@@ -321,11 +321,6 @@ export class DashboradComponent implements OnInit {
         userId: user?.id ?? null,
         role,
         displayName: user?.name?.trim() || user?.email?.trim() || 'seja bem-vindo(a)',
-        isProfessionalHome:
-          user?.role === 'therapist' ||
-          user?.role === 'professional' ||
-          user?.role === 'enterprise',
-        isInstitutionHome: user?.role === 'enterprise',
       };
     }),
   );

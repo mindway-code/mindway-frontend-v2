@@ -1,23 +1,39 @@
 <section class="dashborad-page" *ngIf="viewModel$ | async as vm; else dashboardLoading">
-  <header class="dashboard-brand" *ngIf="vm.isProfessionalHome">
-    <img class="dashboard-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
-  </header>
-
   <ng-container *ngIf="children$ | async as children">
+    <app-admin-dashboard
+      *ngIf="vm.role === 'admin'"
+      [viewModel]="vm"
+      [children]="children"
+      [loading]="(childrenLoading$ | async) ?? false"
+    ></app-admin-dashboard>
+
+    <app-therapist-dashboard
+      *ngIf="vm.role === 'therapist'"
+      [viewModel]="vm"
+      [children]="children"
+      [loading]="(childrenLoading$ | async) ?? false"
+    ></app-therapist-dashboard>
+
     <app-professional-dashboard
-      *ngIf="vm.isProfessionalHome; else familyDashboard"
+      *ngIf="vm.role === 'professional'"
       [viewModel]="vm"
       [children]="children"
       [loading]="(childrenLoading$ | async) ?? false"
     ></app-professional-dashboard>
 
-    <ng-template #familyDashboard>
-      <app-family-dashboard
-        [viewModel]="vm"
-        [children]="children"
-        [loading]="(childrenLoading$ | async) ?? false"
-      ></app-family-dashboard>
-    </ng-template>
+    <app-institution-dashboard
+      *ngIf="vm.role === 'enterprise'"
+      [viewModel]="vm"
+      [children]="children"
+      [loading]="(childrenLoading$ | async) ?? false"
+    ></app-institution-dashboard>
+
+    <app-family-dashboard
+      *ngIf="vm.role === 'common' || vm.role === 'default'"
+      [viewModel]="vm"
+      [children]="children"
+      [loading]="(childrenLoading$ | async) ?? false"
+    ></app-family-dashboard>
   </ng-container>
 </section>
 

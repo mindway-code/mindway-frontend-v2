@@ -30,6 +30,18 @@ export interface DashboardViewModel extends DashboardProfile {
   userId: string | null;
   role: UserRole | 'default';
   displayName: string;
-  isProfessionalHome: boolean;
-  isInstitutionHome: boolean;
+}
+
+export interface RoleDashboardConfig {
+  icon: string;
+  searchPlaceholder: string;
+  summaryLabel: string;
+  summaryDescription: string;
+  listEyebrow: string;
+  listTitle: string;
+  listDescription: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  childActionLabel: string;
+  childActionRoute: string;
 }

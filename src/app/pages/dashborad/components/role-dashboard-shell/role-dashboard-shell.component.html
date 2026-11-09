@@ -1,0 +1,147 @@
+<header class="role-brand" [attr.aria-label]="'Cabeçalho de ' + viewModel.roleLabel">
+  <span class="role-brand__balance" aria-hidden="true"></span>
+  <img class="role-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
+  <div class="role-brand__utilities">
+    <a class="role-brand__notification" routerLink="/messages" aria-label="Ver notificações">
+      <i class="bi bi-bell" aria-hidden="true"></i>
+    </a>
+    <time class="role-brand__date" [attr.datetime]="today | date: 'yyyy-MM-dd'">
+      {{ today | date: 'dd MMM' : '' : 'pt-BR' }}
+    </time>
+    <span class="role-brand__divider" aria-hidden="true"></span>
+    <span class="role-brand__greeting">Olá, {{ firstName }}</span>
+    <span class="role-brand__avatar" aria-hidden="true">{{ profileInitial }}</span>
+  </div>
+</header>
+
+<app-page-skeleton
+  *ngIf="loading; else dashboardContent"
+  variant="page"
+  [rows]="4"
+  [label]="'Carregando painel de ' + viewModel.roleLabel"
+></app-page-skeleton>
+
+<ng-template #dashboardContent>
+  <div class="role-dashboard">
+    <section class="role-search" aria-label="Buscar perfis vinculados">
+      <div class="input-primary role-search__field">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <label class="visually-hidden" for="role-child-search">Buscar criança</label>
+        <input
+          id="role-child-search"
+          type="search"
+          autocomplete="off"
+          [placeholder]="config.searchPlaceholder"
+          [value]="searchTerm"
+          (input)="updateSearch($event)"
+        />
+        <button *ngIf="searchTerm" type="button" (click)="clearSearch()" aria-label="Limpar busca">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    </section>
+
+    <div class="role-workspace">
+      <aside class="role-summary" aria-label="Resumo do acesso">
+        <span class="role-summary__icon" aria-hidden="true">
+          <i class="bi" [ngClass]="config.icon"></i>
+        </span>
+        <p>{{ config.summaryLabel }}</p>
+        <strong>{{ children.length }}</strong>
+        <small>{{ config.summaryDescription }}</small>
+      </aside>
+
+      <section class="role-children" aria-labelledby="role-children-title">
+        <header class="role-heading">
+          <div>
+            <p class="role-eyebrow">{{ config.listEyebrow }}</p>
+            <h1 id="role-children-title">{{ config.listTitle }}</h1>
+            <p>{{ config.listDescription }}</p>
+          </div>
+          <span class="role-heading__badge">{{ viewModel.roleLabel }}</span>
+        </header>
+
+        <div class="role-child-list" *ngIf="filteredChildren.length; else emptyChildren">
+          <a
+            class="role-child"
+            *ngFor="let child of filteredChildren | slice: 0 : 6; trackBy: trackChildById"
+            [routerLink]="[config.childActionRoute]"
+            [queryParams]="{ childId: child.id }"
+          >
+            <span class="role-child__avatar" aria-hidden="true">
+              <img *ngIf="getPhoto(child) as photo; else childInitial" [src]="photo" alt="" />
+              <ng-template #childInitial>{{ getInitial(child) }}</ng-template>
+            </span>
+            <span class="role-child__identity">
+              <strong>{{ getName(child) }}</strong>
+              <small>
+                {{ getAge(child) }}
+                <ng-container *ngIf="getDiagnoses(child)">
+                  <span aria-hidden="true">&middot;</span> {{ getDiagnoses(child) }}
+                </ng-container>
+              </small>
+            </span>
+            <span class="role-child__action">
+              {{ config.childActionLabel }}
+              <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </span>
+          </a>
+        </div>
+
+        <ng-template #emptyChildren>
+          <div class="role-empty">
+            <i class="bi" [ngClass]="searchTerm ? 'bi-search' : config.icon" aria-hidden="true"></i>
+            <div>
+              <h2>{{ searchTerm ? 'Nenhum perfil encontrado' : config.emptyTitle }}</h2>
+              <p>
+                {{
+                  searchTerm ? 'Revise o nome ou diagnóstico informado.' : config.emptyDescription
+                }}
+              </p>
+            </div>
+            <button *ngIf="searchTerm" type="button" (click)="clearSearch()">Limpar busca</button>
+          </div>
+        </ng-template>
+      </section>
+
+      <aside class="role-sidebar" aria-label="Ações e orientações">
+        <section class="role-card" aria-labelledby="role-actions-title">
+          <header class="role-heading role-heading--compact">
+            <div>
+              <p class="role-eyebrow">Acesso rápido</p>
+              <h2 id="role-actions-title">Ações</h2>
+            </div>
+          </header>
+          <nav class="role-actions" [attr.aria-label]="'Ações de ' + viewModel.roleLabel">
+            <a *ngFor="let action of viewModel.actions" [routerLink]="action.route">
+              <span aria-hidden="true"><i class="bi" [ngClass]="action.icon"></i></span>
+              <span>
+                <strong>{{ action.label }}</strong>
+                <small>{{ action.description }}</small>
+              </span>
+              <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </a>
+          </nav>
+        </section>
+
+        <section class="role-card" aria-labelledby="role-guidance-title">
+          <header class="role-heading role-heading--compact">
+            <div>
+              <p class="role-eyebrow">Orientações</p>
+              <h2 id="role-guidance-title">Para este perfil</h2>
+            </div>
+          </header>
+          <ul class="role-tips">
+            <li *ngFor="let tip of viewModel.tips | slice: 0 : 2">
+              <i class="bi" [ngClass]="tip.icon" aria-hidden="true"></i>
+              <div>
+                <strong>{{ tip.title }}</strong>
+                <p>{{ tip.description }}</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</ng-template>

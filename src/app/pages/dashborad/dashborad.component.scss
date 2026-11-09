@@ -20,31 +20,8 @@
   color: var(--color-dark);
 }
 
-.dashboard-brand {
-  display: grid;
-  justify-items: center;
-  padding-bottom: var(--padding-lg);
-  text-align: center;
-}
-
-.dashboard-brand__logo {
-  display: block;
-  width: min(100%, 10rem);
-  height: auto;
-  aspect-ratio: 1280 / 420;
-  object-fit: contain;
-}
-
 @media (max-width: 680px) {
   .dashborad-page {
     gap: 1.5rem;
-  }
-
-  .dashboard-brand {
-    padding-top: 0.5rem;
-  }
-
-  .dashboard-brand__logo {
-    width: min(100%, 12rem);
   }
 }

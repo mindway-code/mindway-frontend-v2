@@ -1,13 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { ChildRecord } from '../../../../api/interfaces/child.interface';
-import {
-  getChildAge,
-  getChildDiagnosisList,
-  getChildGender,
-  getChildInitial,
-  getChildName,
-} from '../../dashboard-child.utils';
-import type { DashboardViewModel } from '../../dashboard.models';
+import type { DashboardViewModel, RoleDashboardConfig } from '../../dashboard.models';
 
 @Component({
   selector: 'app-professional-dashboard',
@@ -21,13 +14,17 @@ export class ProfessionalDashboardComponent {
   @Input({ required: true }) children: ChildRecord[] = [];
   @Input() loading = false;
 
-  readonly getName = getChildName;
-  readonly getInitial = getChildInitial;
-  readonly getAge = getChildAge;
-  readonly getDiagnosisList = getChildDiagnosisList;
-  readonly getGender = getChildGender;
-
-  trackChildById(_index: number, child: ChildRecord): string {
-    return child.id;
-  }
+  readonly config: RoleDashboardConfig = {
+    icon: 'bi-person-workspace',
+    searchPlaceholder: 'Buscar criança acompanhada',
+    summaryLabel: 'Perfis acompanhados',
+    summaryDescription: 'Crianças que autorizaram sua participação na rede.',
+    listEyebrow: 'Atuação colaborativa',
+    listTitle: 'Crianças acompanhadas',
+    listDescription: 'Consulte o contexto antes de registrar uma observação profissional.',
+    emptyTitle: 'Nenhuma criança vinculada',
+    emptyDescription: 'Os perfis compartilhados com você aparecerão neste espaço.',
+    childActionLabel: 'Criar registro',
+    childActionRoute: '/reports-child',
+  };
 }

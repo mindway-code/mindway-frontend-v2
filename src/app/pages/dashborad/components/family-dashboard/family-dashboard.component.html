@@ -55,44 +55,10 @@
           <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
       </div>
-
-      <a class="family-add-action" routerLink="/child-profile">
-        <i class="bi bi-person-plus" aria-hidden="true"></i>
-        <span>Nova criança</span>
-      </a>
     </section>
 
     <div class="family-workspace">
       <aside class="family-profile" aria-labelledby="family-profile-title">
-        <div class="family-profile__photo">
-          <span class="family-profile__avatar">
-            <img *ngIf="profilePhoto; else responsibleInitial" [src]="profilePhoto" alt="" />
-            <ng-template #responsibleInitial>{{ profileInitial }}</ng-template>
-          </span>
-          <button
-            class="family-profile__camera"
-            type="button"
-            (click)="responsiblePhotoInput.click()"
-            aria-label="Adicionar ou alterar foto do responsável"
-          >
-            <i class="bi bi-camera-fill" aria-hidden="true"></i>
-          </button>
-          <input
-            #responsiblePhotoInput
-            class="family-profile__file-input"
-            type="file"
-            accept="image/*"
-            (change)="onProfilePhotoSelected($event)"
-          />
-        </div>
-        <div class="family-profile__identity">
-          <h2 id="family-profile-title">{{ viewModel.displayName }}</h2>
-          <p>{{ viewModel.roleLabel }}</p>
-        </div>
-
-        <p class="family-profile__photo-error" *ngIf="photoError" role="alert">
-          {{ photoError }}
-        </p>
 
         <div class="family-profile__summary">
           <span>Perfis das crianças</span>
@@ -120,7 +86,6 @@
         <header class="family-section-heading">
           <div>
             <p class="family-eyebrow">Perfis vinculados</p>
-            <h2 id="family-children-title">Crianças</h2>
             <p>Selecione uma criança para acessar suas informações.</p>
           </div>
         </header>

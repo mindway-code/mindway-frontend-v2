@@ -24,12 +24,12 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
         description: 'Veja dados essenciais e selecione a criança certa.',
         route: '/child-profile',
       },
-      {
-        icon: 'bi-clipboard2-pulse',
-        label: 'Anamnese',
-        description: 'Atualize histórico, rotina, saúde e desenvolvimento.',
-        route: '/anamnesis',
-      },
+      // {
+      //   icon: 'bi-clipboard2-pulse',
+      //   label: 'Anamnese',
+      //   description: 'Atualize histórico, rotina, saúde e desenvolvimento.',
+      //   route: '/anamnesis',
+      // },
       {
         icon: 'bi-file-earmark-text',
         label: 'Relatórios',
@@ -73,12 +73,12 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
         description: 'Encontre o perfil vinculado ao seu atendimento.',
         route: '/child-profile',
       },
-      {
-        icon: 'bi-clipboard2-pulse',
-        label: 'Revisar anamnese',
-        description: 'Veja histórico clínico, rotina e desenvolvimento.',
-        route: '/anamnesis',
-      },
+      // {
+      //   icon: 'bi-clipboard2-pulse',
+      //   label: 'Revisar anamnese',
+      //   description: 'Veja histórico clínico, rotina e desenvolvimento.',
+      //   route: '/anamnesis',
+      // },
       {
         icon: 'bi-journal-medical',
         label: 'Relatórios',
@@ -177,12 +177,12 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
         description: 'Compartilhe observações com a rede de apoio.',
         route: '/reports-child',
       },
-      {
-        icon: 'bi-clipboard-data',
-        label: 'Anamnese',
-        description: 'Consulte informações que ajudam no cuidado diário.',
-        route: '/anamnesis',
-      },
+      // {
+      //   icon: 'bi-clipboard-data',
+      //   label: 'Anamnese',
+      //   description: 'Consulte informações que ajudam no cuidado diário.',
+      //   route: '/anamnesis',
+      // },
     ],
     tips: [
       {
@@ -220,12 +220,12 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
         description: 'Acesse crianças e informações associadas.',
         route: '/child-profile',
       },
-      {
-        icon: 'bi-clipboard2-pulse',
-        label: 'Anamneses',
-        description: 'Consulte dados estruturados de acompanhamento.',
-        route: '/anamnesis',
-      },
+      // {
+      //   icon: 'bi-clipboard2-pulse',
+      //   label: 'Anamneses',
+      //   description: 'Consulte dados estruturados de acompanhamento.',
+      //   route: '/anamnesis',
+      // },
       {
         icon: 'bi-file-earmark-text',
         label: 'Relatórios',
@@ -269,12 +269,12 @@ const dashboardProfiles: Record<UserRole | 'default', DashboardProfile> = {
         description: 'Consulte informações básicas da criança.',
         route: '/child-profile',
       },
-      {
-        icon: 'bi-clipboard2-pulse',
-        label: 'Anamnese',
-        description: 'Veja dados importantes do histórico.',
-        route: '/anamnesis',
-      },
+      // {
+      //   icon: 'bi-clipboard2-pulse',
+      //   label: 'Anamnese',
+      //   description: 'Veja dados importantes do histórico.',
+      //   route: '/anamnesis',
+      // },
       {
         icon: 'bi-file-earmark-text',
         label: 'Relatórios',

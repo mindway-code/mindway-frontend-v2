@@ -20,6 +20,12 @@
   text-align: center;
 }
 
+.profile-edit__photo {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+}
+
 .profile-edit__avatar {
   box-sizing: border-box;
   width: 6rem;
@@ -29,6 +35,56 @@
   outline: 1px solid var(--border-medium);
   background: var(--bg-light);
   object-fit: cover;
+}
+
+.profile-edit__camera {
+  position: absolute;
+  right: -0.15rem;
+  bottom: -0.15rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--bg-white);
+  border-radius: var(--border-pill);
+  background: var(--bg-green);
+  color: var(--text-light);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.profile-edit__camera:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.profile-edit__camera:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.profile-edit__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.profile-edit__photo-feedback {
+  margin: 0;
+  color: var(--text-green);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+}
+
+.profile-edit__photo-feedback.is-error {
+  color: #b02a37;
 }
 
 .profile-edit__title {
@@ -108,5 +164,11 @@
 
   .profile-edit__actions .btn-ui--light {
     order: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-edit__camera {
+    transition: none;
   }
 }

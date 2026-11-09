@@ -6,3 +6,10 @@
   padding: 0;
   background-color: var(--bg-white);
 }
+
+@media (max-width: 900px) {
+  :host {
+    display: block;
+    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom));
+  }
+}

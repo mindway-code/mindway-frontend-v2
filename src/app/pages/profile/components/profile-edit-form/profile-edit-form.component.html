@@ -1,15 +1,38 @@
 <section class="profile-edit">
   <header class="profile-edit__header">
     <div class="profile-edit__identity">
-      <img
-        class="profile-edit__avatar"
-        [src]="profilePhoto || 'assets/img/placeholder.PNG'"
-        alt="Foto do perfil"
-      />
+      <div class="profile-edit__photo">
+        <img
+          class="profile-edit__avatar"
+          [src]="profilePhoto || 'assets/img/placeholder.PNG'"
+          alt="Foto do perfil"
+        />
+        <button
+          class="profile-edit__camera"
+          type="button"
+          aria-label="Adicionar ou alterar foto do perfil"
+          (click)="profilePhotoInput.click()"
+        >
+          <i class="bi bi-camera-fill" aria-hidden="true"></i>
+        </button>
+        <input
+          #profilePhotoInput
+          class="profile-edit__file-input"
+          type="file"
+          accept="image/*"
+          (change)="onProfilePhotoSelected($event)"
+        />
+      </div>
       <div>
         <h2 class="profile-edit__title">Informações pessoais</h2>
         <p class="profile-edit__subtitle">Esses dados identificam sua conta MindWay.</p>
       </div>
+      <p *ngIf="photoError" class="profile-edit__photo-feedback is-error" role="alert">
+        {{ photoError }}
+      </p>
+      <p *ngIf="photoMessage" class="profile-edit__photo-feedback" role="status">
+        {{ photoMessage }}
+      </p>
     </div>
   </header>
 

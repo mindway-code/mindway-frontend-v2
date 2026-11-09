@@ -9,11 +9,13 @@
       >
       <span class="profile-navbar__spacer"></span>
       <ng-container *ngIf="currentUser$ | async as user">
-        <a
-          class="profile-navbar__account"
-          routerLink="/settings"
-          aria-label="Abrir configurações da conta"
-        >
+        <a class="navbar-notification" routerLink="/messages" aria-label="Ver notificações">
+          <i class="bi bi-bell" aria-hidden="true"></i>
+        </a>
+        <a class="profile-navbar__account" routerLink="/profile" aria-label="Abrir perfil">
+          <span class="profile-navbar__greeting"
+            >Olá, {{ getFirstName(user.name, user.email) }}</span
+          >
           <img
             *ngIf="getProfilePhoto(user.id) as photo; else profileInitial"
             [src]="photo"
@@ -21,10 +23,9 @@
           />
           <ng-template #profileInitial
             ><span class="profile-navbar__initial">{{
-              (user.name || user.email || 'U').charAt(0).toUpperCase()
+              getInitial(user.name, user.email)
             }}</span></ng-template
           >
-          <span>{{ user.name || user.email }}</span>
         </a>
       </ng-container>
     </div>
@@ -92,18 +93,198 @@
             >
           </li>
         </ul>
-        <div class="navbar-actions d-flex gap-2">
-          <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/login" (click)="closeMenu()"
-            >Entrar</a
-          >
-          <a
-            class="btn-ui btn-ui--green btn-ui--sm"
-            routerLink="/register-options"
-            (click)="closeMenu()"
-            >Cadastrar</a
-          >
-        </div>
+        <ng-container *ngIf="currentUser$ | async as user; else guestActions">
+          <div class="navbar-actions navbar-actions--authenticated">
+            <a
+              class="navbar-notification"
+              routerLink="/messages"
+              aria-label="Ver notificações"
+              (click)="closeMenu()"
+            >
+              <i class="bi bi-bell" aria-hidden="true"></i>
+            </a>
+            <a
+              class="navbar-user"
+              routerLink="/profile"
+              aria-label="Abrir perfil"
+              (click)="closeMenu()"
+            >
+              <span class="navbar-user__greeting"
+                >Olá, {{ getFirstName(user.name, user.email) }}</span
+              >
+              <span class="navbar-user__avatar">
+                <img
+                  *ngIf="getProfilePhoto(user.id) as photo; else publicProfileInitial"
+                  [src]="photo"
+                  [alt]="'Foto de ' + (user.name || user.email)"
+                />
+                <ng-template #publicProfileInitial>{{
+                  getInitial(user.name, user.email)
+                }}</ng-template>
+              </span>
+            </a>
+          </div>
+        </ng-container>
+
+        <ng-template #guestActions>
+          <div class="navbar-actions navbar-actions--guest d-flex gap-2">
+            <a class="btn-ui btn-ui--accent-tr btn-ui--sm" routerLink="/login" (click)="closeMenu()"
+              >Entrar</a
+            >
+            <a
+              class="btn-ui btn-ui--green btn-ui--sm"
+              routerLink="/register-options"
+              (click)="closeMenu()"
+              >Cadastrar</a
+            >
+          </div>
+        </ng-template>
       </div>
     </div>
   </nav>
 </ng-template>
+
+<ng-container *ngIf="currentUser$ | async as mobileUser; else mobileGuestHeader">
+  <header class="mobile-topbar" aria-label="Acesso rápido da conta">
+      <a class="profile-navbar__brand" routerLink="/" aria-label="MindWay - início">
+        <img src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
+      </a>
+    <a class="navbar-notification" routerLink="/messages" aria-label="Ver notificações">
+      <i class="bi bi-bell" aria-hidden="true"></i>
+    </a>
+    <a class="navbar-user" routerLink="/profile" aria-label="Abrir perfil">
+      <span class="navbar-user__greeting"
+        >Olá, {{ getFirstName(mobileUser.name, mobileUser.email) }}</span
+      >
+      <span class="navbar-user__avatar">
+        <img
+          *ngIf="getProfilePhoto(mobileUser.id) as photo; else mobileProfileInitial"
+          [src]="photo"
+          [alt]="'Foto de ' + (mobileUser.name || mobileUser.email)"
+        />
+        <ng-template #mobileProfileInitial>{{
+          getInitial(mobileUser.name, mobileUser.email)
+        }}</ng-template>
+      </span>
+    </a>
+  </header>
+</ng-container>
+
+<ng-template #mobileGuestHeader>
+  <header class="mobile-topbar mobile-topbar--guest">
+    <a routerLink="/" aria-label="MindWay - início">
+      <img src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
+    </a>
+  </header>
+</ng-template>
+
+<div
+  class="mobile-nav-backdrop"
+  [class.is-visible]="isMenuOpen"
+  (click)="closeMenu()"
+  aria-hidden="true"
+></div>
+
+<aside
+  id="mindwayMobileMenu"
+  class="mobile-nav-drawer"
+  [class.is-open]="isMenuOpen"
+  [attr.aria-hidden]="!isMenuOpen"
+  aria-label="Menu completo"
+>
+  <header>
+    <span>Menu</span>
+    <button type="button" aria-label="Fechar menu" (click)="closeMenu()">
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <nav>
+    <a
+      routerLink="/"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="closeMenu()"
+    >
+      <i class="bi bi-house-door" aria-hidden="true"></i><span>Início</span>
+    </a>
+    <a routerLink="/como-funciona" routerLinkActive="is-active" (click)="closeMenu()">
+      <i class="bi bi-heart" aria-hidden="true"></i><span>Como funciona</span>
+    </a>
+    <a routerLink="/sobre" routerLinkActive="is-active" (click)="closeMenu()">
+      <i class="bi bi-info-circle" aria-hidden="true"></i><span>Sobre</span>
+    </a>
+    <a routerLink="/ajuda" routerLinkActive="is-active" (click)="closeMenu()">
+      <i class="bi bi-question-circle" aria-hidden="true"></i><span>Ajuda</span>
+    </a>
+    <a routerLink="/contato" routerLinkActive="is-active" (click)="closeMenu()">
+      <i class="bi bi-envelope" aria-hidden="true"></i><span>Contato</span>
+    </a>
+
+    <ng-container *ngIf="currentUser$ | async as drawerUser; else drawerGuestActions">
+      <span class="mobile-nav-drawer__divider" aria-hidden="true"></span>
+      <a routerLink="/dashboard" routerLinkActive="is-active" (click)="closeMenu()">
+        <i class="bi bi-grid" aria-hidden="true"></i><span>Painel</span>
+      </a>
+      <a routerLink="/profile" routerLinkActive="is-active" (click)="closeMenu()">
+        <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
+      </a>
+    </ng-container>
+
+    <ng-template #drawerGuestActions>
+      <span class="mobile-nav-drawer__divider" aria-hidden="true"></span>
+      <a routerLink="/login" routerLinkActive="is-active" (click)="closeMenu()">
+        <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i><span>Entrar</span>
+      </a>
+      <a routerLink="/register-options" routerLinkActive="is-active" (click)="closeMenu()">
+        <i class="bi bi-person-plus" aria-hidden="true"></i><span>Cadastrar</span>
+      </a>
+    </ng-template>
+  </nav>
+</aside>
+
+<nav class="mobile-bottom-nav" aria-label="Navegação principal">
+  <ng-container *ngIf="currentUser$ | async; else guestBottomNavigation">
+    <div class="mobile-bottom-nav__primary">
+      <a routerLink="/dashboard" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-grid" aria-hidden="true"></i><span>Painel</span>
+      </a>
+      <a routerLink="/profile" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
+      </a>
+      <a routerLink="/ajuda" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-question-circle" aria-hidden="true"></i><span>Ajuda</span>
+      </a>
+    </div>
+  </ng-container>
+
+  <ng-template #guestBottomNavigation>
+    <div class="mobile-bottom-nav__primary">
+      <a
+        routerLink="/"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+      >
+        <i class="bi bi-house-door" aria-hidden="true"></i><span>Início</span>
+      </a>
+      <a routerLink="/como-funciona" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-heart" aria-hidden="true"></i><span>Como funciona</span>
+      </a>
+      <a routerLink="/ajuda" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-question-circle" aria-hidden="true"></i><span>Ajuda</span>
+      </a>
+    </div>
+  </ng-template>
+
+  <button
+    class="mobile-bottom-nav__more"
+    type="button"
+    aria-controls="mindwayMobileMenu"
+    [attr.aria-expanded]="isMenuOpen"
+    [attr.aria-label]="isMenuOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
+    (click)="toggleMenu()"
+  >
+    <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-grid-3x3-gap'" aria-hidden="true"></i>
+  </button>
+</nav>

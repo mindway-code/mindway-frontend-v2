@@ -21,7 +21,7 @@ export class HomeComponent {
     {
       title: 'Meu perfil',
       description: 'Acesse e gerencie suas informações pessoais de forma rápida e organizada.',
-      img: 'assets/webp/family.webp',
+      img: 'assets/img/home/familia.webp',
       alt: 'Ilustração da área de perfil',
       buttonText: 'Acessar perfil',
       route: '/profile',
@@ -29,7 +29,7 @@ export class HomeComponent {
     {
       title: 'Relatórios',
       description: 'Visualize dados, acompanhamentos e informações importantes em um só lugar.',
-      img: 'assets/webp/relate.webp',
+      img: 'assets/img/home/consulta.webp',
       alt: 'Ilustração da área de relatórios',
       buttonText: 'Ver relatórios',
       route: '/reports-child',
@@ -37,7 +37,7 @@ export class HomeComponent {
     {
       title: 'Acessar painel',
       description: 'Consulte e preencha informações com praticidade e clareza.',
-      img: 'assets/webp/relate2.webp',
+      img: 'assets/img/home/medico.webp',
       alt: 'Ilustração da ficha de anamnese',
       buttonText: 'Ir para o painel',
       route: '/dashboard',

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -26,11 +26,25 @@ export class NavbarComponent {
     return localStorage.getItem(`mindway-account-photo-${userId}`);
   }
 
+  getFirstName(name: string | null | undefined, email: string | null | undefined): string {
+    const displayName = name?.trim() || email?.split('@')[0]?.trim() || 'Usuário';
+    return displayName.split(/\s+/)[0];
+  }
+
+  getInitial(name: string | null | undefined, email: string | null | undefined): string {
+    return this.getFirstName(name, email).charAt(0).toLocaleUpperCase('pt-BR');
+  }
+
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
   closeMenu(): void {
     this.isMenuOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeMenuOnEscape(): void {
+    this.closeMenu();
   }
 }

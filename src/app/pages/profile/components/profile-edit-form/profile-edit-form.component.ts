@@ -23,6 +23,11 @@ export class ProfileEditFormComponent implements OnChanges {
 
   constructor(private readonly fb: FormBuilder) {}
 
+  get profilePhoto(): string | null {
+    if (!this.user?.id || typeof localStorage === 'undefined') return null;
+    return localStorage.getItem(`mindway-account-photo-${this.user.id}`);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['user']) {
       const name = this.user?.name ?? '';

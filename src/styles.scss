@@ -230,8 +230,10 @@ body {
       border: none;
       width: 100%;
       min-height: 40px;
+      color: var(--text-muted);
       &:focus {
         outline: none;
+      color: var(--text-dark);
       }
     }
 }
@@ -245,7 +247,7 @@ body {
   padding: 0.5rem 0.85rem;
   border: 1px solid #007d83;
   border-radius: 0.5rem;
-  background: var(--profile-primary);
+  background: var(--bg-green);
   box-shadow: 0 2px 6px rgba(0, 90, 96, 0.18);
   color: #fff;
   font-size: 0.8rem;

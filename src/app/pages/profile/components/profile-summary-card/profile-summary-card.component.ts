@@ -9,8 +9,15 @@ import type { UserRecord } from '../../../../api/interfaces/user.interface';
 })
 export class ProfileSummaryCardComponent {
   @Input() user: UserRecord | null = null;
-  @Input() childrenCount = 0;
+  @Input() pushNotificationsEnabled = true;
+  @Input() legalAccepted = false;
+  @Input() loggingOut = false;
+
   @Output() edit = new EventEmitter<void>();
+  @Output() changePassword = new EventEmitter<void>();
+  @Output() pushNotificationsChange = new EventEmitter<boolean>();
+  @Output() openLegalTerms = new EventEmitter<void>();
+  @Output() logoutAccount = new EventEmitter<void>();
 
   get roleLabel(): string {
     const labels: Record<string, string> = {
@@ -23,15 +30,13 @@ export class ProfileSummaryCardComponent {
     return this.user?.role ? (labels[this.user.role] ?? 'Usuário') : 'Usuário';
   }
 
-  get memberSince(): string {
-    if (!this.user?.createdAt) return '—';
-    const date = new Date(this.user.createdAt);
-    if (Number.isNaN(date.getTime())) return '—';
-    return date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace('.', '');
-  }
-
   get profilePhoto(): string | null {
     if (!this.user?.id || typeof localStorage === 'undefined') return null;
     return localStorage.getItem(`mindway-account-photo-${this.user.id}`);
+  }
+
+  onPushNotificationsChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.pushNotificationsChange.emit(input.checked);
   }
 }

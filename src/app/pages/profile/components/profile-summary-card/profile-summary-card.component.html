@@ -1,42 +1,92 @@
-<section class="profile-summary card-ui card-ui--md">
-  <div class="profile-summary__identity">
+<section class="profile-summary">
+  <header class="profile-summary__identity">
     <img
       class="profile-summary__avatar"
       [src]="profilePhoto || 'assets/img/placeholder.PNG'"
       alt="Foto do perfil"
     />
     <div class="profile-summary__text">
+      <p class="profile-summary__welcome">Bem-vindo</p>
       <h2 class="profile-summary__title">{{ user?.name || 'Usuário' | titlecase }}</h2>
-      <p class="profile-summary__subtitle">
-        <i class="bi bi-envelope"></i> {{ user?.email || '—' }}
-      </p>
-      <div class="profile-summary__actions">
-        <span class="profile-summary__role">{{ roleLabel }}</span>
-        <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="edit.emit()">
-          <i class="bi bi-pencil"></i> Editar perfil
-        </button>
-      </div>
+      <p class="profile-summary__role">{{ roleLabel }}</p>
     </div>
+  </header>
+
+  <div class="profile-summary__menu" aria-label="Opções da conta">
+    <button class="profile-summary__item" type="button" (click)="edit.emit()">
+      <span class="profile-summary__item-icon"><i class="bi bi-person"></i></span>
+      <span class="profile-summary__item-copy">
+        <strong>Informações do perfil</strong>
+        <small>{{ user?.email || 'Atualize seus dados pessoais' }}</small>
+      </span>
+      <i class="bi bi-chevron-right profile-summary__chevron" aria-hidden="true"></i>
+    </button>
+
+    <button class="profile-summary__item" type="button" (click)="changePassword.emit()">
+      <span class="profile-summary__item-icon"><i class="bi bi-lock"></i></span>
+      <span class="profile-summary__item-copy">
+        <strong>Alterar senha</strong>
+        <small>Proteja o acesso à sua conta</small>
+      </span>
+      <i class="bi bi-chevron-right profile-summary__chevron" aria-hidden="true"></i>
+    </button>
+
+    <label class="profile-summary__item profile-summary__item--toggle">
+      <span class="profile-summary__item-icon"><i class="bi bi-bell"></i></span>
+      <span class="profile-summary__item-copy">
+        <strong>Notificações push</strong>
+        <small>Receba avisos importantes no sistema</small>
+      </span>
+      <span class="profile-summary__switch">
+        <input
+          type="checkbox"
+          [checked]="pushNotificationsEnabled"
+          (change)="onPushNotificationsChange($event)"
+        />
+        <span aria-hidden="true"></span>
+      </span>
+    </label>
+
+    <button
+      class="profile-summary__item profile-summary__item--toggle"
+      type="button"
+      role="switch"
+      [attr.aria-checked]="legalAccepted"
+      [attr.aria-label]="
+        legalAccepted
+          ? 'Termos de uso e privacidade aceitos. Abrir documentos'
+          : 'Abrir termos de uso e privacidade para aceitar'
+      "
+      (click)="openLegalTerms.emit()"
+    >
+      <span class="profile-summary__item-icon"><i class="bi bi-file-earmark-check"></i></span>
+      <span class="profile-summary__item-copy">
+        <strong>Aceitar termos de uso e privacidade</strong>
+        <small>{{
+          legalAccepted ? 'Documentos aceitos' : 'Leia os documentos para aceitar'
+        }}</small>
+      </span>
+      <span
+        class="profile-summary__switch profile-summary__switch--status"
+        [class.is-checked]="legalAccepted"
+        aria-hidden="true"
+      >
+        <span></span>
+      </span>
+    </button>
+
+    <button
+      class="profile-summary__item profile-summary__item--logout"
+      type="button"
+      [disabled]="loggingOut"
+      (click)="logoutAccount.emit()"
+    >
+      <span class="profile-summary__item-icon"><i class="bi bi-box-arrow-right"></i></span>
+      <span class="profile-summary__item-copy">
+        <strong>{{ loggingOut ? 'Saindo...' : 'Sair da conta' }}</strong>
+        <small>Encerre sua sessão neste dispositivo</small>
+      </span>
+      <i class="bi bi-chevron-right profile-summary__chevron" aria-hidden="true"></i>
+    </button>
   </div>
-
-  <span class="profile-summary__divider" aria-hidden="true"></span>
-
-  <aside class="profile-summary__account">
-    <h3>Informações da conta</h3>
-    <p>
-      <i class="bi bi-calendar-event"></i
-      ><span
-        >Membro desde: <strong>{{ memberSince }}</strong></span
-      >
-    </p>
-    <p>
-      <i class="bi bi-people"></i
-      ><span
-        >Perfis de crianças: <strong>{{ childrenCount }}</strong></span
-      >
-    </p>
-    <p>
-      <i class="bi bi-shield-check"></i><span>Segurança: <strong>Conta protegida</strong></span>
-    </p>
-  </aside>
 </section>

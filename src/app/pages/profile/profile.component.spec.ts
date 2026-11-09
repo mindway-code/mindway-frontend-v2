@@ -7,12 +7,9 @@ import { of } from 'rxjs';
 import { ProfileComponent } from './profile.component';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { ChildService } from '../../services/child.service';
 import { ProfileSummaryCardComponent } from './components/profile-summary-card/profile-summary-card.component';
 import { ProfileEditFormComponent } from './components/profile-edit-form/profile-edit-form.component';
-import { ChildrenSectionComponent } from './components/children-section/children-section.component';
-import { ChildCardComponent } from './components/child-card/child-card.component';
-import { ChildCreateFormComponent } from './components/child-create-form/child-create-form.component';
+import { PageSkeletonComponent } from '../../shared/page-skeleton/page-skeleton.component';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -24,9 +21,7 @@ describe('ProfileComponent', () => {
         ProfileComponent,
         ProfileSummaryCardComponent,
         ProfileEditFormComponent,
-        ChildrenSectionComponent,
-        ChildCardComponent,
-        ChildCreateFormComponent,
+        PageSkeletonComponent,
       ],
       imports: [CommonModule, ReactiveFormsModule, RouterTestingModule],
       providers: [
@@ -38,6 +33,7 @@ describe('ProfileComponent', () => {
             error$: of(null),
             loadCurrentUser: () =>
               of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
+            logout: () => of(void 0),
           } satisfies Partial<AuthService>,
         },
         {
@@ -48,27 +44,6 @@ describe('ProfileComponent', () => {
             updateMe: () =>
               of({ id: 'u1', name: 'Test', email: 'test@example.com', role: 'common' }),
           } satisfies Partial<UserService>,
-        },
-        {
-          provide: ChildService,
-          useValue: {
-            children$: of([]),
-            loading$: of(false),
-            saving$: of(false),
-            error$: of(null),
-            loadMyChildren: () => of([]),
-            createChild: () =>
-              of({
-                id: 'c1',
-                responsibleId: 'u1',
-                name: 'Child',
-                age: 1,
-                birthDate: '2020-01-01',
-                accessCode: 'ABC123',
-                createdAt: '2020-01-01',
-                updatedAt: '2020-01-01',
-              }),
-          } satisfies Partial<ChildService>,
         },
       ],
     }).compileComponents();

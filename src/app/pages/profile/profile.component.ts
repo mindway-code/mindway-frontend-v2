@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, HostListener, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { AssociationChildService } from '../../services/association-child.service';
-import { ChildService } from '../../services/child.service';
-import { UserService } from '../../services/user.service';
-import type { CreateAssociationChildDTO } from '../../api/interfaces/association-child.interface';
-import type { ChildRecord, CreateChildDTO } from '../../api/interfaces/child.interface';
+import { finalize, switchMap, take } from 'rxjs';
 import type { UpdateUserDTO } from '../../api/interfaces/user.interface';
-import { map, switchMap, take } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import {
+  LEGAL_CONTENT,
+  LEGAL_UPDATED_AT,
+  LEGAL_VERSION,
+  type LegalAcceptanceRecord,
+  type LegalDocumentType,
+} from '../../shared/legal/legal-content';
 
-interface InviteLink {
-  label: string;
-  description: string;
-  path: string;
-  icon: string;
-}
+type StoredNotificationPreferences = Record<string, boolean> & { inApp?: boolean };
 
 @Component({
   selector: 'app-profile',
@@ -23,68 +23,49 @@ interface InviteLink {
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationStorageKey = 'mindway-notification-preferences';
+  private currentUserId: string | null = null;
+
   readonly user$ = this.authService.currentUser$;
   readonly userError$ = this.authService.error$;
   readonly profileSaving$ = this.userService.saving$;
   readonly profileError$ = this.userService.error$;
-
-  readonly children$ = this.childService.children$;
-  readonly selectedChild$ = this.childService.selectedChild$;
-  readonly selectedChildId$ = this.selectedChild$.pipe(map((child) => child?.id ?? null));
-  readonly childrenLoading$ = this.childService.loading$;
-  readonly childrenSaving$ = this.childService.saving$;
-  readonly childrenError$ = this.childService.error$;
-  readonly associationLoading$ = this.associationChildService.loading$;
-  readonly associationError$ = this.associationChildService.error$;
-
-  readonly inviteLinks: InviteLink[] = [
-    {
-      label: 'Escola',
-      description: 'Convide uma escola para criar acesso institucional.',
-      path: '/link-school',
-      icon: 'bi-building-add',
-    },
-    {
-      label: 'Clínica',
-      description: 'Convide uma clínica para organizar acompanhamentos.',
-      path: '/link-clinic',
-      icon: 'bi-hospital',
-    },
-    {
-      label: 'Terapeuta',
-      description: 'Convide terapeutas para colaborar nos registros.',
-      path: '/link-therapist',
-      icon: 'bi-person-badge',
-    },
-    {
-      label: 'Profissional',
-      description: 'Convide professores, fisioterapeutas e áreas relacionadas.',
-      path: '/link-professional',
-      icon: 'bi-clipboard2-pulse',
-    },
-    {
-      label: 'Responsável',
-      description: 'Convide familiares ou cuidadores para criar uma conta.',
-      path: '/register',
-      icon: 'bi-person-heart',
-    },
-  ];
+  readonly legalContent = LEGAL_CONTENT;
+  readonly legalUpdatedAt = LEGAL_UPDATED_AT;
+  readonly legalVersion = LEGAL_VERSION;
+  readonly passwordForm = this.fb.group({
+    currentPassword: ['', Validators.required],
+    newPassword: ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', Validators.required],
+  });
 
   editMode = false;
-  showCreateChild = false;
+  passwordDialogOpen = false;
+  termsDialogOpen = false;
+  legalDocument: LegalDocumentType = 'terms';
+  legalAccepted = false;
+  legalAcceptanceChecked = false;
+  legalAcceptanceMessage: string | null = null;
+  legalAcceptanceRecord: LegalAcceptanceRecord | null = null;
+  pushNotificationsEnabled = true;
+  loggingOut = false;
   flashMessage: string | null = null;
+  passwordMessage: string | null = null;
 
   constructor(
+    private readonly fb: FormBuilder,
     private readonly authService: AuthService,
-    private readonly associationChildService: AssociationChildService,
     private readonly userService: UserService,
-    private readonly childService: ChildService,
     private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
-    // Children list is profile-specific and not restored automatically.
-    this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 }).pipe(take(1)).subscribe();
+    this.loadPushPreference();
+    this.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
+      this.currentUserId = user?.id ?? null;
+      if (user?.id) this.loadLegalAcceptance(user.id);
+    });
   }
 
   startEdit(): void {
@@ -111,76 +92,169 @@ export class ProfileComponent implements OnInit {
           this.flashMessage = 'Perfil atualizado.';
         },
         error: () => {
-          // Service exposes a user-friendly error message.
+          // UserService exposes a user-friendly message.
         },
       });
   }
 
-  toggleCreateChild(): void {
-    this.showCreateChild = !this.showCreateChild;
-    this.flashMessage = null;
+  openPasswordDialog(): void {
+    this.passwordForm.reset();
+    this.passwordMessage = null;
+    this.passwordDialogOpen = true;
   }
 
-  closeCreateChild(): void {
-    this.showCreateChild = false;
+  closePasswordDialog(): void {
+    this.passwordDialogOpen = false;
+    this.passwordMessage = null;
+    this.passwordForm.reset();
   }
 
-  createChild(payload: CreateChildDTO): void {
-    this.flashMessage = null;
+  @HostListener('document:keydown.escape')
+  closePasswordDialogOnEscape(): void {
+    if (this.termsDialogOpen) {
+      this.closeTermsDialog();
+      return;
+    }
+    if (this.passwordDialogOpen) this.closePasswordDialog();
+  }
 
-    this.childService
-      .createChild(payload)
+  openTermsDialog(): void {
+    this.legalDocument = 'terms';
+    this.legalAcceptanceChecked = false;
+    this.legalAcceptanceMessage = null;
+    this.termsDialogOpen = true;
+  }
+
+  closeTermsDialog(): void {
+    this.termsDialogOpen = false;
+    this.legalAcceptanceChecked = false;
+    this.legalAcceptanceMessage = null;
+  }
+
+  selectLegalDocument(document: LegalDocumentType): void {
+    this.legalDocument = document;
+  }
+
+  acceptLegalDocuments(): void {
+    if (!this.legalAcceptanceChecked) {
+      this.legalAcceptanceMessage =
+        'Confirme que leu e aceita os Termos de Uso e a Política de Privacidade.';
+      return;
+    }
+    if (!this.currentUserId) {
+      this.legalAcceptanceMessage = 'Não foi possível identificar sua conta. Tente novamente.';
+      return;
+    }
+
+    const acceptedAt = new Date().toISOString();
+    const record: LegalAcceptanceRecord = {
+      termsAcceptedAt: acceptedAt,
+      privacyAcceptedAt: acceptedAt,
+      termsVersion: this.legalVersion,
+      privacyVersion: this.legalVersion,
+    };
+
+    try {
+      localStorage.setItem(
+        `mindway-legal-acceptance-${this.currentUserId}`,
+        JSON.stringify(record),
+      );
+      this.legalAcceptanceRecord = record;
+      this.legalAccepted = true;
+      this.closeTermsDialog();
+      this.flashMessage = 'Termos de Uso e Política de Privacidade aceitos.';
+    } catch {
+      this.legalAcceptanceMessage =
+        'Não foi possível registrar o aceite neste navegador. Tente novamente.';
+    }
+  }
+
+  changePassword(): void {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.getRawValue();
+    if (newPassword !== confirmPassword) {
+      this.passwordMessage = 'A nova senha e a confirmação estão diferentes.';
+      return;
+    }
+
+    this.passwordMessage = null;
+    this.userService
+      .changePassword(currentPassword ?? '', newPassword ?? '')
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.showCreateChild = false;
-          this.flashMessage = 'Criança criada.';
+          this.closePasswordDialog();
+          this.flashMessage = 'Senha alterada com sucesso.';
         },
         error: () => {
-          // Service exposes a user-friendly error message.
+          this.passwordMessage =
+            'A senha atual não confere ou não foi possível concluir. Tente novamente.';
         },
       });
   }
 
-  associateChild(payload: CreateAssociationChildDTO): void {
-    this.flashMessage = null;
+  setPushNotifications(enabled: boolean): void {
+    this.pushNotificationsEnabled = enabled;
 
-    this.associationChildService
-      .associateByAccessCode(payload)
+    try {
+      const saved = localStorage.getItem(this.notificationStorageKey);
+      const preferences = saved
+        ? (JSON.parse(saved) as StoredNotificationPreferences)
+        : ({} as StoredNotificationPreferences);
+
+      localStorage.setItem(
+        this.notificationStorageKey,
+        JSON.stringify({ ...preferences, inApp: enabled }),
+      );
+      this.flashMessage = enabled
+        ? 'Notificações push ativadas neste navegador.'
+        : 'Notificações push desativadas neste navegador.';
+    } catch {
+      this.flashMessage = 'Não foi possível salvar a preferência de notificações.';
+    }
+  }
+
+  logout(): void {
+    if (this.loggingOut) return;
+
+    this.loggingOut = true;
+    this.authService
+      .logout()
       .pipe(
-        switchMap(() => this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 })),
         take(1),
+        finalize(() => (this.loggingOut = false)),
       )
-      .subscribe({
-        next: () => {
-          this.flashMessage = 'Criança conectada.';
-        },
-        error: () => {
-          // Service exposes a user-friendly error message.
-        },
-      });
+      .subscribe(() => void this.router.navigate(['/login']));
   }
 
-  onAssociateByAccessCode(payload: CreateAssociationChildDTO): void {
-    this.associateChild(payload);
+  private loadPushPreference(): void {
+    try {
+      const saved = localStorage.getItem(this.notificationStorageKey);
+      if (!saved) return;
+
+      const preferences = JSON.parse(saved) as StoredNotificationPreferences;
+      this.pushNotificationsEnabled = preferences.inApp ?? true;
+    } catch {
+      this.pushNotificationsEnabled = true;
+    }
   }
 
-  onSelectChild(child: ChildRecord | null): void {
-    this.childService.selectChild(child);
-  }
+  private loadLegalAcceptance(userId: string): void {
+    try {
+      const saved = localStorage.getItem(`mindway-legal-acceptance-${userId}`);
+      const record = saved ? (JSON.parse(saved) as LegalAcceptanceRecord) : null;
+      const isCurrentVersion =
+        record?.termsVersion === this.legalVersion && record?.privacyVersion === this.legalVersion;
 
-  onOpenAnamnesis(child: ChildRecord): void {
-    this.router.navigate(['/anamnesis'], { queryParams: { childId: child.id } });
-  }
-
-  getInviteUrl(path: string): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${origin}${path}`;
-  }
-
-  copyInviteLink(path: string): void {
-    const url = this.getInviteUrl(path);
-    void navigator.clipboard?.writeText(url);
-    this.flashMessage = 'Link de convite copiado.';
+      this.legalAcceptanceRecord = isCurrentVersion ? record : null;
+      this.legalAccepted = Boolean(this.legalAcceptanceRecord);
+    } catch {
+      this.legalAcceptanceRecord = null;
+      this.legalAccepted = false;
+    }
   }
 }

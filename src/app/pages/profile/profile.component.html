@@ -1,21 +1,37 @@
-<section class="profile-page">
+<section
+  class="profile-page"
+  [class.profile-page--dialog-open]="passwordDialogOpen || termsDialogOpen"
+>
   <header class="profile-page__hero">
-    <div class="profile-page__hero-content">
-      <h1 class="profile-page__title">Meu perfil</h1>
-      <p class="profile-page__subtitle">
-        Gerencie suas informações pessoais e os perfis de seus filhos em um só lugar.
-      </p>
-    </div>
+    <button
+      *ngIf="editMode"
+      class="profile-page__back"
+      type="button"
+      aria-label="Voltar para as configurações do perfil"
+      (click)="cancelEdit()"
+    >
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    </button>
 
-    <div class="profile-page__hero-actions" *ngIf="editMode">
-      <button class="btn-ui btn-ui--light btn-ui--sm" type="button" (click)="cancelEdit()">
-        Fechar
-      </button>
+    <div class="profile-page__hero-content">
+      <p class="profile-page__eyebrow">Minha conta</p>
+      <h1 class="profile-page__title">{{ editMode ? 'Editar perfil' : 'Configurações' }}</h1>
+      <p class="profile-page__subtitle">
+        {{
+          editMode
+            ? 'Mantenha seus dados de contato atualizados.'
+            : 'Gerencie os dados, a segurança e as preferências da sua conta.'
+        }}
+      </p>
     </div>
   </header>
 
   <div *ngIf="flashMessage" class="profile-page__flash" role="status">
-    {{ flashMessage }}
+    <i class="bi bi-check-circle" aria-hidden="true"></i>
+    <span>{{ flashMessage }}</span>
+    <button type="button" aria-label="Fechar mensagem" (click)="flashMessage = null">
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
   </div>
 
   <div
@@ -26,13 +42,19 @@
     {{ userError }}
   </div>
 
-  <div class="profile-page__grid">
-    <ng-container *ngIf="user$ | async as user; else profileLoadingCards">
+  <main class="profile-page__content">
+    <ng-container *ngIf="user$ | async as user; else profileLoading">
       <app-profile-summary-card
         *ngIf="!editMode"
         [user]="user"
-        [childrenCount]="((children$ | async) ?? []).length"
+        [pushNotificationsEnabled]="pushNotificationsEnabled"
+        [legalAccepted]="legalAccepted"
+        [loggingOut]="loggingOut"
         (edit)="startEdit()"
+        (changePassword)="openPasswordDialog()"
+        (pushNotificationsChange)="setPushNotifications($event)"
+        (openLegalTerms)="openTermsDialog()"
+        (logoutAccount)="logout()"
       ></app-profile-summary-card>
 
       <app-profile-edit-form
@@ -43,9 +65,19 @@
         (save)="saveProfile($event)"
         (cancel)="cancelEdit()"
       ></app-profile-edit-form>
+
+      <aside *ngIf="!editMode" class="profile-page__tip">
+        <span class="profile-page__tip-icon" aria-hidden="true">
+          <i class="bi bi-shield-check"></i>
+        </span>
+        <div>
+          <h2>Uma dica de segurança</h2>
+          <p>Use uma senha exclusiva e revise seus dados sempre que algo mudar.</p>
+        </div>
+      </aside>
     </ng-container>
 
-    <ng-template #profileLoadingCards>
+    <ng-template #profileLoading>
       <app-page-skeleton
         class="profile-page__skeleton"
         variant="detail"
@@ -53,56 +85,185 @@
         label="Carregando perfil"
       ></app-page-skeleton>
     </ng-template>
-  </div>
+  </main>
 
-  <app-children-section
-    [children]="(children$ | async) ?? []"
-    [loading]="(childrenLoading$ | async) ?? false"
-    [saving]="(childrenSaving$ | async) ?? false"
-    [error]="(childrenError$ | async) ?? null"
-    [userRole]="(user$ | async)?.role ?? null"
-    [associationLoading]="(associationLoading$ | async) ?? false"
-    [associationError]="(associationError$ | async) ?? null"
-    [showCreate]="showCreateChild"
-    (toggleCreate)="toggleCreateChild()"
-    (createChild)="createChild($event)"
-    (closeCreate)="closeCreateChild()"
-    (associateChild)="associateChild($event)"
-  ></app-children-section>
+  <div
+    *ngIf="passwordDialogOpen"
+    class="profile-page__dialog-backdrop"
+    (click)="closePasswordDialog()"
+  >
+    <section
+      class="profile-page__password-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="password-dialog-title"
+      (click)="$event.stopPropagation()"
+    >
+      <span class="profile-page__dialog-handle" aria-hidden="true"></span>
+      <header>
+        <div>
+          <h2 id="password-dialog-title">Alterar senha</h2>
+          <p>Confirme sua senha atual antes de criar uma nova.</p>
+        </div>
+        <button type="button" aria-label="Fechar" (click)="closePasswordDialog()">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
 
-  <section class="profile-page__invites card-ui card-ui--md">
-    <header class="profile-page__invites-header">
-      <div>
-        <h2 class="profile-page__section-title">
-          <i class="bi bi-people"></i>
-          Compartilhar acesso
-        </h2>
-        <p class="profile-page__subtitle">
-          Convide instituições e profissionais para acessar informações de forma segura e
-          colaborativa.
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="currentPassword"
+              type="password"
+              placeholder="Senha atual"
+              autocomplete="current-password"
+              autofocus
+            />
+            <label class="input-ui__label">Senha atual</label>
+          </div>
+          <p
+            class="profile-page__field-error"
+            *ngIf="
+              passwordForm.controls.currentPassword.touched &&
+              passwordForm.controls.currentPassword.invalid
+            "
+          >
+            Informe sua senha atual.
+          </p>
+        </div>
+
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="newPassword"
+              type="password"
+              placeholder="Nova senha"
+              autocomplete="new-password"
+            />
+            <label class="input-ui__label">Nova senha</label>
+          </div>
+          <p
+            class="profile-page__field-error"
+            *ngIf="
+              passwordForm.controls.newPassword.touched && passwordForm.controls.newPassword.invalid
+            "
+          >
+            Use pelo menos 8 caracteres.
+          </p>
+        </div>
+
+        <div class="input-ui">
+          <div class="input-ui__field">
+            <input
+              class="input-ui__control"
+              formControlName="confirmPassword"
+              type="password"
+              placeholder="Confirmar nova senha"
+              autocomplete="new-password"
+            />
+            <label class="input-ui__label">Confirmar nova senha</label>
+          </div>
+        </div>
+
+        <p *ngIf="passwordMessage" class="profile-page__password-message" role="alert">
+          {{ passwordMessage }}
         </p>
-      </div>
-    </header>
-
-    <div class="profile-page__invite-grid">
-      <article class="profile-page__invite-card" *ngFor="let invite of inviteLinks">
-        <div class="profile-page__invite-icon" aria-hidden="true">
-          <i class="bi" [ngClass]="invite.icon"></i>
-        </div>
-
-        <div class="profile-page__invite-copy">
-          <h3>{{ invite.label }}</h3>
-          <p>{{ invite.description }}</p>
-        </div>
 
         <button
-          class="btn-ui btn-ui--light btn-ui--sm"
-          type="button"
-          (click)="copyInviteLink(invite.path)"
+          class="btn-ui btn-ui--green profile-page__password-submit"
+          type="submit"
+          [disabled]="(profileSaving$ | async) ?? false"
         >
-          Copiar código
+          {{ ((profileSaving$ | async) ?? false) ? 'Salvando...' : 'Salvar nova senha' }}
         </button>
-      </article>
-    </div>
-  </section>
+      </form>
+    </section>
+  </div>
+
+  <div *ngIf="termsDialogOpen" class="profile-page__dialog-backdrop" (click)="closeTermsDialog()">
+    <section
+      class="profile-page__legal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="legal-dialog-title"
+      (click)="$event.stopPropagation()"
+    >
+      <span class="profile-page__dialog-handle" aria-hidden="true"></span>
+      <header class="profile-page__legal-header">
+        <div>
+          <h2 id="legal-dialog-title">Termos e privacidade</h2>
+          <p>
+            Última atualização:
+            {{ legalUpdatedAt | date: "dd 'de' MMMM 'de' y" : '' : 'pt-BR' }}
+          </p>
+        </div>
+        <button type="button" aria-label="Fechar termos" (click)="closeTermsDialog()">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <nav class="profile-page__legal-tabs" aria-label="Documentos legais">
+        <button
+          type="button"
+          [class.is-active]="legalDocument === 'terms'"
+          [attr.aria-current]="legalDocument === 'terms' ? 'page' : null"
+          (click)="selectLegalDocument('terms')"
+        >
+          Termos de uso
+        </button>
+        <button
+          type="button"
+          [class.is-active]="legalDocument === 'privacy'"
+          [attr.aria-current]="legalDocument === 'privacy' ? 'page' : null"
+          (click)="selectLegalDocument('privacy')"
+        >
+          Política de privacidade
+        </button>
+      </nav>
+
+      <div class="profile-page__legal-body" tabindex="0">
+        <section *ngFor="let section of legalContent[legalDocument]; let i = index">
+          <h3>{{ i + 1 }}. {{ section.title }}</h3>
+          <p *ngFor="let paragraph of section.paragraphs">{{ paragraph }}</p>
+        </section>
+      </div>
+
+      <footer class="profile-page__legal-footer">
+        <ng-container *ngIf="!legalAccepted; else acceptedTerms">
+          <label class="profile-page__legal-consent">
+            <input type="checkbox" [(ngModel)]="legalAcceptanceChecked" />
+            <span>
+              Li e aceito os Termos de Uso e a Política de Privacidade do MindWay.
+              <small>O aceite registra a data e a versão atual dos documentos.</small>
+            </span>
+          </label>
+
+          <p *ngIf="legalAcceptanceMessage" class="profile-page__legal-error" role="alert">
+            {{ legalAcceptanceMessage }}
+          </p>
+
+          <button class="btn-ui btn-ui--green" type="button" (click)="acceptLegalDocuments()">
+            Aceitar e continuar
+          </button>
+        </ng-container>
+
+        <ng-template #acceptedTerms>
+          <div class="profile-page__legal-accepted">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <span>
+              Documentos aceitos em
+              {{ legalAcceptanceRecord?.termsAcceptedAt | date: 'dd/MM/yyyy' : '' : 'pt-BR' }} ·
+              versão {{ legalAcceptanceRecord?.termsVersion }}
+            </span>
+          </div>
+          <button class="btn-ui btn-ui--green" type="button" (click)="closeTermsDialog()">
+            Concluir
+          </button>
+        </ng-template>
+      </footer>
+    </section>
+  </div>
 </section>

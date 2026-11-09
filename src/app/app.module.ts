@@ -33,8 +33,6 @@ import { RegisterTherapistComponent } from './auth/register-therapist/register-t
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileSummaryCardComponent } from './pages/profile/components/profile-summary-card/profile-summary-card.component';
 import { ProfileEditFormComponent } from './pages/profile/components/profile-edit-form/profile-edit-form.component';
-import { ChildrenSectionComponent } from './pages/profile/components/children-section/children-section.component';
-import { ChildCardComponent } from './pages/profile/components/child-card/child-card.component';
 import { ChildCreateFormComponent } from './pages/profile/components/child-create-form/child-create-form.component';
 import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
 import { ChildSelectorComponent } from './pages/anamnesis/components/child-selector/child-selector.component';
@@ -89,8 +87,6 @@ registerLocaleData(localePt);
     ProfileComponent,
     ProfileSummaryCardComponent,
     ProfileEditFormComponent,
-    ChildrenSectionComponent,
-    ChildCardComponent,
     ChildCreateFormComponent,
     HomeComponent,
     HowItWorksComponent,

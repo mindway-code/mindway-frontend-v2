@@ -54,12 +54,44 @@
         >
           <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
+        <span class="family-search__divider" aria-hidden="true"></span>
+        <button
+          class="family-search__filter"
+          [class.is-active]="activeFilterCount > 0"
+          type="button"
+          aria-haspopup="dialog"
+          [attr.aria-label]="
+            activeFilterCount
+              ? 'Abrir filtros. ' + activeFilterCount + ' filtros aplicados'
+              : 'Abrir filtros'
+          "
+          (click)="openFilterDialog()"
+        >
+          <i class="bi bi-sliders" aria-hidden="true"></i>
+          <span>Filtros</span>
+          <strong *ngIf="activeFilterCount" aria-hidden="true">{{ activeFilterCount }}</strong>
+        </button>
+      </div>
+
+      <div class="family-search__badges" *ngIf="activeFilterBadges.length">
+        <span class="family-search__badge" *ngFor="let badge of activeFilterBadges">
+          {{ badge.label }}
+          <button
+            type="button"
+            (click)="removeFilter(badge.key)"
+            [attr.aria-label]="'Remover filtro ' + badge.label"
+          >
+            <i class="bi bi-x" aria-hidden="true"></i>
+          </button>
+        </span>
+        <button class="family-search__clear-filters" type="button" (click)="clearAllFilters()">
+          Limpar filtros
+        </button>
       </div>
     </section>
 
     <div class="family-workspace">
       <aside class="family-profile" aria-labelledby="family-profile-title">
-
         <div class="family-profile__summary">
           <span>Perfis das crianças</span>
           <strong>{{ children.length }}</strong>
@@ -131,10 +163,10 @@
             </span>
             <div>
               <h3>Nenhuma criança encontrada</h3>
-              <p>Tente buscar por outro nome ou diagnóstico.</p>
+              <p>Revise a busca ou remova alguns filtros aplicados.</p>
             </div>
-            <button type="button" class="family-search-reset" (click)="clearSearch()">
-              Limpar busca
+            <button type="button" class="family-search-reset" (click)="clearSearchAndFilters()">
+              Limpar busca e filtros
             </button>
           </div>
         </ng-template>
@@ -199,5 +231,130 @@
         </section>
       </aside>
     </div>
+  </div>
+
+  <div *ngIf="filterDialogOpen" class="family-filter-backdrop" (click)="closeFilterDialog()">
+    <section
+      class="family-filter-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="family-filter-title"
+      (click)="$event.stopPropagation()"
+    >
+      <span class="family-filter-dialog__handle" aria-hidden="true"></span>
+      <header class="family-filter-dialog__header">
+        <div>
+          <p class="family-eyebrow">Refinar resultados</p>
+          <h2 id="family-filter-title">Filtros</h2>
+          <p>Combine opções para localizar uma criança mais rapidamente.</p>
+        </div>
+        <button type="button" aria-label="Fechar filtros" (click)="closeFilterDialog()">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <div class="family-filter-dialog__body">
+        <fieldset class="family-filter-group">
+          <legend>Faixa etária</legend>
+          <p>Você pode selecionar mais de uma opção.</p>
+          <div class="family-filter-toggles">
+            <button
+              *ngFor="let option of ageGroupOptions"
+              type="button"
+              [class.is-selected]="isDraftAgeGroupSelected(option.value)"
+              [attr.aria-pressed]="isDraftAgeGroupSelected(option.value)"
+              (click)="toggleDraftAgeGroup(option.value)"
+            >
+              <strong>{{ option.label }}</strong>
+              <span>{{ option.description }}</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset class="family-filter-group">
+          <legend>Diagnóstico</legend>
+          <div class="family-filter-choice" role="group" aria-label="Presença de diagnóstico">
+            <button
+              type="button"
+              [class.is-selected]="draftFilters.diagnosisStatus === 'all'"
+              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'all'"
+              (click)="setDraftDiagnosisStatus('all')"
+            >
+              Todos
+            </button>
+            <button
+              type="button"
+              [class.is-selected]="draftFilters.diagnosisStatus === 'with-diagnosis'"
+              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'with-diagnosis'"
+              (click)="setDraftDiagnosisStatus('with-diagnosis')"
+            >
+              Com diagnóstico
+            </button>
+            <button
+              type="button"
+              [class.is-selected]="draftFilters.diagnosisStatus === 'without-diagnosis'"
+              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'without-diagnosis'"
+              (click)="setDraftDiagnosisStatus('without-diagnosis')"
+            >
+              Sem diagnóstico
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset class="family-filter-group">
+          <legend>Busca específica</legend>
+          <p>Use estes campos quando precisar de um resultado mais preciso.</p>
+
+          <label class="family-filter-field">
+            <span>Diagnóstico contém</span>
+            <input
+              type="search"
+              autocomplete="off"
+              placeholder="Ex.: autismo"
+              [value]="draftFilters.diagnosisQuery"
+              (input)="updateDraftDiagnosisQuery($event)"
+            />
+          </label>
+
+          <div class="family-filter-age-fields">
+            <label class="family-filter-field">
+              <span>Idade mínima</span>
+              <input
+                type="number"
+                min="0"
+                inputmode="numeric"
+                placeholder="0"
+                [value]="draftFilters.minimumAge ?? ''"
+                (input)="updateDraftAge($event, 'minimumAge')"
+              />
+            </label>
+            <label class="family-filter-field">
+              <span>Idade máxima</span>
+              <input
+                type="number"
+                min="0"
+                inputmode="numeric"
+                placeholder="21"
+                [value]="draftFilters.maximumAge ?? ''"
+                (input)="updateDraftAge($event, 'maximumAge')"
+              />
+            </label>
+          </div>
+        </fieldset>
+
+        <p *ngIf="filterError" class="family-filter-dialog__error" role="alert">
+          {{ filterError }}
+        </p>
+      </div>
+
+      <footer class="family-filter-dialog__footer">
+        <button class="family-filter-dialog__reset" type="button" (click)="clearDraftFilters()">
+          Limpar
+        </button>
+        <button class="button-primary" type="button" (click)="applyFilters()">
+          Aplicar filtros
+        </button>
+      </footer>
+    </section>
   </div>
 </ng-template>

@@ -3,29 +3,31 @@
 @import './app/shared/ui/card';
 @import './app/shared/ui/input';
 @import './app/shared/ui/select';
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500&family=Nunito:wght@400;500;600&display=swap');
 
 :root {
   margin: 0;
 
-  --font: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font: 'Fraunces', 'Helvetica Neue', serif, sans-serif;
+  --font-heading: 'Fraunces', Georgia, serif;
 
   /* backgrounds */
-  --bg-green: #006c70;
-  --bg-green-light: #006c7032;
-  --bg-accent: #80d4c9;
-  --bg-light: #f4f7f6;
+  --bg-green: #2d7774;
+  --bg-green-light: #e6f2ef;
+  --bg-accent: #a8d8cf;
+  --bg-light: #f5f8f7;
   --bg-white: #ffffff;
-  --bg-blue: #eef8ff;
-  --bg-blue-dark: #1463b8;
+  --bg-blue: #edf5f9;
+  --bg-blue-dark: #456f8d;
 
   /* text */
-  --text-dark: #212529;
-  --text-muted: #6c757d;
-  --text-light: #f8f9fa;
-  --text-accent: #80d4c9;
-  --text-green: #006c70;
-  --text-blue: #eef8ff;
-  --text-blue-dark: #1463b8;
+  --text-dark: #293638;
+  --text-muted: #69797d;
+  --text-light: #f7faf9;
+  --text-accent: #34796f;
+  --text-green: #286e69;
+  --text-blue: #376f88;
+  --text-blue-dark: #345d78;
 
   /* borders color */
   --border-light: #dfe5e4;
@@ -102,8 +104,18 @@
 
 
 body {
+  /* ========================================
+     Base
+  ======================================== */
+
   margin: 0;
   background-color: var(--theme-colors);
+  font-family: 'Nunito' !important;
+
+  /* ========================================
+     Typography
+  ======================================== */
+
   h1,
   h2,
   h3,
@@ -114,34 +126,34 @@ body {
   a,
   label,
   ::placeholder {
-    font-family: 'Montserrat';
+    font-family: 'Nunito';
   }
+
   p {
     font-size: 0.9rem;
   }
-  button,
-  input {
-    outline: none;
-  }
+
   ::placeholder {
     font-size: 1rem;
   }
-  
+
   h1 {
     font-size: var(--font-size-xlg) !important;
   }
+
   h2 {
     font-size: var(--font-size-lg) !important;
   }
-  h3 {
-    font-size: var(--font-size-md) !important;
-  }
+
+  h3,
   h4 {
     font-size: var(--font-size-md) !important;
   }
+
   h5 {
     font-size: .86rem !important;
   }
+
   a,
   p,
   b,
@@ -152,62 +164,100 @@ body {
   i {
     font-size: var(--font-size-md) !important;
   }
-  ::placeholder, 
-  span, small, 
+
+  ::placeholder,
+  span,
+  small,
   time,
-  button, a, li {
+  button,
+  a,
+  li {
     font-size: var(--font-size-sm) !important;
+    font-family: 'Nunito' !important;
   }
+
+  /* ========================================
+     Interactive Elements
+  ======================================== */
+
+  button,
+  input {
+    outline: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  time {
+    color: var(--text-dark) !important;
+    font-family: 'Nunito' !important;
+  }
+
+  /* ========================================
+     Form Controls
+  ======================================== */
+
   select {
     cursor: pointer;
+    font-family: 'Nunito' !important;
     font-size: var(--font-size-sm) !important;
+
     &:focus {
       outline: none !important;
     }
   }
-  a {
-    text-decoration: none;
-  }
-  time {
-    color: var(--text-dark) !important;
-  }
 
   input::-webkit-clear-button,
   input::-webkit-search-cancel-button {
-      -webkit-appearance: none !important;
-      display: none !important;
+    -webkit-appearance: none !important;
+    display: none !important;
   }
+
   input::-ms-clear {
-      display: none !important;
-      width: 0;
-      height: 0;
+    display: none !important;
+    width: 0;
+    height: 0;
   }
+
   input:focus {
-        outline: none !important;
-        color: var(--text-dark);
-        box-shadow: none;
-      }
+    outline: none !important;
+    color: var(--text-dark);
+    box-shadow: none;
+  }
 
   input[type="checkbox"] {
     cursor: pointer;
   }
-  // margin-top: 2rem;
+
+  /* ========================================
+     Responsive — Mobile / Tablet
+  ======================================== */
+
   @media (max-width: 900px) {
+
+    /* Typography */
+
     h1 {
       font-size: 1.3rem !important;
     }
+
     h2 {
       font-size: 1.1rem !important;
     }
+
     h3 {
       font-size: 1rem !important;
     }
+
     h4 {
       font-size: .9rem !important;
     }
+
     h5 {
       font-size: .86rem !important;
     }
+
     a,
     p,
     .card-text,
@@ -218,11 +268,13 @@ body {
     select {
       font-size: 0.8rem !important;
     }
+
     ::placeholder {
       font-size: 0.8rem !important;
     }
 
-      /* O seletor sem nada antes pega o body E qualquer elemento com scroll nos navegadores WebKit */
+    /* Scrollbars — WebKit */
+
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -237,14 +289,15 @@ body {
       border-radius: 10px;
     }
 
-    /* O asterisco (*) garante o funcionamento global no Firefox */
+    /* Scrollbars — Firefox */
+
     * {
       scrollbar-width: .5px;
       scrollbar-color: #fff transparent !important;
     }
-
   }
 }
+
 
 .input-primary {
   display: flex;

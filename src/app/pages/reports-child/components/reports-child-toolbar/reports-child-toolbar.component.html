@@ -1,0 +1,45 @@
+<div class="reports-toolbar">
+  <div class="reports-toolbar__actions">
+    <button
+      *ngIf="canCreate"
+      class="reports-toolbar__primary"
+      type="button"
+      (click)="create.emit()"
+    >
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Novo relatório
+    </button>
+    <button
+      *ngIf="hasSelection"
+      class="reports-toolbar__secondary"
+      type="button"
+      (click)="openSelected.emit()"
+    >
+      <i class="bi bi-eye" aria-hidden="true"></i>
+      Abrir selecionado
+    </button>
+  </div>
+
+  <div class="reports-toolbar__filters" *ngIf="filtersVisible">
+    <label>
+      <i class="bi bi-people" aria-hidden="true"></i>
+      <span class="visually-hidden">Filtrar por acesso</span>
+      <select [value]="accessFilter" (change)="updateAccessFilter($event)">
+        <option value="all">Todos os acessos</option>
+        <option value="manageable">Editáveis por mim</option>
+        <option value="shared">Compartilhados</option>
+      </select>
+    </label>
+
+    <label>
+      <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
+      <span class="visually-hidden">Ordenar relatórios</span>
+      <select [value]="sortOrder" (change)="updateSort($event)">
+        <option value="recent">Mais recentes</option>
+        <option value="oldest">Mais antigos</option>
+      </select>
+    </label>
+
+    <button *ngIf="hasFilters" type="button" (click)="clear.emit()">Limpar filtros</button>
+  </div>
+</div>

@@ -54,9 +54,10 @@ import { ChildFormPreviewComponent } from './pages/child-profile/components/chil
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 import { ReportsChildSelectorComponent } from './pages/reports-child/components/reports-child-selector/reports-child-selector.component';
 import { ReportsChildListComponent } from './pages/reports-child/components/reports-child-list/reports-child-list.component';
-import { ReportsChildCardComponent } from './pages/reports-child/components/reports-child-card/reports-child-card.component';
 import { ReportsChildFormComponent } from './pages/reports-child/components/reports-child-form/reports-child-form.component';
 import { ReportsChildEmptyStateComponent } from './pages/reports-child/components/reports-child-empty-state/reports-child-empty-state.component';
+import { ReportsChildToolbarComponent } from './pages/reports-child/components/reports-child-toolbar/reports-child-toolbar.component';
+import { ReportDetailsDialogComponent } from './pages/reports-child/components/report-details-dialog/report-details-dialog.component';
 import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
 import { LinkTherapistComponent } from './auth/link-therapist/link-therapist.component';
@@ -119,9 +120,10 @@ registerLocaleData(localePt);
     ReportsChildComponent,
     ReportsChildSelectorComponent,
     ReportsChildListComponent,
-    ReportsChildCardComponent,
     ReportsChildFormComponent,
     ReportsChildEmptyStateComponent,
+    ReportsChildToolbarComponent,
+    ReportDetailsDialogComponent,
     LinkSchoolComponent,
     LinkClinicComponent,
     LinkProfessionalComponent,

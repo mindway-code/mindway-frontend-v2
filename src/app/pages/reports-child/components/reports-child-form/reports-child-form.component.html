@@ -1,97 +1,65 @@
-<section class="card-ui card-ui--md reports-child-form">
-  <div class="card-ui__body">
-    <div class="reports-child-form__header">
+<div class="report-form__backdrop" (click)="cancel.emit()">
+  <section
+    class="report-form"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="report-form-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="report-form__header">
       <div>
-        <h2 class="card-ui__title">
+        <p>{{ mode === 'create' ? 'Novo registro' : 'Atualizar registro' }}</p>
+        <h2 id="report-form-title">
           {{ mode === 'create' ? 'Criar relatório' : 'Editar relatório' }}
         </h2>
-        <p class="card-ui__subtitle reports-child-form__subtitle">
-          Registre as notas mais relevantes de forma estruturada e fácil de revisar depois.
-        </p>
+        <small>Organize somente as informações relevantes para o acompanhamento.</small>
       </div>
-
       <button
-        class="btn-ui btn-ui--outline btn-ui--sm"
         type="button"
         [disabled]="saving"
         (click)="cancel.emit()"
+        aria-label="Fechar formulário"
       >
-        Cancelar
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
       </button>
-    </div>
+    </header>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="reports-child-form__grid">
-      <div class="input-ui reports-child-form__span-2">
-        <div class="input-ui__field">
-          <input
-            id="rTitle"
-            class="input-ui__control"
-            type="text"
-            formControlName="title"
-            [disabled]="saving"
-            placeholder=" "
-          />
-          <label class="input-ui__label" for="rTitle">Título</label>
-        </div>
-        <p class="input-ui__hint">
-          Ex: acompanhamento semanal, retorno da escola ou resumo da terapia.
-        </p>
-      </div>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="report-form__body">
+      <label class="report-form__field report-form__field--wide">
+        <span>Título do relatório</span>
+        <input type="text" formControlName="title" [disabled]="saving" autocomplete="off" />
+        <small *ngIf="form.controls.title.touched && form.controls.title.invalid" role="alert">
+          Informe um título para continuar.
+        </small>
+      </label>
 
-      <div class="input-ui">
-        <div class="input-ui__field reports-child-form__textarea-field">
-          <textarea
-            id="rBehavior"
-            class="input-ui__control"
-            rows="4"
-            formControlName="behavior"
-            [disabled]="saving"
-            placeholder=" "
-          ></textarea>
-          <label class="input-ui__label" for="rBehavior">Comportamento</label>
-        </div>
-        <p class="input-ui__hint">Descreva comportamentos observados, interações ou padrões.</p>
-      </div>
+      <label class="report-form__field">
+        <span>Comportamento e observações</span>
+        <textarea rows="6" formControlName="behavior" [disabled]="saving"></textarea>
+        <small>Descreva fatos observados e o contexto.</small>
+      </label>
 
-      <div class="input-ui">
-        <div class="input-ui__field reports-child-form__textarea-field">
-          <textarea
-            id="rDifficulty"
-            class="input-ui__control"
-            rows="4"
-            formControlName="difficulty"
-            [disabled]="saving"
-            placeholder=" "
-          ></textarea>
-          <label class="input-ui__label" for="rDifficulty">Dificuldade</label>
-        </div>
-        <p class="input-ui__hint">
-          Registre desafios, obstáculos ou situações que precisam de atenção.
-        </p>
-      </div>
+      <label class="report-form__field">
+        <span>Dificuldades identificadas</span>
+        <textarea rows="6" formControlName="difficulty" [disabled]="saving"></textarea>
+        <small>Registre situações que precisam de atenção.</small>
+      </label>
 
-      <div class="input-ui reports-child-form__span-2">
-        <div class="input-ui__field reports-child-form__textarea-field">
-          <textarea
-            id="rRecommendation"
-            class="input-ui__control"
-            rows="4"
-            formControlName="recommendation"
-            [disabled]="saving"
-            placeholder=" "
-          ></textarea>
-          <label class="input-ui__label" for="rRecommendation">Recomendação</label>
-        </div>
-        <p class="input-ui__hint">
-          Adicione próximos passos, orientações ou ações para os responsáveis.
-        </p>
-      </div>
+      <label class="report-form__field report-form__field--wide">
+        <span>Recomendações</span>
+        <textarea rows="5" formControlName="recommendation" [disabled]="saving"></textarea>
+        <small>Inclua orientações e próximos passos possíveis.</small>
+      </label>
 
-      <div class="reports-child-form__actions">
-        <button class="btn-ui btn-ui--green" type="submit" [disabled]="saving">
-          {{ mode === 'create' ? 'Criar' : 'Salvar' }}
+      <footer class="report-form__actions">
+        <button class="button-secondary" type="button" [disabled]="saving" (click)="cancel.emit()">
+          Cancelar
         </button>
-      </div>
+        <button class="button-primary" type="submit" [disabled]="saving">
+          <i class="bi" [ngClass]="saving ? 'bi-arrow-repeat' : 'bi-check2'" aria-hidden="true"></i>
+          {{ saving ? 'Salvando...' : mode === 'create' ? 'Criar relatório' : 'Salvar alterações' }}
+        </button>
+      </footer>
     </form>
-  </div>
-</section>
+  </section>
+</div>

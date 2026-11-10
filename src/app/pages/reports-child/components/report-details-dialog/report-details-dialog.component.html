@@ -1,0 +1,64 @@
+<div class="report-dialog__backdrop" (click)="close.emit()">
+  <section
+    class="report-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="report-dialog-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="report-dialog__header">
+      <div>
+        <p>{{ typeLabel }}</p>
+        <h2 id="report-dialog-title">{{ report.title }}</h2>
+        <small>{{ author }} · {{ report.createdAt | date: 'dd MMMM yyyy' : '' : 'pt-BR' }}</small>
+      </div>
+      <button type="button" (click)="close.emit()" aria-label="Fechar relatório">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <article class="report-dialog__document">
+      <section *ngIf="report.behavior">
+        <h3>Comportamento e observações</h3>
+        <p>{{ report.behavior }}</p>
+      </section>
+      <section *ngIf="report.difficulty">
+        <h3>Dificuldades identificadas</h3>
+        <p>{{ report.difficulty }}</p>
+      </section>
+      <section *ngIf="report.recommendation">
+        <h3>Recomendações</h3>
+        <p>{{ report.recommendation }}</p>
+      </section>
+      <div
+        class="report-dialog__empty"
+        *ngIf="!report.behavior && !report.difficulty && !report.recommendation"
+      >
+        <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+        <p>Este relatório não possui detalhes adicionais.</p>
+      </div>
+    </article>
+
+    <footer class="report-dialog__footer">
+      <button class="button-secondary" type="button" (click)="print()">
+        <i class="bi bi-printer" aria-hidden="true"></i>Imprimir
+      </button>
+      <button
+        *ngIf="report.canManage"
+        class="button-secondary report-dialog__delete"
+        type="button"
+        (click)="delete.emit(report)"
+      >
+        Excluir
+      </button>
+      <button
+        *ngIf="report.canManage"
+        class="button-primary"
+        type="button"
+        (click)="edit.emit(report)"
+      >
+        Editar relatório
+      </button>
+    </footer>
+  </section>
+</div>

@@ -1,8 +1,48 @@
-.reports-child-empty .card-ui__subtitle {
-  margin-top: 8px;
+.reports-empty-page {
+  display: grid;
+  justify-items: center;
+  gap: var(--gap-sm);
+  min-height: 20rem;
+  padding: var(--gap-xlg) var(--padding-lg);
+  place-content: center;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-white);
+  color: var(--text-muted);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    margin-top: var(--gap-sm);
+    color: var(--text-dark);
+    font-weight: var(--fw-lg);
+  }
+
+  p {
+    max-width: 34rem;
+    line-height: 1.55;
+  }
+
+  .button-primary {
+    margin-top: var(--gap-md);
+  }
 }
 
-.reports-child-empty {
-  border: 1px solid rgba(223, 229, 228, 0.9);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(244, 247, 246, 0.82));
+.reports-empty-page__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--bg-green-light);
+  color: var(--text-green);
+
+  i {
+    font-size: var(--font-size-xlg) !important;
+  }
 }

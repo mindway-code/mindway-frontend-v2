@@ -1,27 +1,133 @@
-<section class="reports-child-list">
-  <ng-container *ngIf="loading">
-    <app-page-skeleton
-      variant="list"
-      [rows]="4"
-      label="Carregando relat&#243;rios"
-    ></app-page-skeleton>
-  </ng-container>
+<app-page-skeleton
+  *ngIf="loading"
+  class="reports-table__loading"
+  variant="list"
+  [rows]="6"
+  [compact]="true"
+  label="Carregando relatórios"
+></app-page-skeleton>
 
-  <ng-container *ngIf="!loading">
-    <app-reports-child-empty-state
-      *ngIf="selectedChildId && (reports?.length ?? 0) === 0"
-      variant="no-reports"
-      (create)="create.emit()"
-    />
+<div class="reports-empty" *ngIf="!loading && !reports.length">
+  <span aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+  <div>
+    <h3>{{ hasActiveFilters ? 'Nenhum relatório encontrado' : 'Nenhum relatório disponível' }}</h3>
+    <p>
+      {{
+        hasActiveFilters
+          ? 'Revise a pesquisa ou remova os filtros aplicados.'
+          : 'Os registros compartilhados para esta criança aparecerão aqui.'
+      }}
+    </p>
+  </div>
+  <button *ngIf="hasActiveFilters" type="button" (click)="clearFilters.emit()">
+    Limpar filtros
+  </button>
+</div>
 
-    <div class="reports-child-list__grid" *ngIf="(reports?.length ?? 0) > 0">
-      <app-reports-child-card
-        *ngFor="let report of reports; trackBy: trackById"
-        [report]="report"
-        [canManage]="!!report.canManage"
-        (edit)="edit.emit($event)"
-        (delete)="delete.emit(report)"
+<div class="reports-table" *ngIf="!loading && reports.length" role="table">
+  <div class="reports-table__header" role="row">
+    <span role="columnheader" class="reports-table__select-heading">
+      <span class="visually-hidden">Selecionar</span>
+    </span>
+    <span role="columnheader">Relatório</span>
+    <span role="columnheader">Criado por</span>
+    <span role="columnheader">Tipo</span>
+    <span role="columnheader">Data</span>
+    <span role="columnheader">Acesso</span>
+    <span class="visually-hidden">Ações</span>
+  </div>
+
+  <article
+    class="reports-table__row"
+    role="row"
+    [class.is-selected]="selectedReportId === report.id"
+    *ngFor="let report of reports; trackBy: trackById"
+  >
+    <label class="reports-table__checkbox" role="cell">
+      <span class="visually-hidden">Selecionar {{ report.title }}</span>
+      <input
+        type="checkbox"
+        [checked]="selectedReportId === report.id"
+        (change)="toggleSelection(report, $any($event.target).checked)"
       />
+    </label>
+    <button class="reports-table__title" role="cell" type="button" (click)="open.emit(report)">
+      <span class="reports-table__document" aria-hidden="true">
+        <i class="bi bi-file-earmark-text"></i>
+      </span>
+      <span>
+        <strong>{{ report.title }}</strong>
+        <small>#{{ report.id | slice: 0 : 8 }}</small>
+      </span>
+    </button>
+
+    <span class="reports-table__author" role="cell" data-label="Criado por">
+      <span aria-hidden="true">{{ authorInitial(report) }}</span>
+      <strong>{{ reportAuthor(report) }}</strong>
+    </span>
+    <span class="reports-table__type" role="cell" data-label="Tipo">{{ roleLabel(report) }}</span>
+    <time role="cell" [attr.datetime]="report.createdAt" data-label="Data">
+      {{ report.createdAt | date: 'dd MMM yyyy' : '' : 'pt-BR' }}
+    </time>
+    <span
+      class="reports-table__access"
+      role="cell"
+      [class.reports-table__access--manageable]="report.canManage"
+      data-label="Acesso"
+    >
+      <i class="bi" [ngClass]="report.canManage ? 'bi-pencil' : 'bi-people'" aria-hidden="true"></i>
+      {{ report.canManage ? 'Editável' : 'Compartilhado' }}
+    </span>
+
+    <div class="reports-table__actions" role="cell">
+      <button type="button" (click)="open.emit(report)" aria-label="Abrir relatório">
+        <i class="bi bi-eye" aria-hidden="true"></i>
+      </button>
+      <button
+        *ngIf="report.canManage"
+        type="button"
+        (click)="edit.emit(report)"
+        aria-label="Editar relatório"
+      >
+        <i class="bi bi-pencil" aria-hidden="true"></i>
+      </button>
+      <button
+        *ngIf="report.canManage"
+        class="reports-table__delete"
+        type="button"
+        (click)="delete.emit(report)"
+        aria-label="Excluir relatório"
+      >
+        <i class="bi bi-trash3" aria-hidden="true"></i>
+      </button>
     </div>
-  </ng-container>
-</section>
+  </article>
+
+  <footer class="reports-table__footer" *ngIf="pagination as page">
+    <span>
+      {{ (page.page - 1) * page.pageSize + 1 }}–{{
+        page.page * page.pageSize > page.total ? page.total : page.page * page.pageSize
+      }}
+      de {{ page.total }} registros
+    </span>
+    <nav aria-label="Paginação dos relatórios">
+      <button
+        type="button"
+        [disabled]="page.page <= 1"
+        (click)="pageChange.emit(page.page - 1)"
+        aria-label="Página anterior"
+      >
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+      <span>Página {{ page.page }} de {{ page.totalPages }}</span>
+      <button
+        type="button"
+        [disabled]="page.page >= page.totalPages"
+        (click)="pageChange.emit(page.page + 1)"
+        aria-label="Próxima página"
+      >
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </nav>
+  </footer>
+</div>

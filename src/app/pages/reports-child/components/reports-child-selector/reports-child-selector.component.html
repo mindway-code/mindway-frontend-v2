@@ -1,44 +1,96 @@
-<section class="child-selector" aria-labelledby="child-selector-title">
-  <div class="child-selector__label">
-    <span class="child-selector__avatar" aria-hidden="true">
-      <img
-        *ngIf="selectedChild && getPhoto(selectedChild) as photo; else childInitial"
-        [src]="photo"
-        alt=""
-      />
-      <ng-template #childInitial>{{ selectedChild ? getInitial(selectedChild) : 'C' }}</ng-template>
-    </span>
-    <div>
-      <span id="child-selector-title">Criança</span>
-      <strong>{{ selectedChild?.name || 'Selecionar' }}</strong>
-    </div>
-  </div>
+<button
+  class="child-selector-trigger"
+  type="button"
+  [disabled]="loading || !children.length"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="dialogOpen"
+  (click)="openDialog()"
+>
+  <span class="child-selector-trigger__avatar" aria-hidden="true">
+    <img
+      *ngIf="selectedChild && getPhoto(selectedChild) as photo; else childInitial"
+      [src]="photo"
+      alt=""
+    />
+    <ng-template #childInitial>{{ selectedChild ? getInitial(selectedChild) : 'C' }}</ng-template>
+  </span>
+  <span class="child-selector-trigger__copy">
+    <small>Criança</small>
+    <strong>{{ selectedChild?.name || 'Selecionar criança' }}</strong>
+  </span>
+  <span class="child-selector-trigger__action">
+    Trocar
+    <i class="bi bi-chevron-down" aria-hidden="true"></i> 
+  </span>
+</button>
 
-  <div class="child-selector__controls">
-    <label class="child-selector__search">
-      <i class="bi bi-search" aria-hidden="true"></i>
+<div class="child-picker-backdrop" *ngIf="dialogOpen" (click)="closeDialog()">
+  <section
+    class="child-picker"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="child-picker-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="child-picker__header">
+      <div>
+        <p>Perfis vinculados</p>
+        <h2 id="child-picker-title">Selecionar criança</h2>
+      </div>
+      <button type="button" aria-label="Fechar seleção de criança" (click)="closeDialog()">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <label class="child-picker__search">
       <span class="visually-hidden">Pesquisar criança</span>
+      <i class="bi bi-search" aria-hidden="true"></i>
       <input
+        #searchInput
         type="search"
         autocomplete="off"
-        placeholder="Buscar criança"
+        placeholder="Buscar por nome ou idade"
         [value]="searchTerm"
         (input)="updateSearch($event)"
       />
+      <button
+        *ngIf="searchTerm"
+        type="button"
+        aria-label="Limpar busca"
+        (click)="searchTerm = ''; searchInput.focus()"
+      >
+        <i class="bi bi-x" aria-hidden="true"></i>
+      </button>
     </label>
 
-    <label class="child-selector__select">
-      <span class="visually-hidden">Selecionar criança</span>
-      <select
-        [disabled]="loading || !children.length"
-        [value]="selectedChildId || ''"
-        (change)="selectChild($event)"
+    <div class="child-picker__results" aria-live="polite">
+      <button
+        class="child-picker__option"
+        *ngFor="let child of filteredChildren; trackBy: trackById"
+        type="button"
+        [class.is-selected]="child.id === selectedChildId"
+        (click)="selectChild(child)"
       >
-        <option value="" disabled>Selecione</option>
-        <option *ngFor="let child of filteredChildren; trackBy: trackById" [value]="child.id">
-          {{ child.name }} — {{ child.age }} anos
-        </option>
-      </select>
-    </label>
-  </div>
-</section>
+        <span class="child-picker__avatar" aria-hidden="true">
+          <img *ngIf="getPhoto(child) as photo; else optionInitial" [src]="photo" alt="" />
+          <ng-template #optionInitial>{{ getInitial(child) }}</ng-template>
+        </span>
+        <span>
+          <strong>{{ child.name }}</strong>
+          <small>{{ child.age }} anos</small>
+        </span>
+        <i
+          class="bi"
+          [ngClass]="child.id === selectedChildId ? 'bi-check-circle-fill' : 'bi-chevron-right'"
+          aria-hidden="true"
+        ></i>
+      </button>
+
+      <div class="child-picker__empty" *ngIf="!filteredChildren.length">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <strong>Nenhuma criança encontrada</strong>
+        <p>Revise o nome ou a idade informada.</p>
+      </div>
+    </div>
+  </section>
+</div>

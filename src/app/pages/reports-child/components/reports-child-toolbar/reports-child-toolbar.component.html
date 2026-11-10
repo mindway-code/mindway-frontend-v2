@@ -2,7 +2,7 @@
   <div class="reports-toolbar__actions">
     <button
       *ngIf="canCreate"
-      class="reports-toolbar__primary"
+      class="button-primary"
       type="button"
       (click)="create.emit()"
     >
@@ -11,7 +11,7 @@
     </button>
     <button
       *ngIf="hasSelection"
-      class="reports-toolbar__secondary"
+      class="button-primary"
       type="button"
       (click)="openSelected.emit()"
     >

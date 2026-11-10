@@ -101,44 +101,6 @@
           previewMode ? 'Prévia do perfil' : profileSections[activeSection].title
         }}</strong>
       </nav>
-      <!-- <section class="child-banner">
-        <div class="child-banner__avatar-wrap">
-          <div class="child-avatar child-avatar--large">
-            <img
-              *ngIf="getChildPhoto(child) as photo; else childProfileInitial"
-              [src]="photo"
-              alt=""
-            /><ng-template #childProfileInitial>{{ getChildInitial(child) }}</ng-template>
-          </div>
-          <label
-            *ngIf="!isProfessionalView"
-            class="child-photo-button"
-            [attr.for]="'child-photo-' + child.id"
-            ><i class="bi bi-camera" aria-hidden="true"></i>
-            {{ getChildPhoto(child) ? 'Alterar foto' : 'Adicionar foto' }}</label
-          >
-          <input
-            *ngIf="!isProfessionalView"
-            class="child-photo-input"
-            [id]="'child-photo-' + child.id"
-            type="file"
-            accept="image/*"
-            (change)="onChildPhotoSelected($event)"
-          />
-        </div>
-        <div class="child-banner__identity">
-          <h2>{{ getChildName(child) }}</h2>
-          <p>
-            {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child)
-            }}<ng-container *ngIf="getChildGender(child) as gender"
-              ><span aria-hidden="true">|</span> {{ gender }}</ng-container
-            >
-          </p>
-          <div class="diagnoses diagnoses--banner" *ngIf="getChildDiagnoses(child).length">
-            <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
-          </div>
-        </div>
-      </section> -->
 
       <nav class="profile-steps profile-steps--preview" aria-label="Se&#231;&#245;es do perfil">
         <button

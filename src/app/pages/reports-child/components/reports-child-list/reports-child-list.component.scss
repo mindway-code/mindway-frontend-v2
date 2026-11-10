@@ -18,8 +18,8 @@
 }
 
 .reports-table__header {
-  min-height: 2.6rem;
-  padding: 0 var(--padding-lg);
+  min-height: 2.1rem;
+  padding: 0 var(--padding-sm);
   border-bottom: 1px solid var(--border-medium);
   background: var(--bg-light);
   color: var(--text-muted);
@@ -30,6 +30,7 @@
   min-height: 4rem;
   padding: var(--padding-sm) var(--padding-lg);
   border-bottom: 1px solid var(--border-light);
+  background: var(--bg-white);
 
   &:hover {
     background: #fafcfc;
@@ -89,10 +90,14 @@
   place-items: center;
   width: 2.25rem;
   height: 2.25rem;
-  flex: 0 0 2.25rem;
+  flex: 0 0 auto;
   border-radius: var(--radius-sm);
-  background: var(--bg-green-light);
+  // background: var(--bg-accent);
   color: var(--text-green);
+
+  i {
+    font-size: var(--font-size-lg) !important;
+  }
 }
 
 .reports-table__author {
@@ -132,10 +137,9 @@
   justify-self: start;
   gap: 0.3rem;
   padding: 0.25rem 0.5rem;
-  border: 1px solid var(--border-light);
   border-radius: var(--border-pill);
-  color: var(--text-muted);
-  white-space: nowrap;
+  background: var(--bg-blue);
+  color: var(--text-blue-dark) !important;
 }
 
 .reports-table__access--manageable {
@@ -175,8 +179,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap-md);
-  min-height: 3.5rem;
-  padding: 0 var(--padding-lg);
+  min-height: 2.5rem;
+  padding: 0 var(--padding-md);
   background: var(--bg-light);
   color: var(--text-muted);
 

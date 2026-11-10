@@ -34,7 +34,7 @@
 
   <div class="reports-context">
     <nav aria-label="Navegação estrutural">
-      <a routerLink="/dashboard">Início</a>
+      <a routerLink="/dashboard"> <i class="bi bi-house me-1"></i> Início</a>
       <i class="bi bi-chevron-right" aria-hidden="true"></i>
       <span>Relatórios</span>
       <ng-container *ngIf="selectedChild$ | async as child">
@@ -57,7 +57,7 @@
       <button
         *ngIf="selectedReport"
         type="button"
-        class="reports-print"
+        class="button-primary"
         (click)="printSelectedReport()"
       >
         <i class="bi bi-printer" aria-hidden="true"></i>

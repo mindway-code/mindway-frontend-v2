@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import type { ChildRecord } from '../../../../api/interfaces/child.interface';
 
 @Component({
@@ -9,36 +18,53 @@ import type { ChildRecord } from '../../../../api/interfaces/child.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsChildSelectorComponent {
+  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+
   @Input() children: ChildRecord[] = [];
   @Input() selectedChildId: string | null = null;
   @Input() loading = false;
   @Output() selectedChildIdChange = new EventEmitter<string>();
+
   searchTerm = '';
+  dialogOpen = false;
 
   get selectedChild(): ChildRecord | null {
     return this.children.find((child) => child.id === this.selectedChildId) ?? null;
   }
 
   get filteredChildren(): ChildRecord[] {
-    const search = this.searchTerm.trim().toLocaleLowerCase('pt-BR');
+    const search = this.normalize(this.searchTerm);
     if (!search) return this.children;
 
-    const filtered = this.children.filter((child) =>
-      child.name.toLocaleLowerCase('pt-BR').includes(search),
+    return this.children.filter((child) =>
+      this.normalize(`${child.name} ${child.age} anos`).includes(search),
     );
-    const selected = this.selectedChild;
-    return selected && !filtered.some((child) => child.id === selected.id)
-      ? [selected, ...filtered]
-      : filtered;
+  }
+
+  openDialog(): void {
+    if (this.loading || !this.children.length) return;
+    this.searchTerm = '';
+    this.dialogOpen = true;
+    setTimeout(() => this.searchInput?.nativeElement.focus());
+  }
+
+  closeDialog(): void {
+    this.dialogOpen = false;
+    this.searchTerm = '';
   }
 
   updateSearch(event: Event): void {
     this.searchTerm = (event.target as HTMLInputElement).value;
   }
 
-  selectChild(event: Event): void {
-    const childId = (event.target as HTMLSelectElement).value;
-    if (childId) this.selectedChildIdChange.emit(childId);
+  selectChild(child: ChildRecord): void {
+    this.selectedChildIdChange.emit(child.id);
+    this.closeDialog();
+  }
+
+  @HostListener('document:keydown.escape')
+  closeOnEscape(): void {
+    if (this.dialogOpen) this.closeDialog();
   }
 
   getInitial(child: ChildRecord): string {
@@ -63,5 +89,13 @@ export class ReportsChildSelectorComponent {
 
   trackById(_index: number, child: ChildRecord): string {
     return child.id;
+  }
+
+  private normalize(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('pt-BR')
+      .trim();
   }
 }

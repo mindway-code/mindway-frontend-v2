@@ -179,7 +179,7 @@
   flex-direction: column;
   gap: 0.9rem;
   padding-top: var(--padding-md);
-  background: linear-gradient(105deg, #fff 0%, #f8fcfd 70%, #e0f7f5 100%);
+  background: linear-gradient(105deg, #fff 0%, #f8fcfd 70% );
 }
 
 .dashboard-bottom-nav {

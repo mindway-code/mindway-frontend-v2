@@ -25,8 +25,8 @@ export class DashboardLayoutComponent {
   ];
   readonly mobileNavItems: DashboardNavItem[] = [
     { label: 'Início', route: '/dashboard', icon: 'bi-house-door' },
-    { label: 'Crianças', route: '/child-profile', icon: 'bi-people' },
-    { label: 'Anamnese', route: '/anamnesis', icon: 'bi-journal-text' },
+    { label: 'Crianças', route: '/child-profile', icon: 'bi-person-vcard' },
+    { label: 'Relatórios', route: '/reports-child', icon: 'bi-file-earmark-bar-graph' },
   ];
 
   isDesktopSidebarExpanded = true;

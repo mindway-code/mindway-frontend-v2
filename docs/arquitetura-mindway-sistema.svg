@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1070" viewBox="0 0 1440 1070" role="img" aria-labelledby="title description">
+  <title id="title">Arquitetura atual do sistema MindWay</title>
+  <desc id="description">Diagrama em camadas. Cinco perfis acessam o frontend Angular 19. O frontend usa a API REST Node.js e Express para autenticação, crianças e vínculos, anamnese, relatórios e mensagens. A API usa Prisma para persistir dados em PostgreSQL do Supabase e Redis para cache. Socket.IO está inicializado no servidor, mas a interface atual não faz a conexão. A implantação da API usa imagem Docker e migrações via GitHub Actions.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2 2L9 6L2 10" fill="none" stroke="#006c70" stroke-width="2"/></marker>
+    <marker id="arrowGrey" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2 2L9 6L2 10" fill="none" stroke="#7f9699" stroke-width="2"/></marker>
+    <style>
+      svg { font-family: Montserrat, 'Segoe UI', Arial, sans-serif; background: #fff; }
+      .title { fill: #183749; font-size: 30px; font-weight: 650; }
+      .subtitle { fill: #617782; font-size: 16px; }
+      .kicker { fill: #006c70; font-size: 13px; font-weight: 700; letter-spacing: 1.8px; }
+      .head { fill: #16384b; font-size: 22px; font-weight: 600; }
+      .body { fill: #496775; font-size: 16px; }
+      .small { fill: #617782; font-size: 14px; }
+      .role { fill: #204354; font-size: 17px; font-weight: 600; }
+      .module { fill: #214556; font-size: 16px; font-weight: 550; }
+      .route { fill: #006c70; font-size: 16px; font-weight: 600; }
+      .notehead { fill: #1d4255; font-size: 16px; font-weight: 650; }
+      .note { fill: #536b75; font-size: 14px; }
+      .arrow { fill: none; stroke: #006c70; stroke-width: 2.5; marker-end: url(#arrow); }
+      .arrow-grey { fill: none; stroke: #7f9699; stroke-width: 2.2; marker-end: url(#arrowGrey); }
+      .guide { fill: none; stroke: #b4c9c7; stroke-width: 1.5; stroke-dasharray: 6 6; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1070" fill="#fff"/>
+  <rect width="1440" height="8" fill="#006c70"/>
+  <text x="64" y="59" class="title">MindWay · arquitetura do sistema</text>
+  <text x="64" y="90" class="subtitle">Visão funcional e técnica baseada nas rotas, serviços e configuração presentes no repositório</text>
+
+  <text x="72" y="146" class="kicker">QUEM USA</text>
+  <g fill="#e9f5f3" stroke="#c3ded9" stroke-width="1.5">
+    <rect x="72" y="163" width="242" height="68" rx="8"/>
+    <rect x="334" y="163" width="242" height="68" rx="8"/>
+    <rect x="596" y="163" width="242" height="68" rx="8"/>
+    <rect x="858" y="163" width="242" height="68" rx="8"/>
+    <rect x="1120" y="163" width="242" height="68" rx="8"/>
+  </g>
+  <text x="193" y="205" text-anchor="middle" class="role">Responsável</text>
+  <text x="455" y="205" text-anchor="middle" class="role">Terapeuta</text>
+  <text x="717" y="205" text-anchor="middle" class="role">Profissional</text>
+  <text x="979" y="205" text-anchor="middle" class="role">Instituição</text>
+  <text x="1241" y="205" text-anchor="middle" class="role">Administrador</text>
+
+  <path class="guide" d="M193 231V260 M455 231V260 M717 231V260 M979 231V260 M1241 231V260 M193 260H1241"/>
+  <path class="arrow" d="M717 260V291"/>
+
+  <rect x="72" y="300" width="575" height="348" rx="14" fill="#f4f7f6" stroke="#cddedb" stroke-width="1.5"/>
+  <rect x="72" y="300" width="575" height="8" rx="4" fill="#006c70"/>
+  <text x="98" y="348" class="kicker">EXPERIÊNCIA WEB</text>
+  <text x="98" y="382" class="head">Frontend · Angular 19</text>
+  <text x="98" y="412" class="body">Telas públicas, autenticação e painel por perfil</text>
+
+  <rect x="98" y="448" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="370" y="448" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="98" y="531" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="370" y="531" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <text x="222" y="486" text-anchor="middle" class="module">Perfis das crianças</text>
+  <text x="494" y="486" text-anchor="middle" class="module">Anamnese</text>
+  <text x="222" y="569" text-anchor="middle" class="module">Relatórios</text>
+  <text x="494" y="569" text-anchor="middle" class="module">Mensagens e conta</text>
+  <text x="98" y="624" class="small">As permissões e ações variam conforme o papel autenticado.</text>
+
+  <rect x="792" y="300" width="576" height="348" rx="14" fill="#f4f8f8" stroke="#c7d9dc" stroke-width="1.5"/>
+  <rect x="792" y="300" width="576" height="8" rx="4" fill="#397d84"/>
+  <text x="818" y="348" class="kicker">SERVIÇO DE APLICAÇÃO</text>
+  <text x="818" y="382" class="head">API · Node.js / Express</text>
+  <text x="818" y="412" class="body">Contêiner Docker · autenticação e regras de acesso</text>
+
+  <rect x="818" y="448" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="1092" y="448" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="818" y="531" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <rect x="1092" y="531" width="248" height="65" rx="8" fill="#fff" stroke="#dfe5e4"/>
+  <text x="942" y="476" text-anchor="middle" class="module">Usuários e autenticação</text>
+  <text x="942" y="498" text-anchor="middle" class="small">JWT / cookies</text>
+  <text x="1216" y="476" text-anchor="middle" class="module">Crianças e vínculos</text>
+  <text x="1216" y="498" text-anchor="middle" class="small">código de acesso</text>
+  <text x="942" y="569" text-anchor="middle" class="module">Anamnese e relatórios</text>
+  <text x="1216" y="569" text-anchor="middle" class="module">Mensagens</text>
+  <text x="818" y="624" class="small">Socket.IO é inicializado no servidor em /socket.io.</text>
+
+  <path class="arrow" d="M647 467H782"/>
+  <rect x="663" y="430" width="102" height="28" rx="5" fill="#fff"/>
+  <text x="714" y="450" text-anchor="middle" class="route">REST /api</text>
+
+  <text x="72" y="710" class="kicker">INFRAESTRUTURA DE DADOS</text>
+  <rect x="72" y="734" width="575" height="189" rx="14" fill="#eaf1f7" stroke="#afc4d5" stroke-width="1.5"/>
+  <rect x="792" y="734" width="576" height="189" rx="14" fill="#e9f5f3" stroke="#b7d8d1" stroke-width="1.5"/>
+  <text x="98" y="784" class="head">PostgreSQL · Supabase</text>
+  <text x="98" y="815" class="body">Usuários, crianças, vínculos, anamnese,</text>
+  <text x="98" y="843" class="body">relatórios e mensagens</text>
+  <text x="98" y="889" class="small">Persistência acessada pela API com Prisma ORM.</text>
+
+  <text x="818" y="784" class="head">Redis · cache</text>
+  <text x="818" y="815" class="body">Acelera consultas e invalida dados alterados</text>
+  <text x="818" y="843" class="body">Configuração da API: REDIS_URL</text>
+  <text x="818" y="889" class="small">Serviço externo ao compose de produção do repositório.</text>
+
+  <path class="arrow" d="M967 649V713H360V726"/>
+  <rect x="491" y="675" width="155" height="26" rx="5" fill="#fff"/>
+  <text x="568" y="694" text-anchor="middle" class="route">Prisma ORM</text>
+  <path class="arrow-grey" d="M1189 649V726"/>
+  <rect x="1090" y="674" width="198" height="27" rx="5" fill="#fff"/>
+  <text x="1189" y="693" text-anchor="middle" class="small">leitura / gravação em cache</text>
+
+  <rect x="72" y="955" width="1296" height="81" rx="9" fill="#f4f7f6" stroke="#dfe5e4"/>
+  <text x="97" y="986" class="notehead">Entrega e limites do diagrama</text>
+  <text x="97" y="1010" class="note">GitHub Actions constrói a imagem Docker da API e aplica migrações no Supabase. A hospedagem final do frontend e da API não é identificada no repositório.</text>
+  <text x="72" y="1058" class="small">A conexão Socket.IO do frontend não aparece nos serviços atuais; o caminho ativo da interface é REST.</text>
+</svg>

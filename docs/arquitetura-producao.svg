@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1180" viewBox="0 0 960 1180" role="img" aria-labelledby="title description">
+  <title id="title">Arquitetura de produção do MindWay conforme o repositório</title>
+  <desc id="description">Fluxo vertical: usuário acessa o frontend Angular 19; requisições REST em /api e conexão Socket.IO chegam à API Node.js e Express executada em contêiner Docker; Prisma conecta a API ao PostgreSQL do Supabase. GitHub Actions gera a imagem e aplica migrações. A hospedagem do frontend e o destino do deploy da API não estão identificados nos arquivos do projeto.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2 2L9 6L2 10" fill="none" stroke="#007b77" stroke-width="2"/></marker>
+    <style>
+      svg { font-family: Montserrat, 'Segoe UI', Arial, sans-serif; }
+      .title { fill: #173449; font-size: 30px; font-weight: 650; }
+      .subtitle { fill: #5d7380; font-size: 16px; }
+      .section { fill: #006c70; font-size: 14px; font-weight: 700; letter-spacing: 1.6px; }
+      .name { fill: #19394c; font-size: 22px; font-weight: 600; }
+      .detail { fill: #5d7380; font-size: 16px; }
+      .flow-label { fill: #275162; font-size: 17px; font-weight: 600; }
+      .flow-detail { fill: #647984; font-size: 14px; }
+      .note-head { fill: #215063; font-size: 16px; font-weight: 600; }
+      .note { fill: #536a75; font-size: 14px; }
+      .arrow { stroke: #007b77; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dotted { stroke: #9ab6b4; stroke-width: 2; stroke-dasharray: 7 6; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="960" height="1180" fill="#ffffff"/>
+  <rect width="960" height="8" fill="#006c70"/>
+  <text x="64" y="59" class="title">Arquitetura do MindWay</text>
+  <text x="64" y="88" class="subtitle">Serviços e conexões identificados na configuração atual do projeto</text>
+
+  <circle cx="480" cy="153" r="29" fill="#e9f5f3" stroke="#9fcac3" stroke-width="2"/>
+  <circle cx="480" cy="146" r="8" fill="none" stroke="#006c70" stroke-width="2"/>
+  <path d="M465 166c3-11 27-11 30 0" fill="none" stroke="#006c70" stroke-width="2" stroke-linecap="round"/>
+  <text x="480" y="211" text-anchor="middle" class="name">Usuário</text>
+
+  <path class="arrow" d="M480 223V276"/>
+  <rect x="385" y="238" width="190" height="24" fill="#ffffff"/>
+  <text x="480" y="256" text-anchor="middle" class="flow-label">Acesso via HTTPS</text>
+
+  <rect x="70" y="283" width="820" height="761" rx="16" fill="#f7faf9" stroke="#b8d4d0" stroke-width="2"/>
+  <text x="106" y="320" class="section">AMBIENTE DE PRODUÇÃO</text>
+
+  <rect x="211" y="352" width="538" height="113" rx="10" fill="#e9f5f3" stroke="#a7cfc8" stroke-width="1.5"/>
+  <text x="480" y="394" text-anchor="middle" class="name">Frontend · Angular 19</text>
+  <text x="480" y="427" text-anchor="middle" class="detail">Aplicação web compilada para hospedagem estática</text>
+  <rect x="611" y="366" width="122" height="24" rx="12" fill="#ffffff"/>
+  <text x="672" y="383" text-anchor="middle" class="flow-detail">build Angular</text>
+
+  <path class="arrow" d="M480 467V560"/>
+  <rect x="334" y="497" width="292" height="54" rx="8" fill="#ffffff" stroke="#dfe5e4"/>
+  <text x="480" y="518" text-anchor="middle" class="flow-label">REST: /api</text>
+  <text x="480" y="539" text-anchor="middle" class="flow-detail">Socket.IO: /socket.io</text>
+
+  <rect x="211" y="568" width="538" height="119" rx="10" fill="#e8f1f2" stroke="#a9c8ca" stroke-width="1.5"/>
+  <text x="480" y="610" text-anchor="middle" class="name">API · Node.js / Express</text>
+  <text x="480" y="644" text-anchor="middle" class="detail">HTTP + Socket.IO · contêiner Docker</text>
+  <rect x="609" y="582" width="124" height="24" rx="12" fill="#ffffff"/>
+  <text x="671" y="599" text-anchor="middle" class="flow-detail">porta 3333</text>
+
+  <path class="arrow" d="M480 689V772"/>
+  <rect x="350" y="720" width="260" height="43" rx="8" fill="#ffffff" stroke="#dfe5e4"/>
+  <text x="480" y="747" text-anchor="middle" class="flow-label">Prisma ORM</text>
+
+  <g transform="translate(272 790)">
+    <path d="M0 30C0 13 92 0 208 0s208 13 208 30v117c0 17-92 30-208 30S0 164 0 147Z" fill="#f1f3fa" stroke="#a9b6cf" stroke-width="1.5"/>
+    <ellipse cx="208" cy="30" rx="208" ry="30" fill="#e6edf3" stroke="#a9b6cf" stroke-width="1.5"/>
+    <path d="M0 147c0 17 92 30 208 30s208-13 208-30" fill="none" stroke="#a9b6cf" stroke-width="1.5"/>
+    <text x="208" y="94" text-anchor="middle" class="name">PostgreSQL · Supabase</text>
+    <text x="208" y="125" text-anchor="middle" class="detail">Dados persistidos via Prisma</text>
+  </g>
+
+  <rect x="70" y="1068" width="820" height="83" rx="10" fill="#f4f7f6" stroke="#dfe5e4"/>
+  <text x="95" y="1096" class="note-head">Implantação e escopo da documentação</text>
+  <text x="95" y="1120" class="note">GitHub Actions gera a imagem da API e aplica migrações no Supabase.</text>
+  <text x="95" y="1141" class="note">O repositório não identifica Netlify, Render ou outro destino final de hospedagem.</text>
+</svg>

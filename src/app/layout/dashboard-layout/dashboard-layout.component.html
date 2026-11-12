@@ -90,21 +90,22 @@
           <i class="bi" [ngClass]="item.icon" aria-hidden="true"></i>
           <span>{{ item.label }}</span>
         </a>
-      </div>
 
-      <button
-        class="dashboard-bottom-nav__more"
-        type="button"
-        (click)="toggleSidebar()"
-        [attr.aria-expanded]="isMobileSidebarOpen"
-        [attr.aria-label]="isMobileSidebarOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
-      >
-        <i
-          class="bi"
-          [ngClass]="isMobileSidebarOpen ? 'bi-x-lg' : 'bi-grid'"
-          aria-hidden="true"
-        ></i>
-      </button>
+        <button
+          class="dashboard-bottom-nav__more"
+          type="button"
+          (click)="toggleSidebar()"
+          [attr.aria-expanded]="isMobileSidebarOpen"
+          [attr.aria-label]="isMobileSidebarOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
+        >
+          <i
+            class="bi"
+            [ngClass]="isMobileSidebarOpen ? 'bi-x-lg' : 'bi-grid-3x3-gap'"
+            aria-hidden="true"
+          ></i>
+          <span>{{ isMobileSidebarOpen ? 'Fechar' : 'Mais' }}</span>
+        </button>
+      </div>
     </nav>
   </main>
 </section>

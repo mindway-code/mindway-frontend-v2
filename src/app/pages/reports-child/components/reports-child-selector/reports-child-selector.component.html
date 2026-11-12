@@ -15,12 +15,13 @@
     <ng-template #childInitial>{{ selectedChild ? getInitial(selectedChild) : 'C' }}</ng-template>
   </span>
   <span class="child-selector-trigger__copy">
-    <small>Criança</small>
+    <small>Criança selecionada</small>
     <strong>{{ selectedChild?.name || 'Selecionar criança' }}</strong>
   </span>
   <span class="child-selector-trigger__action">
-    Trocar
-    <i class="bi bi-chevron-down" aria-hidden="true"></i> 
+    <span>Trocar</span>
+    <i class="bi bi-chevron-down child-selector-trigger__desktop-icon" aria-hidden="true"></i>
+    <i class="bi bi-chevron-right child-selector-trigger__mobile-icon" aria-hidden="true"></i>
   </span>
 </button>
 

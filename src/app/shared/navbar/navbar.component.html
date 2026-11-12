@@ -146,9 +146,9 @@
 
 <ng-container *ngIf="currentUser$ | async as mobileUser; else mobileGuestHeader">
   <header class="mobile-topbar" aria-label="Acesso rápido da conta">
-      <a class="profile-navbar__brand" routerLink="/" aria-label="MindWay - início">
-        <img src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
-      </a>
+    <a class="profile-navbar__brand" routerLink="/" aria-label="MindWay - início">
+      <img src="assets/img/home/logo.png" alt="MindWay — Conexões que desenvolvem" />
+    </a>
     <a class="navbar-notification" routerLink="/messages" aria-label="Ver notificações">
       <i class="bi bi-bell" aria-hidden="true"></i>
     </a>
@@ -244,10 +244,10 @@
 </aside>
 
 <nav class="mobile-bottom-nav" aria-label="Navegação principal">
-  <ng-container *ngIf="currentUser$ | async; else guestBottomNavigation">
-    <div class="mobile-bottom-nav__primary">
-      <a routerLink="/dashboard" routerLinkActive="is-active" ariaCurrentWhenActive="page">
-        <i class="bi bi-grid" aria-hidden="true"></i><span>Painel</span>
+  <div class="mobile-bottom-nav__primary">
+    <ng-container *ngIf="currentUser$ | async; else guestBottomNavigation">
+      <a routerLink="/" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+        <i class="bi bi-house" aria-hidden="true"></i><span>Início</span>
       </a>
       <a routerLink="/profile" routerLinkActive="is-active" ariaCurrentWhenActive="page">
         <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
@@ -255,11 +255,9 @@
       <a routerLink="/ajuda" routerLinkActive="is-active" ariaCurrentWhenActive="page">
         <i class="bi bi-question-circle" aria-hidden="true"></i><span>Ajuda</span>
       </a>
-    </div>
-  </ng-container>
+    </ng-container>
 
-  <ng-template #guestBottomNavigation>
-    <div class="mobile-bottom-nav__primary">
+    <ng-template #guestBottomNavigation>
       <a
         routerLink="/"
         routerLinkActive="is-active"
@@ -274,17 +272,18 @@
       <a routerLink="/ajuda" routerLinkActive="is-active" ariaCurrentWhenActive="page">
         <i class="bi bi-question-circle" aria-hidden="true"></i><span>Ajuda</span>
       </a>
-    </div>
-  </ng-template>
+    </ng-template>
 
-  <button
-    class="mobile-bottom-nav__more"
-    type="button"
-    aria-controls="mindwayMobileMenu"
-    [attr.aria-expanded]="isMenuOpen"
-    [attr.aria-label]="isMenuOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
-    (click)="toggleMenu()"
-  >
-    <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-grid-3x3-gap'" aria-hidden="true"></i>
-  </button>
+    <button
+      class="mobile-bottom-nav__more"
+      type="button"
+      aria-controls="mindwayMobileMenu"
+      [attr.aria-expanded]="isMenuOpen"
+      [attr.aria-label]="isMenuOpen ? 'Fechar menu completo' : 'Abrir menu completo'"
+      (click)="toggleMenu()"
+    >
+      <i class="bi" [ngClass]="isMenuOpen ? 'bi-x-lg' : 'bi-grid-3x3-gap'" aria-hidden="true"></i>
+      <span>{{ isMenuOpen ? 'Fechar' : 'Mais' }}</span>
+    </button>
+  </div>
 </nav>

@@ -1,0 +1,36 @@
+<section class="reports-summary" aria-label="Resumo dos relatórios da criança selecionada">
+  <article class="reports-summary__item">
+    <span class="reports-summary__icon" aria-hidden="true"
+      ><i class="bi bi-file-earmark-text"></i
+    ></span>
+    <div>
+      <p>Total de relatórios</p>
+      <strong>{{ total }}</strong>
+    </div>
+  </article>
+  <article class="reports-summary__item">
+    <span class="reports-summary__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+    <div>
+      <p>Compartilhados <small>nesta página</small></p>
+      <strong>{{ sharedOnPage }}</strong>
+    </div>
+  </article>
+  <article class="reports-summary__item">
+    <span class="reports-summary__icon" aria-hidden="true"
+      ><i class="bi bi-pencil-square"></i
+    ></span>
+    <div>
+      <p>Editáveis <small>nesta página</small></p>
+      <strong>{{ manageableOnPage }}</strong>
+    </div>
+  </article>
+  <article class="reports-summary__item">
+    <span class="reports-summary__icon" aria-hidden="true"><i class="bi bi-calendar3"></i></span>
+    <div>
+      <p>Último relatório <small>nesta página</small></p>
+      <strong class="reports-summary__date">
+        {{ latestDate ? (latestDate | date: 'dd MMM yyyy' : '' : 'pt-BR') : '—' }}
+      </strong>
+    </div>
+  </article>
+</section>

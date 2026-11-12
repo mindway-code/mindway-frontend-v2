@@ -68,6 +68,15 @@ export class ReportsChildService {
         map((res) => res.data),
         tap((created) => {
           this.reportsSubject.next([created, ...this.reportsSubject.value]);
+          const pagination = this.paginationSubject.value;
+          if (pagination) {
+            const total = pagination.total + 1;
+            this.paginationSubject.next({
+              ...pagination,
+              total,
+              totalPages: Math.ceil(total / pagination.pageSize),
+            });
+          }
         }),
         catchError((err) => {
           this.errorSubject.next('Não foi possível criar o relatório.');
@@ -107,6 +116,15 @@ export class ReportsChildService {
       map(() => undefined),
       tap(() => {
         this.reportsSubject.next(this.reportsSubject.value.filter((r) => r.id !== reportId));
+        const pagination = this.paginationSubject.value;
+        if (pagination) {
+          const total = Math.max(0, pagination.total - 1);
+          this.paginationSubject.next({
+            ...pagination,
+            total,
+            totalPages: Math.ceil(total / pagination.pageSize),
+          });
+        }
         const selected = this.selectedReportSubject.value;
         if (selected?.id === reportId) this.selectedReportSubject.next(null);
       }),

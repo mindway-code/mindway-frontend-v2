@@ -25,6 +25,7 @@ export type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean }
   styleUrl: './reports-child.component.scss',
 })
 export class ReportsChildComponent implements OnInit {
+  readonly today = new Date();
   private readonly destroyRef = inject(DestroyRef);
   private readonly selectedChildIdSubject = new BehaviorSubject<string | null>(null);
   private readonly searchSubject = new BehaviorSubject('');
@@ -113,7 +114,6 @@ export class ReportsChildComponent implements OnInit {
   searchTerm = '';
   accessFilter: ReportAccessFilter = 'all';
   sortOrder: ReportSortOrder = 'recent';
-  filtersVisible = true;
 
   constructor(
     private readonly authService: AuthService,
@@ -272,6 +272,14 @@ export class ReportsChildComponent implements OnInit {
   getUserPhoto(userId: string): string | null {
     if (typeof localStorage === 'undefined') return null;
     return localStorage.getItem(`mindway-account-photo-${userId}`);
+  }
+
+  countShared(reports: ReportWithPermissions[]): number {
+    return reports.filter((report) => !report.canManage).length;
+  }
+
+  countManageable(reports: ReportWithPermissions[]): number {
+    return reports.filter((report) => report.canManage).length;
   }
 
   private loadReports(page: number): void {

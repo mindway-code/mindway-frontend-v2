@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import type { PaginationMeta } from '../../../../api/interfaces/api-response.interface';
 import type { ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
 
@@ -12,6 +19,7 @@ export type ReportsChildListItem = ReportsChildRecord & { canManage?: boolean };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsChildListComponent {
+  openMenuId: string | null = null;
   @Input() reports: ReportsChildListItem[] = [];
   @Input() loading = false;
   @Input() pagination: PaginationMeta | null = null;
@@ -50,5 +58,24 @@ export class ReportsChildListComponent {
 
   toggleSelection(report: ReportsChildListItem, checked: boolean): void {
     this.selectionChange.emit(checked ? report : null);
+  }
+
+  toggleMobileMenu(reportId: string): void {
+    this.openMenuId = this.openMenuId === reportId ? null : reportId;
+  }
+
+  selectFromMenu(report: ReportsChildListItem): void {
+    this.toggleSelection(report, this.selectedReportId !== report.id);
+    this.openMenuId = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeMenuOnEscape(): void {
+    this.openMenuId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeMenuOnOutside(event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('.reports-table__more')) this.openMenuId = null;
   }
 }

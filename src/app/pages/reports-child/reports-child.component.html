@@ -1,70 +1,47 @@
 <main class="reports-page">
-  <header class="reports-topbar">
-    <h1>Relatórios</h1>
-
-    <div class="input-primary reports-topbar__search">
-      <i class="bi bi-search" aria-hidden="true"></i>
-      <label class="visually-hidden" for="report-search">Pesquisar nos relatórios</label>
-      <input
-        id="report-search"
-        type="search"
-        autocomplete="off"
-        placeholder="Pesquisar nos relatórios"
-        [value]="searchTerm"
-        (input)="onSearchChange($any($event.target).value)"
-      />
-      <button
-        *ngIf="searchTerm"
-        type="button"
-        aria-label="Limpar pesquisa"
-        (click)="onSearchChange('')"
-      >
-        <i class="bi bi-x-lg" aria-hidden="true"></i>
-      </button>
-    </div>
-
-    <div class="reports-topbar__user" *ngIf="currentUser$ | async as user">
-      <span>Olá, {{ getFirstName(user.name, user.email) }}</span>
-      <span class="reports-topbar__avatar" aria-hidden="true">
-        <img *ngIf="getUserPhoto(user.id) as photo; else userInitial" [src]="photo" alt="" />
-        <ng-template #userInitial>{{ getUserInitial(user.name, user.email) }}</ng-template>
-      </span>
+  <header class="reports-brand">
+    <a class="reports-brand__logo" routerLink="/dashboard" aria-label="MindWay, voltar ao início">
+      <img src="assets/img/mindway-logo.svg" alt="MindWay" />
+    </a>
+    <div class="reports-brand__utility" *ngIf="currentUser$ | async as user">
+      <a class="reports-brand__notification" routerLink="/messages" aria-label="Ver notificações">
+        <i class="bi bi-bell" aria-hidden="true"></i>
+      </a>
+      <time class="reports-brand__date" [attr.datetime]="today | date: 'yyyy-MM-dd'">
+        {{ today | date: 'dd MMM' : '' : 'pt-BR' }}
+      </time>
+      <span class="reports-brand__divider" aria-hidden="true"></span>
+      <div class="reports-brand__profile">
+        <span class="reports-brand__greeting">Olá, {{ getFirstName(user.name, user.email) }}</span>
+        <span class="reports-brand__avatar" aria-hidden="true">
+          <img *ngIf="getUserPhoto(user.id) as photo; else userInitial" [src]="photo" alt="" />
+          <ng-template #userInitial>{{ getUserInitial(user.name, user.email) }}</ng-template>
+        </span>
+      </div>
     </div>
   </header>
 
-  <div class="reports-context">
-    <nav aria-label="Navegação estrutural">
-      <a routerLink="/dashboard"> <i class="bi bi-house me-1"></i> Início</a>
-      <i class="bi bi-chevron-right" aria-hidden="true"></i>
-      <span>Relatórios</span>
-      <ng-container *ngIf="selectedChild$ | async as child">
-        <i class="bi bi-chevron-right" aria-hidden="true"></i>
-        <strong>{{ child.name }}</strong>
-      </ng-container>
-    </nav>
+  <nav class="reports-breadcrumb" aria-label="Navegação estrutural">
+    <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
+    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    <span aria-current="page">Relatórios</span>
+  </nav>
 
-    <div class="reports-context__actions">
-      <button
-        type="button"
-        class="reports-filter-trigger"
-        [class.is-active]="accessFilter !== 'all' || sortOrder !== 'recent'"
-        [attr.aria-expanded]="filtersVisible"
-        (click)="filtersVisible = !filtersVisible"
-      >
-        <i class="bi bi-funnel" aria-hidden="true"></i>
-        Filtros
-      </button>
-      <button
-        *ngIf="selectedReport"
-        type="button"
-        class="button-primary"
-        (click)="printSelectedReport()"
-      >
-        <i class="bi bi-printer" aria-hidden="true"></i>
-        Imprimir
-      </button>
+  <header class="reports-heading">
+    <div class="reports-heading__title">
+      <h1>Relatórios</h1>
+      <p>Acompanhe, gere e compartilhe relatórios de desenvolvimento.</p>
     </div>
-  </div>
+    <div class="reports-heading__utility">
+      <app-reports-child-selector
+        *ngIf="children$ | async as children"
+        [children]="children"
+        [selectedChildId]="selectedChildId"
+        [loading]="(childrenLoading$ | async) ?? false"
+        (selectedChildIdChange)="onSelectChild($event)"
+      ></app-reports-child-selector>
+    </div>
+  </header>
 
   <ng-container *ngIf="children$ | async as children">
     <app-reports-child-empty-state
@@ -73,46 +50,111 @@
     ></app-reports-child-empty-state>
 
     <ng-container *ngIf="children.length">
-      <div class="reports-controls">
+      <app-page-skeleton
+        *ngIf="reportsLoading$ | async; else reportsSummary"
+        variant="list"
+        [rows]="4"
+        [compact]="true"
+        label="Carregando resumo dos relatórios"
+      ></app-page-skeleton>
+      <ng-template #reportsSummary>
+        <app-reports-child-summary
+          *ngIf="reportsWithPermissions$ | async as reports"
+          [reports]="reports"
+          [pagination]="pagination$ | async"
+        ></app-reports-child-summary>
+      </ng-template>
+
+      <section class="reports-workspace" aria-label="Relatórios da criança selecionada">
+        <div class="input-primary reports-workspace__search">
+          <i class="bi bi-search" aria-hidden="true"></i>
+          <label class="visually-hidden" for="report-search">Pesquisar relatórios</label>
+          <input
+            id="report-search"
+            type="search"
+            autocomplete="off"
+            placeholder="Buscar por título, autor ou conteúdo..."
+            [value]="searchTerm"
+            (input)="onSearchChange($any($event.target).value)"
+          />
+          <button
+            *ngIf="searchTerm"
+            type="button"
+            aria-label="Limpar pesquisa"
+            (click)="onSearchChange('')"
+          >
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </div>
         <app-reports-child-toolbar
+          class="reports-workspace__toolbar"
           [accessFilter]="accessFilter"
           [sortOrder]="sortOrder"
           [canCreate]="(canCreateReport$ | async) ?? false"
-          [filtersVisible]="filtersVisible"
           [hasSelection]="!!selectedReport"
           (accessFilterChange)="onAccessFilterChange($event)"
           (sortOrderChange)="onSortChange($event)"
-          (clear)="clearFilters()"
           (create)="onOpenCreate()"
-          (openSelected)="selectedReport && onOpenReport(selectedReport)"
+          (printSelected)="printSelectedReport()"
         ></app-reports-child-toolbar>
 
-        <app-reports-child-selector
-          [children]="children"
-          [selectedChildId]="selectedChildId"
-          [loading]="(childrenLoading$ | async) ?? false"
-          (selectedChildIdChange)="onSelectChild($event)"
-        ></app-reports-child-selector>
-      </div>
+        <p class="reports-error" *ngIf="reportsError$ | async as error" role="alert">
+          <i class="bi bi-exclamation-circle" aria-hidden="true"></i>{{ error }}
+        </p>
 
-      <p class="reports-error" *ngIf="reportsError$ | async as error" role="alert">
-        <i class="bi bi-exclamation-circle" aria-hidden="true"></i>{{ error }}
-      </p>
+        <ng-container *ngIf="reportsWithPermissions$ | async as allReports">
+          <div class="reports-tabs" role="group" aria-label="Filtrar relatórios por acesso">
+            <button
+              type="button"
+              [class.is-active]="accessFilter === 'all'"
+              [attr.aria-pressed]="accessFilter === 'all'"
+              (click)="onAccessFilterChange('all')"
+            >
+              <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Todos os relatórios
+              <span>{{ (pagination$ | async)?.total ?? allReports.length }}</span>
+            </button>
+            <button
+              type="button"
+              [class.is-active]="accessFilter === 'shared'"
+              [attr.aria-pressed]="accessFilter === 'shared'"
+              (click)="onAccessFilterChange('shared')"
+            >
+              <i class="bi bi-people" aria-hidden="true"></i> Compartilhados
+              <span [attr.title]="'Nesta página'">{{ countShared(allReports) }}</span>
+            </button>
+            <button
+              type="button"
+              [class.is-active]="accessFilter === 'manageable'"
+              [attr.aria-pressed]="accessFilter === 'manageable'"
+              (click)="onAccessFilterChange('manageable')"
+            >
+              <i class="bi bi-pencil-square" aria-hidden="true"></i> Editáveis
+              <span [attr.title]="'Nesta página'">{{ countManageable(allReports) }}</span>
+            </button>
+          </div>
+        </ng-container>
 
-      <app-reports-child-list
-        *ngIf="visibleReports$ | async as reports"
-        [reports]="reports"
-        [loading]="(reportsLoading$ | async) ?? false"
-        [pagination]="pagination$ | async"
-        [selectedReportId]="selectedReport?.id ?? null"
-        [hasActiveFilters]="!!searchTerm || accessFilter !== 'all'"
-        (selectionChange)="onSelectReport($event)"
-        (open)="onOpenReport($event)"
-        (edit)="onEditReport($event)"
-        (delete)="onDeleteReport($event)"
-        (pageChange)="onPageChange($event)"
-        (clearFilters)="clearFilters()"
-      ></app-reports-child-list>
+        <ng-container *ngIf="visibleReports$ | async as reports">
+          <p class="reports-mobile-count" *ngIf="!(reportsLoading$ | async)">
+            {{ reports.length }} {{ reports.length === 1 ? 'relatório' : 'relatórios' }}
+            <span *ngIf="(pagination$ | async)?.total !== reports.length"> nesta página</span>
+          </p>
+          <app-reports-child-list
+            class="reports-workspace__list"
+            [reports]="reports"
+            [loading]="(reportsLoading$ | async) ?? false"
+            [pagination]="pagination$ | async"
+            [selectedReportId]="selectedReport?.id ?? null"
+            [hasActiveFilters]="!!searchTerm || accessFilter !== 'all'"
+            (selectionChange)="onSelectReport($event)"
+            (open)="onOpenReport($event)"
+            (edit)="onEditReport($event)"
+            (delete)="onDeleteReport($event)"
+            (pageChange)="onPageChange($event)"
+            (clearFilters)="clearFilters()"
+          ></app-reports-child-list>
+        </ng-container>
+      </section>
     </ng-container>
   </ng-container>
 

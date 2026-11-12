@@ -57,6 +57,7 @@ import { ReportsChildListComponent } from './pages/reports-child/components/repo
 import { ReportsChildFormComponent } from './pages/reports-child/components/reports-child-form/reports-child-form.component';
 import { ReportsChildEmptyStateComponent } from './pages/reports-child/components/reports-child-empty-state/reports-child-empty-state.component';
 import { ReportsChildToolbarComponent } from './pages/reports-child/components/reports-child-toolbar/reports-child-toolbar.component';
+import { ReportsChildSummaryComponent } from './pages/reports-child/components/reports-child-summary/reports-child-summary.component';
 import { ReportDetailsDialogComponent } from './pages/reports-child/components/report-details-dialog/report-details-dialog.component';
 import { LinkSchoolComponent } from './auth/link-school/link-school.component';
 import { LinkProfessionalComponent } from './auth/link-professional/link-professional.component';
@@ -123,6 +124,7 @@ registerLocaleData(localePt);
     ReportsChildFormComponent,
     ReportsChildEmptyStateComponent,
     ReportsChildToolbarComponent,
+    ReportsChildSummaryComponent,
     ReportDetailsDialogComponent,
     LinkSchoolComponent,
     LinkClinicComponent,

@@ -1,45 +1,120 @@
 <div class="reports-toolbar">
-  <div class="reports-toolbar__actions">
-    <button
-      *ngIf="canCreate"
-      class="button-primary"
-      type="button"
-      (click)="create.emit()"
-    >
-      <i class="bi bi-plus-lg" aria-hidden="true"></i>
-      Novo relatório
-    </button>
-    <button
-      *ngIf="hasSelection"
-      class="button-primary"
-      type="button"
-      (click)="openSelected.emit()"
-    >
-      <i class="bi bi-eye" aria-hidden="true"></i>
-      Abrir selecionado
-    </button>
-  </div>
+  <button
+    #filterTrigger
+    class="button-primary"
+    [class.is-active]="hasFilters"
+    type="button"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="dialogOpen"
+    (click)="openFilterDialog()"
+  >
+    <i class="bi bi-funnel" aria-hidden="true"></i>
+    Filtros
+    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+  </button>
 
-  <div class="reports-toolbar__filters" *ngIf="filtersVisible">
-    <label>
-      <i class="bi bi-people" aria-hidden="true"></i>
-      <span class="visually-hidden">Filtrar por acesso</span>
-      <select [value]="accessFilter" (change)="updateAccessFilter($event)">
-        <option value="all">Todos os acessos</option>
-        <option value="manageable">Editáveis por mim</option>
-        <option value="shared">Compartilhados</option>
-      </select>
-    </label>
+  <label class="reports-toolbar__control reports-toolbar__sort" for="reports-sort-order">
+    <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
+    <select id="reports-sort-order" [value]="sortOrder" (change)="updateSort($event)">
+      <option value="recent">Mais recentes</option>
+      <option value="oldest">Mais antigos</option>
+    </select>
+    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+  </label>
 
-    <label>
-      <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
-      <span class="visually-hidden">Ordenar relatórios</span>
-      <select [value]="sortOrder" (change)="updateSort($event)">
-        <option value="recent">Mais recentes</option>
-        <option value="oldest">Mais antigos</option>
-      </select>
-    </label>
+  <button
+    type="button"
+    class="reports-toolbar__print"
+    [disabled]="!hasSelection"
+    [attr.aria-label]="
+      hasSelection ? 'Imprimir relatório selecionado' : 'Selecione um relatório para imprimir'
+    "
+    [attr.title]="
+      hasSelection ? 'Imprimir relatório selecionado' : 'Selecione um relatório para imprimir'
+    "
+    (click)="printSelected.emit()"
+  >
+    <i class="bi bi-printer" aria-hidden="true"></i>
+  </button>
 
-    <button *ngIf="hasFilters" type="button" (click)="clear.emit()">Limpar filtros</button>
-  </div>
+  <button *ngIf="canCreate" type="button" class="reports-toolbar__create" (click)="create.emit()">
+    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+    Novo relatório
+  </button>
+</div>
+
+<div class="reports-filter-backdrop" *ngIf="dialogOpen" (click)="closeFilterDialog()">
+  <section
+    #filterDialog
+    class="reports-filter-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reports-filter-title"
+    aria-describedby="reports-filter-description"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="reports-filter-dialog__header">
+      <div>
+        <p>Refinar resultados</p>
+        <h2 id="reports-filter-title">Filtros</h2>
+      </div>
+      <button type="button" aria-label="Fechar filtros" (click)="closeFilterDialog()">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="reports-filter-dialog__body">
+      <p id="reports-filter-description">
+        Escolha quais relatórios deseja ver para a criança selecionada.
+      </p>
+      <fieldset>
+        <legend>Acesso</legend>
+        <label [class.is-selected]="draftAccessFilter === 'all'">
+          <input type="radio" name="reports-access" value="all" [(ngModel)]="draftAccessFilter" />
+          <span>
+            <strong>Todos os relatórios</strong>
+            <small>Exibe todos os registros disponíveis.</small>
+          </span>
+        </label>
+        <label [class.is-selected]="draftAccessFilter === 'shared'">
+          <input
+            type="radio"
+            name="reports-access"
+            value="shared"
+            [(ngModel)]="draftAccessFilter"
+          />
+          <span>
+            <strong>Compartilhados</strong>
+            <small>Relatórios que você pode consultar.</small>
+          </span>
+        </label>
+        <label [class.is-selected]="draftAccessFilter === 'manageable'">
+          <input
+            type="radio"
+            name="reports-access"
+            value="manageable"
+            [(ngModel)]="draftAccessFilter"
+          />
+          <span>
+            <strong>Editáveis por mim</strong>
+            <small>Registros que você pode gerenciar.</small>
+          </span>
+        </label>
+      </fieldset>
+    </div>
+
+    <footer class="reports-filter-dialog__footer">
+      <button
+        type="button"
+        class="reports-filter-dialog__clear"
+        (click)="draftAccessFilter = 'all'"
+      >
+        Limpar
+      </button>
+      <button type="button" class="reports-filter-dialog__apply" (click)="applyFilter()">
+        Aplicar filtro
+      </button>
+    </footer>
+  </section>
 </div>

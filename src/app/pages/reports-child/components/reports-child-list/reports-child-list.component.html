@@ -19,7 +19,12 @@
       }}
     </p>
   </div>
-  <button class="button-primary" *ngIf="hasActiveFilters" type="button" (click)="clearFilters.emit()">
+  <button
+    class="button-primary"
+    *ngIf="hasActiveFilters"
+    type="button"
+    (click)="clearFilters.emit()"
+  >
     Limpar filtros
   </button>
 </div>
@@ -30,11 +35,11 @@
       <span class="visually-hidden">Selecionar</span>
     </span>
     <span role="columnheader">Relatório</span>
-    <span role="columnheader">Criado por</span>
     <span role="columnheader">Tipo</span>
+    <span role="columnheader">Criado por</span>
     <span role="columnheader">Data</span>
     <span role="columnheader">Acesso</span>
-    <span class="visually-hidden">Ações</span>
+    <span role="columnheader">Ações</span>
   </div>
 
   <article
@@ -61,12 +66,17 @@
       </span>
     </button>
 
+    <span class="reports-table__type" role="cell" data-label="Tipo">
+      <i class="bi bi-tag reports-table__meta-icon" aria-hidden="true"></i>
+      {{ roleLabel(report) }}
+    </span>
     <span class="reports-table__author" role="cell" data-label="Criado por">
+      <i class="bi bi-person reports-table__meta-icon" aria-hidden="true"></i>
       <span aria-hidden="true">{{ authorInitial(report) }}</span>
       <strong>{{ reportAuthor(report) }}</strong>
     </span>
-    <span class="reports-table__type" role="cell" data-label="Tipo">{{ roleLabel(report) }}</span>
     <time role="cell" [attr.datetime]="report.createdAt" data-label="Data">
+      <i class="bi bi-calendar3 reports-table__meta-icon" aria-hidden="true"></i>
       {{ report.createdAt | date: 'dd MMM yyyy' : '' : 'pt-BR' }}
     </time>
     <span
@@ -80,14 +90,18 @@
     </span>
 
     <div class="reports-table__actions" role="cell">
-      <button type="button" (click)="open.emit(report)" aria-label="Abrir relatório">
+      <button
+        type="button"
+        (click)="open.emit(report)"
+        [attr.aria-label]="'Abrir relatório ' + report.title"
+      >
         <i class="bi bi-eye" aria-hidden="true"></i>
       </button>
       <button
         *ngIf="report.canManage"
         type="button"
         (click)="edit.emit(report)"
-        aria-label="Editar relatório"
+        [attr.aria-label]="'Editar relatório ' + report.title"
       >
         <i class="bi bi-pencil" aria-hidden="true"></i>
       </button>
@@ -96,20 +110,66 @@
         class="reports-table__delete"
         type="button"
         (click)="delete.emit(report)"
-        aria-label="Excluir relatório"
+        [attr.aria-label]="'Excluir relatório ' + report.title"
       >
         <i class="bi bi-trash3" aria-hidden="true"></i>
       </button>
     </div>
+
+    <div class="reports-table__mobile-actions" role="cell">
+      <button class="reports-table__view" type="button" (click)="open.emit(report)">
+        <i class="bi bi-eye" aria-hidden="true"></i> Visualizar
+      </button>
+      <div class="reports-table__more">
+        <button
+          type="button"
+          [attr.aria-label]="'Mais ações para ' + report.title"
+          [attr.aria-expanded]="openMenuId === report.id"
+          (click)="toggleMobileMenu(report.id)"
+        >
+          <i class="bi bi-three-dots" aria-hidden="true"></i>
+        </button>
+        <div class="reports-table__menu" *ngIf="openMenuId === report.id">
+          <button type="button" (click)="selectFromMenu(report)">
+            <i class="bi bi-printer" aria-hidden="true"></i>
+            {{ selectedReportId === report.id ? 'Remover seleção' : 'Selecionar para imprimir' }}
+          </button>
+          <button
+            *ngIf="report.canManage"
+            type="button"
+            (click)="openMenuId = null; edit.emit(report)"
+          >
+            <i class="bi bi-pencil" aria-hidden="true"></i> Editar relatório
+          </button>
+          <button
+            *ngIf="report.canManage"
+            type="button"
+            (click)="openMenuId = null; delete.emit(report)"
+          >
+            <i class="bi bi-trash3" aria-hidden="true"></i> Excluir relatório
+          </button>
+        </div>
+      </div>
+    </div>
   </article>
 
-  <footer class="reports-table__footer" *ngIf="pagination as page">
-    <span>
-      {{ (page.page - 1) * page.pageSize + 1 }}–{{
-        page.page * page.pageSize > page.total ? page.total : page.page * page.pageSize
-      }}
-      de {{ page.total }} registros
+  <footer
+    class="reports-table__footer"
+    *ngIf="pagination as page"
+    [class.is-single-page]="page.totalPages <= 1"
+  >
+    <span *ngIf="hasActiveFilters; else unfilteredCount">
+      {{ reports.length }}
+      {{ reports.length === 1 ? 'relatório encontrado' : 'relatórios encontrados' }} nesta página
     </span>
+    <ng-template #unfilteredCount
+      ><span>
+        {{ (page.page - 1) * page.pageSize + 1 }}–{{
+          page.page * page.pageSize > page.total ? page.total : page.page * page.pageSize
+        }}
+        de {{ page.total }} registros
+      </span></ng-template
+    >
     <nav aria-label="Paginação dos relatórios">
       <button
         type="button"

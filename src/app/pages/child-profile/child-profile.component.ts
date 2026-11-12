@@ -1,4 +1,12 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -62,10 +70,25 @@ interface ProfileActivity {
   selector: 'app-child-profile',
   standalone: false,
   templateUrl: './child-profile.component.html',
-  styleUrls: ['./child-profile.component.scss'],
+  styleUrls: ['./child-profile.component.scss', './child-profile.directory.scss'],
 })
 export class ChildProfileComponent implements OnInit {
+  @ViewChild('directoryFilterTrigger') directoryFilterTrigger?: ElementRef<HTMLButtonElement>;
+  @ViewChild('directoryFilterDialog') directoryFilterDialog?: ElementRef<HTMLElement>;
+  readonly today = new Date();
   private readonly destroyRef = inject(DestroyRef);
+
+  readonly currentUser$ = this.authService.currentUser$;
+  childSearch = '';
+  childSort: 'name' | 'youngest' | 'oldest' = 'name';
+  childView: 'grid' | 'list' = 'grid';
+  childFiltersOpen = false;
+  childAgeFilter: 'all' | '0-5' | '6-11' | '12+' = 'all';
+  childDiagnosisFilter: 'all' | 'with' | 'without' = 'all';
+  draftAgeFilter: 'all' | '0-5' | '6-11' | '12+' = 'all';
+  draftDiagnosisFilter: 'all' | 'with' | 'without' = 'all';
+  childMenuId: string | null = null;
+  directoryMessage = '';
 
   readonly children$ = this.childService.children$;
 
@@ -282,6 +305,9 @@ export class ChildProfileComponent implements OnInit {
   onSelectChild(child: ChildRecord | null): void {
     this.childService.selectChild(child);
 
+    this.showCreateChild = false;
+    this.childMenuId = null;
+
     this.activeSection = 0;
     this.previewMode = true;
     this.editingSection = null;
@@ -293,6 +319,150 @@ export class ChildProfileComponent implements OnInit {
   onSelectChildById(childId: string, children: ChildRecord[]): void {
     const child = children.find((item) => item.id === childId) ?? null;
     this.onSelectChild(child);
+  }
+
+  onEditChild(child: ChildRecord): void {
+    if (this.isProfessionalView) return;
+    this.onSelectChild(child);
+    this.previewMode = false;
+    this.activeSection = 0;
+    this.editingSection = 0;
+  }
+
+  getFirstName(name?: string | null, email?: string | null): string {
+    return (name?.trim() || email?.split('@')[0] || 'Usuário').split(/\s+/)[0];
+  }
+
+  getUserPhoto(userId: string): string | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      return localStorage.getItem(`mindway-account-photo-${userId}`);
+    } catch {
+      return null;
+    }
+  }
+
+  getUserInitial(name?: string | null, email?: string | null): string {
+    return this.getFirstName(name, email).charAt(0).toLocaleUpperCase('pt-BR');
+  }
+
+  get visibleChildrenCountLabel(): string {
+    return this.childAgeFilter !== 'all' || this.childDiagnosisFilter !== 'all' || this.childSearch.trim()
+      ? 'Perfis encontrados'
+      : 'Perfis cadastrados';
+  }
+
+  get hasChildFilters(): boolean {
+    return this.childAgeFilter !== 'all' || this.childDiagnosisFilter !== 'all';
+  }
+
+  filterChildren(children: ChildRecord[]): ChildRecord[] {
+    const search = this.normalizeDirectoryText(this.childSearch);
+    const matchesAge = (age: number): boolean => {
+      if (this.childAgeFilter === '0-5') return age <= 5;
+      if (this.childAgeFilter === '6-11') return age >= 6 && age <= 11;
+      if (this.childAgeFilter === '12+') return age >= 12;
+      return true;
+    };
+
+    return children
+      .filter((child) => {
+        const diagnoses = this.getChildDiagnoses(child);
+        if (!matchesAge(child.age)) return false;
+        if (this.childDiagnosisFilter === 'with' && !diagnoses.length) return false;
+        if (this.childDiagnosisFilter === 'without' && diagnoses.length) return false;
+        return (
+          !search ||
+          this.normalizeDirectoryText([this.getChildName(child), ...diagnoses].join(' ')).includes(
+            search,
+          )
+        );
+      })
+      .sort((a, b) => {
+        if (this.childSort === 'youngest') return a.age - b.age;
+        if (this.childSort === 'oldest') return b.age - a.age;
+        return this.getChildName(a).localeCompare(this.getChildName(b), 'pt-BR');
+      });
+  }
+
+  openChildFilters(): void {
+    this.draftAgeFilter = this.childAgeFilter;
+    this.draftDiagnosisFilter = this.childDiagnosisFilter;
+    this.childFiltersOpen = true;
+    setTimeout(() => this.directoryFilterDialog?.nativeElement.focus());
+  }
+
+  closeChildFilters(): void {
+    this.childFiltersOpen = false;
+    setTimeout(() => this.directoryFilterTrigger?.nativeElement.focus());
+  }
+
+  applyChildFilters(): void {
+    this.childAgeFilter = this.draftAgeFilter;
+    this.childDiagnosisFilter = this.draftDiagnosisFilter;
+    this.closeChildFilters();
+  }
+
+  clearDraftChildFilters(): void {
+    this.draftAgeFilter = 'all';
+    this.draftDiagnosisFilter = 'all';
+  }
+
+  clearChildFilters(): void {
+    this.childAgeFilter = 'all';
+    this.childDiagnosisFilter = 'all';
+    this.draftAgeFilter = 'all';
+    this.draftDiagnosisFilter = 'all';
+  }
+
+  async copyChildAccessCode(child: ChildRecord): Promise<void> {
+    this.childMenuId = null;
+    const code = this.getChildAccessCode(child);
+    if (!code || code === 'Não informado') {
+      this.directoryMessage = 'Código de acesso indisponível.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(code);
+      this.directoryMessage = 'Código de acesso copiado.';
+    } catch {
+      this.directoryMessage = 'Não foi possível copiar o código de acesso.';
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleDirectoryKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      if (this.childFiltersOpen) this.closeChildFilters();
+      this.childMenuId = null;
+      return;
+    }
+    if (!this.childFiltersOpen || event.key !== 'Tab') return;
+    const dialog = this.directoryFilterDialog?.nativeElement;
+    const focusable = dialog?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled])');
+    if (!focusable?.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeChildMenuOnOutside(event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('.directory-card__more')) this.childMenuId = null;
+  }
+
+  private normalizeDirectoryText(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('pt-BR')
+      .trim();
   }
 
   toggleCreateChild(): void {

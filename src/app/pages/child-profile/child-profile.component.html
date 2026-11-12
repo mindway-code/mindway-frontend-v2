@@ -1,20 +1,54 @@
 <main class="child-profile-page">
-  <header class="page-heading" *ngIf="!(selectedChild$ | async)">
-    <div>
-      <p class="eyebrow">ANAMNESE INFANTIL</p>
-      <h1>{{ (selectedChild$ | async) ? 'Perfil da crian&#231;a' : 'Minhas crian&#231;as' }}</h1>
-      <p *ngIf="selectedChild$ | async">
-        Consulte os dados e o acompanhamento desta crian&ccedil;a.
-      </p>
-      <p *ngIf="!(selectedChild$ | async)">
-        Registre e acompanhe informa&ccedil;&otilde;es importantes sobre o desenvolvimento e a
-        rotina da crian&ccedil;a.
-      </p>
-    </div>
-    <div class="page-heading__illustration" *ngIf="!(selectedChild$ | async)" aria-hidden="true">
-      <img src="assets/img/child-page.webp" alt="child" />
+  <header class="directory-brand" aria-label="Cabeçalho MindWay">
+    <span class="directory-brand__balance" aria-hidden="true"></span>
+    <a routerLink="/dashboard" class="directory-brand__logo" aria-label="MindWay, voltar ao início">
+      <img src="assets/img/mindway-logo.svg" alt="MindWay" />
+    </a>
+    <div class="directory-brand__utilities" *ngIf="currentUser$ | async as user">
+      <a routerLink="/messages" class="directory-brand__bell" aria-label="Ver notificações">
+        <i class="bi bi-bell" aria-hidden="true"></i>
+      </a>
+      <time [attr.datetime]="today | date: 'yyyy-MM-dd'">{{
+        today | date: 'dd MMM' : '' : 'pt-BR'
+      }}</time>
+      <span class="directory-brand__divider" aria-hidden="true"></span>
+      <span class="directory-brand__greeting">Olá, {{ getFirstName(user.name, user.email) }}</span>
+      <span class="directory-brand__avatar" aria-hidden="true">
+        <img *ngIf="getUserPhoto(user.id) as photo; else accountInitial" [src]="photo" alt="" />
+        <ng-template #accountInitial>{{ getUserInitial(user.name, user.email) }}</ng-template>
+      </span>
     </div>
   </header>
+
+  <ng-container *ngIf="!(selectedChild$ | async)">
+    <nav class="directory-breadcrumb" aria-label="Navegação estrutural">
+      <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span aria-current="page">Crianças</span>
+    </nav>
+
+    <header class="directory-heading">
+      <div>
+        <p class="directory-heading__kicker">PERFIS INFANTIS</p>
+        <h1>{{ isProfessionalView ? 'Crianças vinculadas' : 'Minhas crianças' }}</h1>
+        <p>
+          {{
+            isProfessionalView
+              ? 'Acompanhe as informações das crianças vinculadas.'
+              : 'Gerencie os perfis e acompanhe as informações das crianças.'
+          }}
+        </p>
+      </div>
+      <button
+        *ngIf="!isProfessionalView"
+        type="button"
+        class="button-primary directory-heading__add"
+        (click)="toggleCreateChild()"
+      >
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Adicionar criança
+      </button>
+    </header>
+  </ng-container>
 
   <app-child-create-form
     *ngIf="showCreateChild && !isProfessionalView"
@@ -36,50 +70,288 @@
 
   <ng-container *ngIf="!(childrenLoading$ | async)">
     <ng-container *ngIf="!(selectedChild$ | async); else profileView">
-      <section class="children-grid" *ngIf="children$ | async as children">
-        <article class="child-card" *ngFor="let child of children; let i = index">
-          <div
-            class="child-avatar child-avatar--card"
-            [class.child-avatar--alt]="i % 2 === 1"
-            aria-hidden="true"
-          >
-            <img *ngIf="getChildPhoto(child) as photo; else childInitial" [src]="photo" alt="" />
-            <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
-          </div>
-          <div class="child-card--content">
-            <h2>{{ getChildName(child) }}</h2>
-            <p class="child-meta">
-              {{ getChildAge(child) }} <span aria-hidden="true">|</span> {{ formatBirthDate(child)
-              }}<ng-container *ngIf="getChildGender(child) as gender"
-                ><span aria-hidden="true">|</span> {{ gender }}</ng-container
-              >
-            </p>
-            <div class="diagnoses" *ngIf="getChildDiagnoses(child).length > 0; else noDiagnosis">
-              <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
-            </div>
-            <ng-template #noDiagnosis
-              ><p class="muted child-card__diagnosis-empty">
-                Sem diagn&#243;stico informado
-              </p></ng-template
-            >
-          </div>
+      <ng-container *ngIf="children$ | async as children">
+        <section class="directory-controls" aria-label="Buscar e organizar perfis">
+          <label class="directory-search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <span class="visually-hidden">Buscar criança por nome ou diagnóstico</span>
+            <input
+              type="search"
+              [(ngModel)]="childSearch"
+              placeholder="Buscar criança por nome ou diagnóstico..."
+            />
+          </label>
           <button
+            #directoryFilterTrigger
             type="button"
-            class="button-primary child-card__action"
-            (click)="onSelectChild(child)"
+            class="directory-control"
+            [class.is-active]="hasChildFilters"
+            aria-haspopup="dialog"
+            [attr.aria-expanded]="childFiltersOpen"
+            (click)="openChildFilters()"
           >
-            {{ isProfessionalView ? 'Visualizar perfil' : 'Editar perfil' }} &rarr;
+            <i class="bi bi-sliders" aria-hidden="true"></i> Filtros
           </button>
-        </article>
-        <div class="empty-state" *ngIf="children.length === 0">
-          <p>
-            Nenhuma crian&#231;a cadastrada ainda. Use &#8220;Adicionar crian&#231;a&#8221; para
-            criar o primeiro perfil.
-          </p>
+          <div class="directory-view" role="group" aria-label="Modo de visualização">
+            <button
+              type="button"
+              [class.is-active]="childView === 'grid'"
+              [attr.aria-pressed]="childView === 'grid'"
+              aria-label="Exibir cartões"
+              (click)="childView = 'grid'"
+            >
+              <i class="bi bi-grid" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              [class.is-active]="childView === 'list'"
+              [attr.aria-pressed]="childView === 'list'"
+              aria-label="Exibir lista"
+              (click)="childView = 'list'"
+            >
+              <i class="bi bi-list-ul" aria-hidden="true"></i>
+            </button>
+          </div>
+          <label class="directory-sort">
+            <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
+            <span class="visually-hidden">Ordenar crianças</span>
+            <select [(ngModel)]="childSort">
+              <option value="name">Ordenar: nome</option>
+              <option value="youngest">Mais novas</option>
+              <option value="oldest">Mais velhas</option>
+            </select>
+            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+          </label>
+        </section>
+
+        <p class="directory-feedback" *ngIf="directoryMessage" role="status">
+          {{ directoryMessage }}
+        </p>
+
+        <div class="directory-content" *ngIf="filterChildren(children) as visibleChildren">
+          <section class="directory-main" aria-labelledby="children-list-title">
+            <div class="directory-main__heading">
+              <h2 id="children-list-title">{{ visibleChildrenCountLabel }}</h2>
+              <span
+                >{{ visibleChildren.length }}
+                {{ visibleChildren.length === 1 ? 'criança' : 'crianças' }}</span
+              >
+            </div>
+
+            <div class="directory-cards" [class.directory-cards--list]="childView === 'list'">
+              <article class="directory-card" *ngFor="let child of visibleChildren">
+                <div class="directory-card__avatar" aria-hidden="true">
+                  <img
+                    *ngIf="getChildPhoto(child) as photo; else childInitial"
+                    [src]="photo"
+                    alt=""
+                  />
+                  <ng-template #childInitial>{{ getChildInitial(child) }}</ng-template>
+                </div>
+                <div class="directory-card__body">
+                  <h3>{{ getChildName(child) }}</h3>
+                  <p class="directory-card__meta">
+                    {{ getChildAge(child) }} <span aria-hidden="true">·</span>
+                    {{ formatBirthDate(child) }}
+                  </p>
+                  <div
+                    class="directory-card__diagnoses"
+                    *ngIf="getChildDiagnoses(child).length; else noDiagnosis"
+                  >
+                    <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
+                  </div>
+                  <ng-template #noDiagnosis
+                    ><p class="directory-card__diagnosis-empty">
+                      Sem diagnóstico informado
+                    </p></ng-template
+                  >
+                </div>
+                <div class="directory-card__actions">
+                  <button
+                    type="button"
+                    class="directory-card__view"
+                    [attr.aria-label]="'Visualizar perfil de ' + getChildName(child)"
+                    (click)="onSelectChild(child)"
+                  >
+                    <i class="bi bi-eye" aria-hidden="true"></i> Visualizar
+                  </button>
+                  <button
+                    *ngIf="!isProfessionalView"
+                    type="button"
+                    class="directory-card__icon-button"
+                    [attr.aria-label]="'Editar perfil de ' + getChildName(child)"
+                    (click)="onEditChild(child)"
+                  >
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                  </button>
+                  <div class="directory-card__more">
+                    <button
+                      type="button"
+                      class="directory-card__icon-button"
+                      [attr.aria-label]="'Mais ações para ' + getChildName(child)"
+                      [attr.aria-expanded]="childMenuId === child.id"
+                      (click)="childMenuId = childMenuId === child.id ? null : child.id"
+                    >
+                      <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                    </button>
+                    <div class="directory-card__menu" *ngIf="childMenuId === child.id">
+                      <button type="button" (click)="childMenuId = null; onSelectChild(child)">
+                        <i class="bi bi-eye" aria-hidden="true"></i> Abrir perfil
+                      </button>
+                      <button
+                        *ngIf="!isProfessionalView && getChildAccessCode(child) !== 'Não informado'"
+                        type="button"
+                        (click)="copyChildAccessCode(child)"
+                      >
+                        <i class="bi bi-key" aria-hidden="true"></i> Copiar código de acesso
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <button
+                *ngIf="
+                  !isProfessionalView && children.length > 0 && !childSearch && !hasChildFilters
+                "
+                type="button"
+                class="directory-add-card"
+                (click)="toggleCreateChild()"
+              >
+                <span><i class="bi bi-person-plus" aria-hidden="true"></i></span>
+                <strong>Adicionar criança</strong>
+                <small>Cadastre um novo perfil para acompanhar o desenvolvimento.</small>
+              </button>
+            </div>
+
+            <div class="directory-empty" *ngIf="visibleChildren.length === 0">
+              <i class="bi bi-people" aria-hidden="true"></i>
+              <h3>
+                {{ children.length ? 'Nenhuma criança encontrada' : 'Nenhuma criança cadastrada' }}
+              </h3>
+              <p>
+                {{
+                  children.length
+                    ? 'Ajuste a busca ou os filtros para ver outros perfis.'
+                    : isProfessionalView
+                      ? 'Os perfis vinculados à sua conta aparecerão aqui.'
+                      : 'Adicione uma criança para começar a acompanhar seu desenvolvimento.'
+                }}
+              </p>
+              <button
+                *ngIf="children.length && (childSearch || hasChildFilters)"
+                type="button"
+                (click)="childSearch = ''; clearChildFilters()"
+              >
+                Limpar busca e filtros
+              </button>
+            </div>
+          </section>
+
+          <aside class="directory-help" aria-labelledby="directory-help-title">
+            <div class="directory-help__heading">
+              <span><i class="bi bi-info-circle" aria-hidden="true"></i></span>
+              <h2 id="directory-help-title">Sobre os perfis</h2>
+            </div>
+            <p>
+              {{
+                isProfessionalView
+                  ? 'Selecione uma criança para consultar suas informações.'
+                  : 'Selecione uma criança para acessar ou atualizar informações.'
+              }}
+            </p>
+            <a *ngIf="!isProfessionalView" routerLink="/ajuda"
+              ><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Como cadastrar uma criança
+              <i class="bi bi-arrow-right" aria-hidden="true"></i
+            ></a>
+            <a routerLink="/ajuda"
+              ><i class="bi bi-question-circle" aria-hidden="true"></i> Dúvidas frequentes
+              <i class="bi bi-arrow-right" aria-hidden="true"></i
+            ></a>
+          </aside>
         </div>
-      </section>
+      </ng-container>
     </ng-container>
   </ng-container>
+
+  <div class="directory-filter-backdrop" *ngIf="childFiltersOpen" (click)="closeChildFilters()">
+    <section
+      #directoryFilterDialog
+      class="directory-filter-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="directory-filter-title"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+    >
+      <header>
+        <div>
+          <p>Refinar perfis</p>
+          <h2 id="directory-filter-title">Filtros</h2>
+        </div>
+        <button type="button" aria-label="Fechar filtros" (click)="closeChildFilters()">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+      <div class="directory-filter-dialog__body">
+        <fieldset>
+          <legend>Faixa etária</legend>
+          <label
+            ><input type="radio" name="child-age" value="all" [(ngModel)]="draftAgeFilter" /> Todas
+            as idades</label
+          >
+          <label
+            ><input type="radio" name="child-age" value="0-5" [(ngModel)]="draftAgeFilter" /> 0 a 5
+            anos</label
+          >
+          <label
+            ><input type="radio" name="child-age" value="6-11" [(ngModel)]="draftAgeFilter" /> 6 a
+            11 anos</label
+          >
+          <label
+            ><input type="radio" name="child-age" value="12+" [(ngModel)]="draftAgeFilter" /> 12
+            anos ou mais</label
+          >
+        </fieldset>
+        <fieldset>
+          <legend>Diagnóstico</legend>
+          <label
+            ><input
+              type="radio"
+              name="child-diagnosis"
+              value="all"
+              [(ngModel)]="draftDiagnosisFilter"
+            />
+            Todos</label
+          >
+          <label
+            ><input
+              type="radio"
+              name="child-diagnosis"
+              value="with"
+              [(ngModel)]="draftDiagnosisFilter"
+            />
+            Com diagnóstico</label
+          >
+          <label
+            ><input
+              type="radio"
+              name="child-diagnosis"
+              value="without"
+              [(ngModel)]="draftDiagnosisFilter"
+            />
+            Sem diagnóstico</label
+          >
+        </fieldset>
+      </div>
+      <footer>
+        <button type="button" (click)="clearDraftChildFilters()">Limpar</button>
+        <button type="button" class="button-primary" (click)="applyChildFilters()">
+          Aplicar filtros
+        </button>
+      </footer>
+    </section>
+  </div>
 
   <ng-template #profileView>
     <ng-container *ngIf="selectedChild$ | async as child">

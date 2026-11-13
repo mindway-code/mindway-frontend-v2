@@ -232,6 +232,7 @@ export class ChildProfileComponent implements OnInit {
   private currentAnamnesis: AnamnesisRecord | null = null;
   showCreateChild = false;
   isProfessionalView = false;
+  private createQueryHandled = false;
 
   constructor(
     private readonly childService: ChildService,
@@ -254,6 +255,13 @@ export class ChildProfileComponent implements OnInit {
       this.isProfessionalView =
         user?.role === 'therapist' || user?.role === 'professional' || user?.role === 'enterprise';
       if (this.isProfessionalView) this.showCreateChild = false;
+      else if (
+        !this.createQueryHandled &&
+        this.route.snapshot.queryParamMap.get('create') === '1'
+      ) {
+        this.showCreateChild = true;
+        this.createQueryHandled = true;
+      }
     });
 
     this.route.queryParamMap
@@ -347,7 +355,9 @@ export class ChildProfileComponent implements OnInit {
   }
 
   get visibleChildrenCountLabel(): string {
-    return this.childAgeFilter !== 'all' || this.childDiagnosisFilter !== 'all' || this.childSearch.trim()
+    return this.childAgeFilter !== 'all' ||
+      this.childDiagnosisFilter !== 'all' ||
+      this.childSearch.trim()
       ? 'Perfis encontrados'
       : 'Perfis cadastrados';
   }
@@ -439,7 +449,9 @@ export class ChildProfileComponent implements OnInit {
     }
     if (!this.childFiltersOpen || event.key !== 'Tab') return;
     const dialog = this.directoryFilterDialog?.nativeElement;
-    const focusable = dialog?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled])');
+    const focusable = dialog?.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), input:not([disabled])',
+    );
     if (!focusable?.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];

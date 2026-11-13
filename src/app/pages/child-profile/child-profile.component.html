@@ -175,15 +175,6 @@
                   >
                     <i class="bi bi-eye" aria-hidden="true"></i> Visualizar
                   </button>
-                  <button
-                    *ngIf="!isProfessionalView"
-                    type="button"
-                    class="directory-card__icon-button"
-                    [attr.aria-label]="'Editar perfil de ' + getChildName(child)"
-                    (click)="onEditChild(child)"
-                  >
-                    <i class="bi bi-pencil" aria-hidden="true"></i>
-                  </button>
                   <div class="directory-card__more">
                     <button
                       type="button"

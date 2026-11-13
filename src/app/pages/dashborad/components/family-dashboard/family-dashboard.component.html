@@ -1,5 +1,7 @@
 <header class="family-brand" aria-label="Cabeçalho da família">
-  <span class="family-brand__balance" aria-hidden="true"></span>
+  <a class="family-brand__home" routerLink="/dashboard" aria-current="page">
+    <i class="bi bi-house" aria-hidden="true"></i> Início
+  </a>
 
   <img class="family-brand__logo" src="assets/img/mindway-logo.svg" alt="MindWay" />
 
@@ -28,333 +30,129 @@
   *ngIf="loading; else familyContent"
   variant="page"
   [rows]="4"
-  label="Carregando crianças e atalhos"
+  label="Carregando painel da família"
 ></app-page-skeleton>
 
 <ng-template #familyContent>
   <div class="family-dashboard">
-    <section class="family-search" aria-label="Buscar e adicionar crianças">
-      <div class="input-primary family-search__field">
-        <i class="bi bi-search" aria-hidden="true"></i>
-        <label class="visually-hidden" for="family-child-search">Buscar criança</label>
-        <input
-          id="family-child-search"
-          type="search"
-          autocomplete="off"
-          placeholder="Buscar criança por nome ou diagnóstico"
-          [value]="searchTerm"
-          (input)="updateSearchTerm($event)"
-        />
+    <div class="family-overview">
+      <section class="family-overview__children" aria-labelledby="family-overview-title">
+        <div class="family-overview__topline">
+          <span class="family-overview__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+          <h2>Minhas crianças</h2>
+          <span class="family-overview__count"
+            >{{ children.length }} {{ children.length === 1 ? 'criança' : 'crianças' }}</span
+          >
+          <a  routerLink="/child-profile"
+            >Ver todas <i class="bi bi-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div class="family-overview__avatars" *ngIf="children.length" aria-hidden="true">
+          <span *ngFor="let child of children | slice: 0 : 5; trackBy: trackChildById">
+            <img *ngIf="getPhoto(child) as photo; else overviewInitial" [src]="photo" alt="" />
+            <ng-template #overviewInitial>{{ getInitial(child) }}</ng-template>
+          </span>
+        </div>
+        <h1 id="family-overview-title">Acompanhe o desenvolvimento das suas crianças</h1>
+        <p>
+          Gerencie perfis, registre informações e acompanhe a evolução de cada criança em um só
+          lugar.
+        </p>
+        <div class="family-overview__footer">
+          <a
+            class="family-overview__add"
+            routerLink="/child-profile"
+          >
+            <i class="bi bi-people" aria-hidden="true"></i> Perfil da criança
+          </a>
+          <span
+            >{{ children.length }}
+            {{ children.length === 1 ? 'perfil cadastrado' : 'perfis cadastrados' }}</span
+          >
+        </div>
+      </section>
+
+      <section class="family-daily-tip" aria-labelledby="family-daily-tip-title">
+        <div class="family-daily-tip__copy">
+          <span class="family-daily-tip__icon" aria-hidden="true"
+            ><i class="bi bi-lightbulb"></i
+          ></span>
+          <h2 id="family-daily-tip-title">Dica do dia</h2>
+          <p>{{ dailyTips[activeDailyTipIndex] }}</p>
+          <div class="family-daily-tip__pagination" role="group" aria-label="Escolher dica">
+            <button
+              *ngFor="let tip of dailyTips; let i = index"
+              type="button"
+              [class.is-active]="activeDailyTipIndex === i"
+              [attr.aria-label]="'Mostrar dica ' + (i + 1)"
+              [attr.aria-pressed]="activeDailyTipIndex === i"
+              (click)="activeDailyTipIndex = i"
+            ></button>
+          </div>
+        </div>
+        <img src="assets/webp/login.webp" alt="" aria-hidden="true" />
+      </section>
+    </div>
+
+    <section class="family-week" aria-labelledby="family-week-title">
+      <div class="family-week__heading">
+        <span class="family-week__icon" aria-hidden="true"
+          ><i class="bi bi-calendar-week"></i
+        ></span>
+        <div>
+          <h2 id="family-week-title">Agenda da semana</h2>
+          <p>Navegue pelos dias da semana</p>
+        </div>
+      </div>
+      <div class="family-week__days" role="group" aria-label="Dias da semana">
         <button
-          *ngIf="searchTerm"
-          class="family-search__clear"
+          *ngFor="let day of weekDays"
           type="button"
-          (click)="clearSearch()"
-          aria-label="Limpar busca"
+          [class.is-selected]="isSelectedDay(day)"
+          [attr.aria-pressed]="isSelectedDay(day)"
+          [attr.aria-label]="day | date: 'EEEE, dd MMMM yyyy' : '' : 'pt-BR'"
+          (click)="selectDay(day)"
         >
-          <i class="bi bi-x-lg" aria-hidden="true"></i>
-        </button>
-        <span class="family-search__divider" aria-hidden="true"></span>
-        <button
-          class="family-search__filter"
-          [class.is-active]="activeFilterCount > 0"
-          type="button"
-          aria-haspopup="dialog"
-          [attr.aria-label]="
-            activeFilterCount
-              ? 'Abrir filtros. ' + activeFilterCount + ' filtros aplicados'
-              : 'Abrir filtros'
-          "
-          (click)="openFilterDialog()"
-        >
-          <i class="bi bi-sliders" aria-hidden="true"></i>
-          <span>Filtros</span>
-          <strong *ngIf="activeFilterCount" aria-hidden="true">{{ activeFilterCount }}</strong>
+          <span>{{ day | date: 'EEE' : '' : 'pt-BR' }}</span>
+          <time class="time" [attr.datetime]="day | date: 'yyyy-MM-dd'">{{
+            day | date: 'dd MMM' : '' : 'pt-BR'
+          }}</time>
         </button>
       </div>
-
-      <div class="family-search__badges" *ngIf="activeFilterBadges.length">
-        <span class="family-search__badge" *ngFor="let badge of activeFilterBadges">
-          {{ badge.label }}
-          <button
-            type="button"
-            (click)="removeFilter(badge.key)"
-            [attr.aria-label]="'Remover filtro ' + badge.label"
-          >
-            <i class="bi bi-x" aria-hidden="true"></i>
-          </button>
-        </span>
-        <button class="family-search__clear-filters" type="button" (click)="clearAllFilters()">
-          Limpar filtros
+      <div class="family-week__navigation">
+        <button type="button" aria-label="Semana anterior" (click)="stepWeek(-1)">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" aria-label="Próxima semana" (click)="stepWeek(1)">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
         </button>
       </div>
     </section>
 
-    <div class="family-workspace">
-      <aside class="family-profile" aria-labelledby="family-profile-title">
-        <div class="family-profile__summary">
-          <span>Perfis das crianças</span>
-          <strong>{{ children.length }}</strong>
-        </div>
-
-        <div class="family-profile__status" *ngIf="children.length; else noLinkedProfiles">
-          <div class="family-profile__avatars" aria-hidden="true">
-            <span *ngFor="let child of children | slice: 0 : 3; trackBy: trackChildById">
-              {{ getInitial(child) }}
-            </span>
-          </div>
-          <p>Acompanhamento disponível</p>
-        </div>
-
-        <ng-template #noLinkedProfiles>
-          <div class="family-profile__status family-profile__status--empty">
-            <i class="bi bi-info-circle" aria-hidden="true"></i>
-            <p>Adicione um perfil para começar.</p>
-          </div>
-        </ng-template>
-      </aside>
-
-      <section class="family-children" aria-labelledby="family-children-title">
-        <header class="family-section-heading">
-          <div>
-            <p class="family-eyebrow">Perfis vinculados</p>
-            <p>Selecione uma criança para acessar suas informações.</p>
-          </div>
-        </header>
-
-        <div *ngIf="children.length; else noFamilyChildren">
-          <div class="family-child-list" *ngIf="filteredChildren.length; else noSearchResults">
-            <a
-              class="family-child"
-              *ngFor="let child of filteredChildren; trackBy: trackChildById"
-              [routerLink]="['/child-profile']"
-              [queryParams]="{ childId: child.id }"
-            >
-              <span class="family-child__avatar" aria-hidden="true">
-                <img
-                  *ngIf="getPhoto(child) as photo; else familyChildInitial"
-                  [src]="photo"
-                  alt=""
-                />
-                <ng-template #familyChildInitial>{{ getInitial(child) }}</ng-template>
-              </span>
-
-              <div class="family-child__identity">
-                <h3>{{ getName(child) }}</h3>
-                <p>
-                  {{ getAge(child) }}
-                  <ng-container *ngIf="getDiagnoses(child)">
-                    <span aria-hidden="true">&middot;</span> {{ getDiagnoses(child) }}
-                  </ng-container>
-                </p>
-              </div>
-
-              <span class="family-child__action">
-                Ver perfil <i class="bi bi-arrow-right" aria-hidden="true"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <ng-template #noSearchResults>
-          <div class="family-empty-state family-empty-state--search">
-            <span class="family-empty-state__icon" aria-hidden="true">
-              <i class="bi bi-search"></i>
-            </span>
-            <div>
-              <h3>Nenhuma criança encontrada</h3>
-              <p>Revise a busca ou remova alguns filtros aplicados.</p>
-            </div>
-            <button type="button" class="family-search-reset" (click)="clearSearchAndFilters()">
-              Limpar busca e filtros
-            </button>
-          </div>
-        </ng-template>
-
-        <ng-template #noFamilyChildren>
-          <div class="family-empty-state">
-            <span class="family-empty-state__icon" aria-hidden="true">
-              <i class="bi bi-person-plus"></i>
-            </span>
-            <div>
-              <h3>Nenhuma criança cadastrada</h3>
-              <p>Use o botão “Adicionar criança” para criar o primeiro perfil.</p>
-            </div>
-          </div>
-        </ng-template>
-      </section>
-
-      <aside class="family-sidebar" aria-label="Ações e orientações">
-        <section class="family-actions" aria-labelledby="family-actions-title">
-          <header class="family-section-heading family-section-heading--compact">
-            <div>
-              <p class="family-eyebrow">Acesso rápido</p>
-              <h2 id="family-actions-title">Ações</h2>
-            </div>
-          </header>
-
-          <nav class="family-action-list" aria-label="Ações da família">
-            <a
-              class="family-action"
-              *ngFor="let action of viewModel.actions"
-              [routerLink]="action.route"
-            >
-              <span class="family-action__icon" aria-hidden="true">
-                <i class="bi" [ngClass]="action.icon"></i>
-              </span>
-              <span class="family-action__copy">
-                <strong>{{ action.label }}</strong>
-                <small>{{ action.description }}</small>
-              </span>
-              <i class="bi bi-chevron-right family-action__arrow" aria-hidden="true"></i>
-            </a>
-          </nav>
-        </section>
-
-        <section class="family-tips" aria-labelledby="family-tips-title">
-          <header class="family-section-heading family-section-heading--compact">
-            <div>
-              <p class="family-eyebrow">Orientações</p>
-              <h2 id="family-tips-title">Dicas rápidas</h2>
-            </div>
-          </header>
-
-          <ul class="family-tip-list">
-            <li *ngFor="let tip of viewModel.tips | slice: 0 : 2">
-              <i class="bi" [ngClass]="tip.icon" aria-hidden="true"></i>
-              <div>
-                <strong>{{ tip.title }}</strong>
-                <p>{{ tip.description }}</p>
-              </div>
-            </li>
-          </ul>
-        </section>
-      </aside>
-    </div>
-  </div>
-
-  <div *ngIf="filterDialogOpen" class="family-filter-backdrop" (click)="closeFilterDialog()">
-    <section
-      class="family-filter-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="family-filter-title"
-      (click)="$event.stopPropagation()"
-    >
-      <span class="family-filter-dialog__handle" aria-hidden="true"></span>
-      <header class="family-filter-dialog__header">
+    <section class="family-guidance" aria-labelledby="family-guidance-title">
+      <header class="family-guidance__heading">
         <div>
-          <p class="family-eyebrow">Refinar resultados</p>
-          <h2 id="family-filter-title">Filtros</h2>
-          <p>Combine opções para localizar uma criança mais rapidamente.</p>
+          <span class="family-guidance__icon" aria-hidden="true"
+            ><i class="bi bi-flower1"></i
+          ></span>
+          <h2 id="family-guidance-title">Dicas e orientações</h2>
         </div>
-        <button type="button" aria-label="Fechar filtros" (click)="closeFilterDialog()">
-          <i class="bi bi-x-lg" aria-hidden="true"></i>
-        </button>
+        <a routerLink="/ajuda"
+          >Ver todas as dicas <i class="bi bi-arrow-right" aria-hidden="true"></i
+        ></a>
       </header>
-
-      <div class="family-filter-dialog__body">
-        <fieldset class="family-filter-group">
-          <legend>Faixa etária</legend>
-          <p>Você pode selecionar mais de uma opção.</p>
-          <div class="family-filter-toggles">
-            <button
-              *ngFor="let option of ageGroupOptions"
-              type="button"
-              [class.is-selected]="isDraftAgeGroupSelected(option.value)"
-              [attr.aria-pressed]="isDraftAgeGroupSelected(option.value)"
-              (click)="toggleDraftAgeGroup(option.value)"
-            >
-              <strong>{{ option.label }}</strong>
-              <span>{{ option.description }}</span>
-            </button>
+      <div class="family-guidance__cards">
+        <article class="family-guidance__card" *ngFor="let tip of guidanceCards">
+          <span class="family-guidance__card-icon" aria-hidden="true"
+            ><i class="bi" [ngClass]="tip.icon"></i
+          ></span>
+          <div>
+            <h3>{{ tip.title }}</h3>
+            <p>{{ tip.description }}</p>
+            <span>{{ tip.category }}</span>
           </div>
-        </fieldset>
-
-        <fieldset class="family-filter-group">
-          <legend>Diagnóstico</legend>
-          <div class="family-filter-choice" role="group" aria-label="Presença de diagnóstico">
-            <button
-              type="button"
-              [class.is-selected]="draftFilters.diagnosisStatus === 'all'"
-              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'all'"
-              (click)="setDraftDiagnosisStatus('all')"
-            >
-              Todos
-            </button>
-            <button
-              type="button"
-              [class.is-selected]="draftFilters.diagnosisStatus === 'with-diagnosis'"
-              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'with-diagnosis'"
-              (click)="setDraftDiagnosisStatus('with-diagnosis')"
-            >
-              Com diagnóstico
-            </button>
-            <button
-              type="button"
-              [class.is-selected]="draftFilters.diagnosisStatus === 'without-diagnosis'"
-              [attr.aria-pressed]="draftFilters.diagnosisStatus === 'without-diagnosis'"
-              (click)="setDraftDiagnosisStatus('without-diagnosis')"
-            >
-              Sem diagnóstico
-            </button>
-          </div>
-        </fieldset>
-
-        <fieldset class="family-filter-group">
-          <legend>Busca específica</legend>
-          <p>Use estes campos quando precisar de um resultado mais preciso.</p>
-
-          <label class="family-filter-field">
-            <span>Diagnóstico contém</span>
-            <input
-              type="search"
-              autocomplete="off"
-              placeholder="Ex.: autismo"
-              [value]="draftFilters.diagnosisQuery"
-              (input)="updateDraftDiagnosisQuery($event)"
-            />
-          </label>
-
-          <div class="family-filter-age-fields">
-            <label class="family-filter-field">
-              <span>Idade mínima</span>
-              <input
-                type="number"
-                min="0"
-                inputmode="numeric"
-                placeholder="0"
-                [value]="draftFilters.minimumAge ?? ''"
-                (input)="updateDraftAge($event, 'minimumAge')"
-              />
-            </label>
-            <label class="family-filter-field">
-              <span>Idade máxima</span>
-              <input
-                type="number"
-                min="0"
-                inputmode="numeric"
-                placeholder="21"
-                [value]="draftFilters.maximumAge ?? ''"
-                (input)="updateDraftAge($event, 'maximumAge')"
-              />
-            </label>
-          </div>
-        </fieldset>
-
-        <p *ngIf="filterError" class="family-filter-dialog__error" role="alert">
-          {{ filterError }}
-        </p>
+        </article>
       </div>
-
-      <footer class="family-filter-dialog__footer">
-        <button class="family-filter-dialog__reset" type="button" (click)="clearDraftFilters()">
-          Limpar
-        </button>
-        <button class="button-primary" type="button" (click)="applyFilters()">
-          Aplicar filtros
-        </button>
-      </footer>
     </section>
   </div>
 </ng-template>

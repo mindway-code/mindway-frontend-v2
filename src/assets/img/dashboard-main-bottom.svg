@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 270" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient
+      id="back-wave"
+      x1="130"
+      y1="180"
+      x2="1450"
+      y2="135"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#c8f5f1" stop-opacity="0.38" />
+      <stop offset="0.55" stop-color="#a8d8cf" stop-opacity="0.4" />
+      <stop offset="1" stop-color="#a4f3e9" stop-opacity="0.42" />
+    </linearGradient>
+    <linearGradient
+      id="front-wave"
+      x1="200"
+      y1="240"
+      x2="1450"
+      y2="175"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#a3efe8" stop-opacity="0.42" />
+      <stop offset="0.55" stop-color="#b2f3ec" stop-opacity="0.5" />
+      <stop offset="1" stop-color="#86eadf" stop-opacity="0.63" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M0 204C191 137 350 230 555 222C812 212 1007 90 1246 50C1413 22 1512 47 1600 85V270H0V204Z"
+    fill="url(#back-wave)"
+  />
+  <path
+    d="M0 242C195 190 322 270 527 270C806 270 1047 191 1260 142C1390 112 1496 113 1600 131V270H0V242Z"
+    fill="url(#front-wave)"
+  />
+</svg>

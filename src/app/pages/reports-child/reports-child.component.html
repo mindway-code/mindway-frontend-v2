@@ -1,5 +1,10 @@
 <main class="reports-page">
-  <header class="reports-brand">
+  <header class="reports-brand" aria-label="Cabeçalho MindWay">
+    <nav class="reports-breadcrumb" aria-label="Navegação estrutural">
+      <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span aria-current="page">Relatórios</span>
+    </nav>
     <a class="reports-brand__logo" routerLink="/dashboard" aria-label="MindWay, voltar ao início">
       <img src="assets/img/mindway-logo.svg" alt="MindWay" />
     </a>
@@ -20,12 +25,6 @@
       </div>
     </div>
   </header>
-
-  <nav class="reports-breadcrumb" aria-label="Navegação estrutural">
-    <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
-    <i class="bi bi-chevron-right" aria-hidden="true"></i>
-    <span aria-current="page">Relatórios</span>
-  </nav>
 
   <header class="reports-heading">
     <div class="reports-heading__title">

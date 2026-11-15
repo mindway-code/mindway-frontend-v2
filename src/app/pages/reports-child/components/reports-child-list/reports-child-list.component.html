@@ -56,7 +56,13 @@
         (change)="toggleSelection(report, $any($event.target).checked)"
       />
     </label>
-    <button class="reports-table__title" role="cell" type="button" (click)="open.emit(report)">
+    <button
+      class="reports-table__title"
+      role="cell"
+      type="button"
+      [attr.title]="report.title"
+      (click)="open.emit(report)"
+    >
       <span class="reports-table__document" aria-hidden="true">
         <i class="bi bi-file-earmark-text"></i>
       </span>
@@ -73,7 +79,7 @@
     <span class="reports-table__author" role="cell" data-label="Criado por">
       <i class="bi bi-person reports-table__meta-icon" aria-hidden="true"></i>
       <span aria-hidden="true">{{ authorInitial(report) }}</span>
-      <strong>{{ reportAuthor(report) }}</strong>
+      <strong [attr.title]="reportAuthor(report)">{{ reportAuthor(report) }}</strong>
     </span>
     <time role="cell" [attr.datetime]="report.createdAt" data-label="Data">
       <i class="bi bi-calendar3 reports-table__meta-icon" aria-hidden="true"></i>

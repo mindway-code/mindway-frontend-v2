@@ -1,0 +1,133 @@
+<div class="child-modal-backdrop" (click)="close()">
+  <section
+    #dialog
+    class="child-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="child-modal-title"
+    aria-describedby="child-modal-description"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="child-modal__header">
+      <span class="child-modal__symbol" aria-hidden="true">
+        <i class="bi" [ngClass]="child ? 'bi-pencil-square' : 'bi-person-plus'"></i>
+      </span>
+      <div>
+        <p class="child-modal__eyebrow">Perfil infantil</p>
+        <h2 id="child-modal-title">{{ child ? 'Editar criança' : 'Adicionar criança' }}</h2>
+        <p id="child-modal-description">
+          {{
+            child
+              ? 'Atualize os dados principais do perfil.'
+              : 'Comece pelos dados essenciais da criança.'
+          }}
+        </p>
+      </div>
+      <button
+        class="child-modal__close"
+        type="button"
+        aria-label="Fechar formulário"
+        [disabled]="saving"
+        (click)="close()"
+      >
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="child-modal__content">
+      <form
+        id="child-profile-modal-form"
+        class="child-modal__form"
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+      >
+        <p *ngIf="error && attemptedSave" class="child-modal__error" role="alert">{{ error }}</p>
+
+        <label class="child-modal__field child-modal__field--full">
+          <span>Nome completo <small>Obrigatório</small></span>
+          <input
+            #nameInput
+            formControlName="name"
+            type="text"
+            autocomplete="name"
+            placeholder="Nome da criança"
+            [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+          />
+          <small
+            *ngIf="form.controls.name.touched && form.controls.name.invalid"
+            class="child-modal__field-error"
+          >
+            Informe um nome com pelo menos 2 caracteres.
+          </small>
+        </label>
+
+        <label class="child-modal__field">
+          <span>Data de nascimento <small>Obrigatória</small></span>
+          <input
+            formControlName="birthDate"
+            type="date"
+            [max]="maxBirthDate"
+            [attr.aria-invalid]="form.controls.birthDate.touched && form.controls.birthDate.invalid"
+          />
+          <small
+            *ngIf="form.controls.birthDate.touched && form.controls.birthDate.invalid"
+            class="child-modal__field-error"
+          >
+            Selecione uma data válida que não esteja no futuro.
+          </small>
+        </label>
+
+        <div class="child-modal__age" aria-live="polite">
+          <span>Idade</span>
+          <strong>{{
+            age === null ? 'Aguardando data' : age + (age === 1 ? ' ano' : ' anos')
+          }}</strong>
+          <small>Calculada pela data de nascimento</small>
+        </div>
+
+        <label class="child-modal__field child-modal__field--full">
+          <span>Observações <small>Opcional</small></span>
+          <textarea
+            formControlName="observation"
+            rows="3"
+            placeholder="Informações que ajudam a conhecer a criança"
+          ></textarea>
+        </label>
+      </form>
+
+      <aside class="child-modal__tips" aria-label="Orientações para preencher o perfil">
+        <span class="child-modal__tips-icon" aria-hidden="true"
+          ><i class="bi bi-lightbulb"></i
+        ></span>
+        <h3>{{ child ? 'Antes de atualizar' : 'Para começar bem' }}</h3>
+        <ul>
+          <li>Confira o nome e a data de nascimento antes de salvar.</li>
+          <li>Use as observações para registrar apenas o que for útil ao acompanhamento.</li>
+          <li *ngIf="!child">Você poderá completar as informações de saúde e rotina depois.</li>
+          <li *ngIf="child">
+            Diagnósticos, saúde e rotina continuam disponíveis no perfil detalhado.
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <footer class="child-modal__footer">
+      <span>Os campos obrigatórios estão identificados.</span>
+      <div>
+        <button type="button" class="child-modal__cancel" [disabled]="saving" (click)="close()">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          form="child-profile-modal-form"
+          class="button-primary"
+          [disabled]="saving"
+        >
+          <span *ngIf="saving" class="child-modal__spinner" aria-hidden="true"></span>
+          {{ saving ? 'Salvando...' : child ? 'Salvar alterações' : 'Criar perfil' }}
+        </button>
+      </div>
+    </footer>
+  </section>
+</div>

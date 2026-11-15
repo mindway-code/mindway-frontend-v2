@@ -33,7 +33,6 @@ import { RegisterTherapistComponent } from './auth/register-therapist/register-t
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileSummaryCardComponent } from './pages/profile/components/profile-summary-card/profile-summary-card.component';
 import { ProfileEditFormComponent } from './pages/profile/components/profile-edit-form/profile-edit-form.component';
-import { ChildCreateFormComponent } from './pages/profile/components/child-create-form/child-create-form.component';
 import { AnamnesisComponent } from './pages/anamnesis/anamnesis.component';
 import { ChildSelectorComponent } from './pages/anamnesis/components/child-selector/child-selector.component';
 import { AnamnesisEmptyStateComponent } from './pages/anamnesis/components/anamnesis-empty-state/anamnesis-empty-state.component';
@@ -51,6 +50,7 @@ import { ChildListComponent } from './pages/child-profile/components/child-list/
 import { ChildProfileCardComponent } from './pages/child-profile/components/child-card/child-card.component';
 import { ChildDetailsPanelComponent } from './pages/child-profile/components/child-details-panel/child-details-panel.component';
 import { ChildFormPreviewComponent } from './pages/child-profile/components/child-form-preview/child-form-preview.component';
+import { ChildProfileFormModalComponent } from './pages/child-profile/components/child-profile-form-modal/child-profile-form-modal.component';
 import { ReportsChildComponent } from './pages/reports-child/reports-child.component';
 import { ReportsChildSelectorComponent } from './pages/reports-child/components/reports-child-selector/reports-child-selector.component';
 import { ReportsChildListComponent } from './pages/reports-child/components/reports-child-list/reports-child-list.component';
@@ -93,7 +93,6 @@ registerLocaleData(localePt);
     ProfileComponent,
     ProfileSummaryCardComponent,
     ProfileEditFormComponent,
-    ChildCreateFormComponent,
     HomeComponent,
     HowItWorksComponent,
     AboutComponent,
@@ -118,6 +117,7 @@ registerLocaleData(localePt);
     ChildProfileCardComponent,
     ChildDetailsPanelComponent,
     ChildFormPreviewComponent,
+    ChildProfileFormModalComponent,
     ReportsChildComponent,
     ReportsChildSelectorComponent,
     ReportsChildListComponent,

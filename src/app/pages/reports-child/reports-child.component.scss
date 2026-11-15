@@ -13,19 +13,17 @@
 }
 
 .reports-brand {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-lg);
-  min-height: 3.5rem;
-  padding-bottom: var(--gap-lg);
+  gap: var(--gap-md);
+  min-height: 4.25rem;
 }
 
 .reports-brand__logo {
-  display: inline-flex;
-  width: 9rem;
-  transform: translateX(-10px);
-  min-width: 0;
+  grid-column: 2;
+  display: block;
+  width: 11rem;
 
   img {
     display: block;
@@ -35,9 +33,12 @@
 }
 
 .reports-brand__utility {
+  grid-column: 3;
   display: flex;
   align-items: center;
+  justify-self: end;
   gap: var(--gap-md);
+  min-width: 0;
   color: var(--text-dark);
   font-size: var(--font-size-sm);
 }
@@ -105,8 +106,10 @@
 }
 
 .reports-breadcrumb {
+  grid-column: 1;
   color: var(--text-green);
   font-size: var(--font-size-sm);
+  white-space: nowrap;
 
   a {
     color: var(--text-muted);
@@ -232,13 +235,14 @@
     display: inline-flex;
     align-items: center;
     gap: var(--gap-sm);
-    min-height: 3.5rem;
+    min-height: 3rem;
     flex: 0 0 auto;
-    padding: 0 var(--padding-lg);
+    padding: 0 var(--padding-md);
     border: 0;
     border-bottom: 2px solid transparent;
     background: transparent;
     color: var(--text-muted);
+    font-size: var(--font-size-sm);
     white-space: nowrap;
 
     &.is-active {
@@ -304,19 +308,28 @@ input:focus-visible {
   .reports-workspace__toolbar {
     justify-self: stretch;
   }
+
+  .reports-workspace__list {
+    margin-top: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
 }
 
-@media (max-width: 680px) {
-  .reports-page {
-    gap: var(--gap-md);
-  }
-
+@media (max-width: 900px) {
   .reports-brand {
-    min-height: 2.75rem;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .reports-brand__logo {
+    grid-column: 1;
     width: 8rem;
+  }
+
+  .reports-brand__utility {
+    grid-column: 2;
   }
 
   .reports-brand__date,
@@ -324,6 +337,12 @@ input:focus-visible {
   .reports-brand__greeting,
   .reports-breadcrumb {
     display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .reports-page {
+    gap: var(--gap-md);
   }
 
   .reports-page > app-reports-child-summary,
@@ -402,11 +421,6 @@ input:focus-visible {
 
   .reports-workspace__list {
     order: 6;
-    margin-top: 0;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
   }
 
   .reports-error {

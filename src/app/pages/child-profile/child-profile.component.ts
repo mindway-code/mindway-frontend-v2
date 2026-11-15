@@ -81,7 +81,9 @@ export class ChildProfileComponent implements OnInit {
   readonly currentUser$ = this.authService.currentUser$;
   childSearch = '';
   childSort: 'name' | 'youngest' | 'oldest' = 'name';
-  childView: 'grid' | 'list' = 'grid';
+  childView: 'grid' | 'list' = 'list';
+  childPage = 1;
+  childPageSize = 6;
   childFiltersOpen = false;
   childAgeFilter: 'all' | '0-5' | '6-11' | '12+' = 'all';
   childDiagnosisFilter: 'all' | 'with' | 'without' = 'all';
@@ -231,6 +233,7 @@ export class ChildProfileComponent implements OnInit {
   savedMessage = '';
   private currentAnamnesis: AnamnesisRecord | null = null;
   showCreateChild = false;
+  editingChild: ChildRecord | null = null;
   isProfessionalView = false;
   private createQueryHandled = false;
 
@@ -254,8 +257,10 @@ export class ChildProfileComponent implements OnInit {
       this.currentUserRole = this.activityRoleLabel(user?.role ?? '');
       this.isProfessionalView =
         user?.role === 'therapist' || user?.role === 'professional' || user?.role === 'enterprise';
-      if (this.isProfessionalView) this.showCreateChild = false;
-      else if (
+      if (this.isProfessionalView) {
+        this.showCreateChild = false;
+        this.editingChild = null;
+      } else if (
         !this.createQueryHandled &&
         this.route.snapshot.queryParamMap.get('create') === '1'
       ) {
@@ -314,6 +319,7 @@ export class ChildProfileComponent implements OnInit {
     this.childService.selectChild(child);
 
     this.showCreateChild = false;
+    this.editingChild = null;
     this.childMenuId = null;
 
     this.activeSection = 0;
@@ -331,10 +337,9 @@ export class ChildProfileComponent implements OnInit {
 
   onEditChild(child: ChildRecord): void {
     if (this.isProfessionalView) return;
-    this.onSelectChild(child);
-    this.previewMode = false;
-    this.activeSection = 0;
-    this.editingSection = 0;
+    this.showCreateChild = false;
+    this.editingChild = child;
+    this.childMenuId = null;
   }
 
   getFirstName(name?: string | null, email?: string | null): string {
@@ -395,6 +400,38 @@ export class ChildProfileComponent implements OnInit {
       });
   }
 
+  getChildPageCount(total: number): number {
+    return Math.max(1, Math.ceil(total / this.childPageSize));
+  }
+
+  getCurrentChildPage(total: number): number {
+    return Math.min(this.childPage, this.getChildPageCount(total));
+  }
+
+  getPagedChildren(children: ChildRecord[]): ChildRecord[] {
+    const start = (this.getCurrentChildPage(children.length) - 1) * this.childPageSize;
+    return children.slice(start, start + this.childPageSize);
+  }
+
+  setChildPage(page: number, total: number): void {
+    this.childPage = Math.max(1, Math.min(page, this.getChildPageCount(total)));
+    this.childMenuId = null;
+  }
+
+  getChildPageNumbers(total: number): number[] {
+    const pageCount = this.getChildPageCount(total);
+    const start = Math.max(1, Math.min(this.getCurrentChildPage(total) - 2, pageCount - 4));
+    return Array.from({ length: Math.min(5, pageCount) }, (_, index) => start + index);
+  }
+
+  getChildPageStart(total: number): number {
+    return total ? (this.getCurrentChildPage(total) - 1) * this.childPageSize + 1 : 0;
+  }
+
+  getChildPageEnd(total: number): number {
+    return Math.min(total, this.getCurrentChildPage(total) * this.childPageSize);
+  }
+
   openChildFilters(): void {
     this.draftAgeFilter = this.childAgeFilter;
     this.draftDiagnosisFilter = this.childDiagnosisFilter;
@@ -410,6 +447,7 @@ export class ChildProfileComponent implements OnInit {
   applyChildFilters(): void {
     this.childAgeFilter = this.draftAgeFilter;
     this.childDiagnosisFilter = this.draftDiagnosisFilter;
+    this.childPage = 1;
     this.closeChildFilters();
   }
 
@@ -423,6 +461,7 @@ export class ChildProfileComponent implements OnInit {
     this.childDiagnosisFilter = 'all';
     this.draftAgeFilter = 'all';
     this.draftDiagnosisFilter = 'all';
+    this.childPage = 1;
   }
 
   async copyChildAccessCode(child: ChildRecord): Promise<void> {
@@ -479,11 +518,32 @@ export class ChildProfileComponent implements OnInit {
 
   toggleCreateChild(): void {
     if (this.isProfessionalView) return;
+    this.editingChild = null;
     this.showCreateChild = !this.showCreateChild;
   }
 
   closeCreateChild(): void {
     this.showCreateChild = false;
+    this.editingChild = null;
+  }
+
+  saveChildProfile(payload: CreateChildDTO): void {
+    if (this.editingChild) {
+      this.childService
+        .updateChild(this.editingChild.id, payload)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.closeCreateChild();
+            this.directoryMessage = 'Perfil atualizado.';
+          },
+          error: () => {
+            // O serviço disponibiliza a mensagem de erro no modal.
+          },
+        });
+      return;
+    }
+    this.createChild(payload);
   }
 
   createChild(payload: CreateChildDTO): void {
@@ -491,11 +551,14 @@ export class ChildProfileComponent implements OnInit {
     this.childService
       .createChild(payload)
       .pipe(
+        tap(() => {
+          this.closeCreateChild();
+          this.directoryMessage = 'Perfil criado.';
+        }),
         switchMap(() => this.childService.loadAccessibleChildren({ page: 1, pageSize: 50 })),
         take(1),
       )
       .subscribe({
-        next: () => this.closeCreateChild(),
         error: () => {
           // The child service exposes a user-friendly error message.
         },

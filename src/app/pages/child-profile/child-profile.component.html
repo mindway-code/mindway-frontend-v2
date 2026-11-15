@@ -1,6 +1,17 @@
 <main class="child-profile-page">
   <header class="directory-brand" aria-label="Cabeçalho MindWay">
-    <span class="directory-brand__balance" aria-hidden="true"></span>
+    <nav
+      *ngIf="!(selectedChild$ | async); else directoryBrandBalance"
+      class="directory-breadcrumb"
+      aria-label="Navegação estrutural"
+    >
+      <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span aria-current="page">Crianças</span>
+    </nav>
+    <ng-template #directoryBrandBalance>
+      <span class="directory-brand__balance" aria-hidden="true"></span>
+    </ng-template>
     <a routerLink="/dashboard" class="directory-brand__logo" aria-label="MindWay, voltar ao início">
       <img src="assets/img/mindway-logo.svg" alt="MindWay" />
     </a>
@@ -21,12 +32,6 @@
   </header>
 
   <ng-container *ngIf="!(selectedChild$ | async)">
-    <nav class="directory-breadcrumb" aria-label="Navegação estrutural">
-      <a routerLink="/dashboard"><i class="bi bi-house" aria-hidden="true"></i> Início</a>
-      <i class="bi bi-chevron-right" aria-hidden="true"></i>
-      <span aria-current="page">Crianças</span>
-    </nav>
-
     <header class="directory-heading">
       <div>
         <p class="directory-heading__kicker">PERFIS INFANTIS</p>
@@ -39,6 +44,12 @@
           }}
         </p>
       </div>
+      <img
+        class="directory-heading__illustration"
+        src="assets/img/anamnese.webp"
+        alt=""
+        aria-hidden="true"
+      />
       <button
         *ngIf="!isProfessionalView"
         type="button"
@@ -50,13 +61,14 @@
     </header>
   </ng-container>
 
-  <app-child-create-form
-    *ngIf="showCreateChild && !isProfessionalView"
+  <app-child-profile-form-modal
+    *ngIf="(showCreateChild || editingChild) && !isProfessionalView"
+    [child]="editingChild"
     [saving]="(childrenSaving$ | async) ?? false"
     [error]="(childrenError$ | async) ?? null"
-    (create)="createChild($event)"
+    (save)="saveChildProfile($event)"
     (cancel)="closeCreateChild()"
-  ></app-child-create-form>
+  ></app-child-profile-form-modal>
 
   <app-page-skeleton
     *ngIf="childrenLoading$ | async"
@@ -78,6 +90,7 @@
             <input
               type="search"
               [(ngModel)]="childSearch"
+              (ngModelChange)="childPage = 1"
               placeholder="Buscar criança por nome ou diagnóstico..."
             />
           </label>
@@ -115,7 +128,7 @@
           <label class="directory-sort">
             <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
             <span class="visually-hidden">Ordenar crianças</span>
-            <select [(ngModel)]="childSort">
+            <select [(ngModel)]="childSort" (ngModelChange)="childPage = 1">
               <option value="name">Ordenar: nome</option>
               <option value="youngest">Mais novas</option>
               <option value="oldest">Mais velhas</option>
@@ -139,7 +152,10 @@
             </div>
 
             <div class="directory-cards" [class.directory-cards--list]="childView === 'list'">
-              <article class="directory-card" *ngFor="let child of visibleChildren">
+              <article
+                class="directory-card"
+                *ngFor="let child of getPagedChildren(visibleChildren)"
+              >
                 <div class="directory-card__avatar" aria-hidden="true">
                   <img
                     *ngIf="getChildPhoto(child) as photo; else childInitial"
@@ -151,50 +167,61 @@
                 <div class="directory-card__body">
                   <h3>{{ getChildName(child) }}</h3>
                   <p class="directory-card__meta">
+                    <i class="bi bi-calendar3" aria-hidden="true"></i>
                     {{ getChildAge(child) }} <span aria-hidden="true">·</span>
                     {{ formatBirthDate(child) }}
                   </p>
-                  <div
-                    class="directory-card__diagnoses"
-                    *ngIf="getChildDiagnoses(child).length; else noDiagnosis"
-                  >
-                    <span *ngFor="let diagnosis of getChildDiagnoses(child)">{{ diagnosis }}</span>
-                  </div>
-                  <ng-template #noDiagnosis
-                    ><p class="directory-card__diagnosis-empty">
-                      Sem diagnóstico informado
-                    </p></ng-template
-                  >
                 </div>
                 <div class="directory-card__actions">
                   <button
                     type="button"
                     class="directory-card__view"
-                    [attr.aria-label]="'Visualizar perfil de ' + getChildName(child)"
+                    [attr.aria-label]="'Ver mais sobre ' + getChildName(child)"
                     (click)="onSelectChild(child)"
                   >
-                    <i class="bi bi-eye" aria-hidden="true"></i> Visualizar
+                    Ver mais
                   </button>
                   <div class="directory-card__more">
                     <button
                       type="button"
                       class="directory-card__icon-button"
-                      [attr.aria-label]="'Mais ações para ' + getChildName(child)"
+                      [attr.aria-label]="'Diagnósticos e ações de ' + getChildName(child)"
                       [attr.aria-expanded]="childMenuId === child.id"
                       (click)="childMenuId = childMenuId === child.id ? null : child.id"
                     >
                       <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
                     </button>
-                    <div class="directory-card__menu" *ngIf="childMenuId === child.id">
-                      <button type="button" (click)="childMenuId = null; onSelectChild(child)">
-                        <i class="bi bi-eye" aria-hidden="true"></i> Abrir perfil
-                      </button>
+                    <div
+                      class="directory-card__menu"
+                      *ngIf="childMenuId === child.id"
+                      role="group"
+                      [attr.aria-label]="'Opções de ' + getChildName(child)"
+                    >
+                      <div class="directory-card__menu-diagnoses">
+                        <span>Diagnósticos</span>
+                        <ul *ngIf="getChildDiagnoses(child).length; else noMenuDiagnosis">
+                          <li *ngFor="let diagnosis of getChildDiagnoses(child)">
+                            {{ diagnosis }}
+                          </li>
+                        </ul>
+                        <ng-template #noMenuDiagnosis>
+                          <p>Sem diagnóstico informado</p>
+                        </ng-template>
+                      </div>
                       <button
-                        *ngIf="!isProfessionalView && getChildAccessCode(child) !== 'Não informado'"
+                        *ngIf="!isProfessionalView"
                         type="button"
+                        [disabled]="getChildAccessCode(child) === 'Não informado'"
                         (click)="copyChildAccessCode(child)"
                       >
                         <i class="bi bi-key" aria-hidden="true"></i> Copiar código de acesso
+                      </button>
+                      <button
+                        *ngIf="!isProfessionalView"
+                        type="button"
+                        (click)="onEditChild(child)"
+                      >
+                        <i class="bi bi-pencil" aria-hidden="true"></i> Editar perfil
                       </button>
                     </div>
                   </div>
@@ -203,7 +230,11 @@
 
               <button
                 *ngIf="
-                  !isProfessionalView && children.length > 0 && !childSearch && !hasChildFilters
+                  childView === 'grid' &&
+                  !isProfessionalView &&
+                  children.length > 0 &&
+                  !childSearch &&
+                  !hasChildFilters
                 "
                 type="button"
                 class="directory-add-card"
@@ -237,6 +268,62 @@
                 Limpar busca e filtros
               </button>
             </div>
+
+            <footer class="directory-pagination" *ngIf="visibleChildren.length">
+              <div class="directory-pagination__summary">
+                <span>
+                  Mostrando {{ getChildPageStart(visibleChildren.length) }}–{{
+                    getChildPageEnd(visibleChildren.length)
+                  }}
+                  de {{ visibleChildren.length }} perfis
+                </span>
+                <label>
+                  <span class="visually-hidden">Perfis por página</span>
+                  <select [(ngModel)]="childPageSize" (ngModelChange)="childPage = 1">
+                    <option [ngValue]="6">6 por página</option>
+                    <option [ngValue]="12">12 por página</option>
+                    <option [ngValue]="24">24 por página</option>
+                  </select>
+                </label>
+              </div>
+              <nav class="directory-pagination__pages" aria-label="Páginas de perfis">
+                <button
+                  type="button"
+                  aria-label="Página anterior"
+                  [disabled]="getCurrentChildPage(visibleChildren.length) === 1"
+                  (click)="setChildPage(childPage - 1, visibleChildren.length)"
+                >
+                  <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                </button>
+                <button
+                  *ngFor="let page of getChildPageNumbers(visibleChildren.length)"
+                  type="button"
+                  [class.is-current]="getCurrentChildPage(visibleChildren.length) === page"
+                  [attr.aria-label]="'Página ' + page"
+                  [attr.aria-current]="
+                    getCurrentChildPage(visibleChildren.length) === page ? 'page' : null
+                  "
+                  (click)="setChildPage(page, visibleChildren.length)"
+                >
+                  {{ page }}
+                </button>
+                <button
+                  type="button"
+                  aria-label="Próxima página"
+                  [disabled]="
+                    getCurrentChildPage(visibleChildren.length) ===
+                    getChildPageCount(visibleChildren.length)
+                  "
+                  (click)="setChildPage(childPage + 1, visibleChildren.length)"
+                >
+                  <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </button>
+              </nav>
+              <span class="directory-pagination__page-label">
+                Página {{ getCurrentChildPage(visibleChildren.length) }} de
+                {{ getChildPageCount(visibleChildren.length) }}
+              </span>
+            </footer>
           </section>
 
           <aside class="directory-help" aria-labelledby="directory-help-title">

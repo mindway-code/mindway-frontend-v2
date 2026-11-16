@@ -213,11 +213,11 @@
   grid-column: 1 / -1;
   min-width: 0;
   margin-top: calc(-1 * var(--gap-lg));
-  overflow: hidden;
   border: 1px solid var(--border-light);
   border-top: 0;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background: var(--bg-white);
+  box-shadow: var(--shadow-sm);
 }
 
 .reports-tabs {
@@ -227,19 +227,21 @@
   gap: var(--gap-sm);
   overflow-x: auto;
   border: 1px solid var(--border-light);
-  border-bottom-color: var(--border-medium);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-bottom-color: var(--border-light);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: var(--bg-white);
+  padding: 0 var(--padding-lg);
+  box-shadow: var(--shadow-sm);
 
   button {
     display: inline-flex;
     align-items: center;
     gap: var(--gap-sm);
-    min-height: 3rem;
+    min-height: 3.9rem;
     flex: 0 0 auto;
     padding: 0 var(--padding-md);
     border: 0;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     background: transparent;
     color: var(--text-muted);
     font-size: var(--font-size-sm);
@@ -253,6 +255,10 @@
 
     &:hover {
       color: var(--text-green);
+    }
+
+    i {
+      font-size: 1.1rem !important;
     }
   }
 
@@ -310,11 +316,7 @@ input:focus-visible {
   }
 
   .reports-workspace__list {
-    margin-top: 0;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+    margin-top: calc(-1 * var(--gap-lg));
   }
 }
 
@@ -375,27 +377,22 @@ input:focus-visible {
   .reports-tabs {
     order: 3;
     gap: var(--gap-sm);
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+    padding: 0 var(--padding-sm);
 
     button {
       min-height: 2.75rem;
       flex: 1 1 0;
       justify-content: center;
       padding: 0 var(--padding-sm);
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
+      border: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
       font-size: var(--font-size-sm);
 
       &.is-active {
-        border-color: var(--bg-green);
-        background: var(--bg-green);
-        color: var(--text-light);
-      }
-
-      &:last-child {
-        display: none;
+        border-bottom-color: var(--bg-green);
+        background: transparent;
+        color: var(--text-green);
       }
     }
 

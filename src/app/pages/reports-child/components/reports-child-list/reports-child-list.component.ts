@@ -20,6 +20,8 @@ export type ReportsChildListItem = ReportsChildRecord & { canManage?: boolean };
 })
 export class ReportsChildListComponent {
   openMenuId: string | null = null;
+  menuPosition: 'above' | 'below' = 'below';
+  menuMaxHeight = 0;
   @Input() reports: ReportsChildListItem[] = [];
   @Input() loading = false;
   @Input() pagination: PaginationMeta | null = null;
@@ -60,8 +62,20 @@ export class ReportsChildListComponent {
     this.selectionChange.emit(checked ? report : null);
   }
 
-  toggleMobileMenu(reportId: string): void {
-    this.openMenuId = this.openMenuId === reportId ? null : reportId;
+  toggleMobileMenu(reportId: string, event: MouseEvent): void {
+    if (this.openMenuId === reportId) {
+      this.openMenuId = null;
+      return;
+    }
+
+    const trigger = event.currentTarget as HTMLElement;
+    const bounds = trigger.getBoundingClientRect();
+    const spaceAbove = bounds.top - 8;
+    const spaceBelow = window.innerHeight - bounds.bottom - 8;
+
+    this.menuPosition = spaceBelow >= spaceAbove ? 'below' : 'above';
+    this.menuMaxHeight = Math.max(0, this.menuPosition === 'below' ? spaceBelow : spaceAbove);
+    this.openMenuId = reportId;
   }
 
   selectFromMenu(report: ReportsChildListItem): void {

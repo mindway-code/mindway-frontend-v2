@@ -286,6 +286,20 @@
   }
 }
 
+.reports-table__status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: var(--gap-sm);
+  padding: 0.2rem var(--padding-sm);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-pill);
+  background: var(--bg-light);
+  color: var(--text-blue-dark);
+  font-size: var(--font-size-xsm);
+  font-weight: var(--fw-md);
+}
+
 .reports-empty {
   display: flex;
   align-items: center;

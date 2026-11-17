@@ -91,7 +91,7 @@ export class ReportsChildService {
     this.errorSubject.next(null);
 
     return this.http
-      .patch<SuccessResponse<ReportsChildRecord>>(`${this.baseUrl}/${reportId}`, payload)
+      .patch<SuccessResponse<ReportsChildRecord>>(`${this.baseUrl}/${reportId}/draft`, payload)
       .pipe(
         map((res) => res.data),
         tap((updated) => {
@@ -106,6 +106,20 @@ export class ReportsChildService {
         }),
         finalize(() => this.savingSubject.next(false)),
       );
+  }
+
+  submitReport(reportId: string): Observable<ReportsChildRecord> {
+    return this.runTransition(
+      this.http.post<SuccessResponse<ReportsChildRecord>>(`${this.baseUrl}/${reportId}/submissions`, {}),
+      'Não foi possível enviar o relatório para validação.',
+    );
+  }
+
+  createRevision(reportId: string): Observable<ReportsChildRecord> {
+    return this.runTransition(
+      this.http.post<SuccessResponse<ReportsChildRecord>>(`${this.baseUrl}/${reportId}/revisions`, {}),
+      'Não foi possível criar uma nova revisão.',
+    );
   }
 
   deleteReport(reportId: string): Observable<void> {
@@ -129,8 +143,32 @@ export class ReportsChildService {
         if (selected?.id === reportId) this.selectedReportSubject.next(null);
       }),
       catchError((err) => {
-        this.errorSubject.next('Não foi possível excluir o relatório.');
+        this.errorSubject.next('Não foi possível arquivar o relatório.');
         return throwError(() => err);
+      }),
+      finalize(() => this.savingSubject.next(false)),
+    );
+  }
+
+  private runTransition(
+    request: Observable<SuccessResponse<ReportsChildRecord>>,
+    errorMessage: string,
+  ): Observable<ReportsChildRecord> {
+    this.savingSubject.next(true);
+    this.errorSubject.next(null);
+    return request.pipe(
+      map((response) => response.data),
+      tap((updated) => {
+        this.reportsSubject.next(
+          this.reportsSubject.value.map((report) => report.id === updated.id ? updated : report),
+        );
+        if (this.selectedReportSubject.value?.id === updated.id) {
+          this.selectedReportSubject.next(updated);
+        }
+      }),
+      catchError((error) => {
+        this.errorSubject.next(errorMessage);
+        return throwError(() => error);
       }),
       finalize(() => this.savingSubject.next(false)),
     );

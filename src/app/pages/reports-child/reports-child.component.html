@@ -149,6 +149,8 @@
             (open)="onOpenReport($event)"
             (edit)="onEditReport($event)"
             (delete)="onDeleteReport($event)"
+            (submitDraft)="onSubmitWorkflow($event)"
+            (createRevision)="onCreateRevision($event)"
             (pageChange)="onPageChange($event)"
             (clearFilters)="clearFilters()"
           ></app-reports-child-list>
@@ -173,26 +175,29 @@
     (close)="onCloseReport()"
     (edit)="onEditReport($event)"
     (delete)="onDeleteReport($event)"
+    (submitDraft)="onSubmitWorkflow($event)"
+    (createRevision)="onCreateRevision($event)"
   ></app-report-details-dialog>
 
   <article class="reports-print-document" *ngIf="selectedReport">
     <p>{{ reportType(selectedReport) }}</p>
-    <h1>{{ selectedReport.title }}</h1>
+    <h1>{{ selectedReport.revision.title }}</h1>
     <small>
-      {{ selectedReport.user?.name || selectedReport.user?.email || 'Autor não identificado' }}
-      · {{ selectedReport.createdAt | date: 'dd MMMM yyyy' : '' : 'pt-BR' }}
+      {{ selectedReport.author.name || selectedReport.author.email || 'Autor não identificado' }}
+      · revisão {{ selectedReport.revision.revisionNumber }}
+      · {{ selectedReport.revision.createdAt | date: 'dd MMMM yyyy' : '' : 'pt-BR' }}
     </small>
-    <section *ngIf="selectedReport.behavior">
+    <section *ngIf="selectedReport.revision.behavior">
       <h2>Comportamento e observações</h2>
-      <p>{{ selectedReport.behavior }}</p>
+      <p>{{ selectedReport.revision.behavior }}</p>
     </section>
-    <section *ngIf="selectedReport.difficulty">
+    <section *ngIf="selectedReport.revision.difficulty">
       <h2>Dificuldades identificadas</h2>
-      <p>{{ selectedReport.difficulty }}</p>
+      <p>{{ selectedReport.revision.difficulty }}</p>
     </section>
-    <section *ngIf="selectedReport.recommendation">
+    <section *ngIf="selectedReport.revision.recommendation">
       <h2>Recomendações</h2>
-      <p>{{ selectedReport.recommendation }}</p>
+      <p>{{ selectedReport.revision.recommendation }}</p>
     </section>
   </article>
 </main>

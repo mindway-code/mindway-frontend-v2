@@ -45,7 +45,7 @@
     <form class="link-clinic__form" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="link-clinic__section-heading">
         <h3>Dados da clínica</h3>
-        <p>Use os dados oficiais da clínica para criar o acesso.</p>
+        <p>Informe o nome da clínica para criar o acesso. Esta etapa não verifica a organização.</p>
       </div>
 
       <div class="link-clinic__clinic-fields">
@@ -68,21 +68,6 @@
           </p>
         </div>
 
-        <div class="input-ui">
-          <div class="input-ui__field">
-            <input
-              class="input-ui__control"
-              formControlName="cnpj"
-              type="text"
-              inputmode="numeric"
-              autocomplete="off"
-              placeholder=" "
-              maxlength="18"
-            />
-            <label class="input-ui__label">CNPJ (opcional)</label>
-          </div>
-          <small class="link-clinic__field-hint">Ex.: 00.000.000/0000-00</small>
-        </div>
       </div>
 
       <div class="input-ui">

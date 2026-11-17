@@ -8,6 +8,18 @@
   background: rgba(21, 37, 42, 0.46);
 }
 
+.report-dialog__status {
+  display: inline-flex;
+  margin-top: var(--gap-sm);
+  padding: var(--padding-sm) var(--padding-md);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--border-pill);
+  background: var(--bg-light);
+  color: var(--text-blue-dark);
+  font-size: var(--font-size-sm);
+  font-weight: var(--fw-md);
+}
+
 .report-dialog {
   display: flex;
   flex-direction: column;

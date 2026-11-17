@@ -1,13 +1,11 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, combineLatest, map, take } from 'rxjs';
-import type { ChildRecord } from '../../api/interfaces/child.interface';
 import type {
   CreateReportsChildDTO,
   ReportsChildRecord,
   UpdateReportsChildDTO,
 } from '../../api/interfaces/reports-child.interface';
-import type { UserRecord } from '../../api/interfaces/user.interface';
 import { AuthService } from '../../services/auth.service';
 import { ChildService } from '../../services/child.service';
 import { ReportsChildService } from '../../services/reports-child.service';
@@ -16,7 +14,7 @@ import type {
   ReportSortOrder,
 } from './components/reports-child-toolbar/reports-child-toolbar.component';
 
-export type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean };
+export type ReportWithPermissions = ReportsChildRecord;
 
 @Component({
   selector: 'app-reports-child',
@@ -49,26 +47,10 @@ export class ReportsChildComponent implements OnInit {
     this.selectedChild$,
     this.authService.currentUser$,
   ]).pipe(
-    map(
-      ([child, user]) =>
-        !!child &&
-        !!user &&
-        ['admin', 'enterprise', 'professional', 'therapist'].includes(user.role ?? ''),
-    ),
+    map(([child, user]) => !!child && !!user),
   );
 
-  readonly reportsWithPermissions$ = combineLatest([
-    this.reportsChildService.reports$,
-    this.authService.currentUser$,
-    this.selectedChild$,
-  ]).pipe(
-    map(([reports, user, child]) =>
-      reports.map((report) => ({
-        ...report,
-        canManage: this.canManageReport(user, child, report),
-      })),
-    ),
-  );
+  readonly reportsWithPermissions$ = this.reportsChildService.reports$;
 
   readonly visibleReports$ = combineLatest([
     this.reportsWithPermissions$,
@@ -81,18 +63,18 @@ export class ReportsChildComponent implements OnInit {
 
       return [...reports]
         .filter((report) => {
-          if (accessFilter === 'manageable' && !report.canManage) return false;
-          if (accessFilter === 'shared' && report.canManage) return false;
+          if (accessFilter === 'manageable' && !this.hasManagementCapability(report)) return false;
+          if (accessFilter === 'shared' && this.hasManagementCapability(report)) return false;
           if (!search) return true;
 
           return this.normalize(
             [
-              report.title,
-              report.behavior,
-              report.difficulty,
-              report.recommendation,
-              report.user?.name,
-              report.user?.email,
+              report.revision.title,
+              report.revision.behavior,
+              report.revision.difficulty,
+              report.revision.recommendation,
+              report.author.name,
+              report.author.email,
               this.reportType(report),
             ]
               .filter(Boolean)
@@ -192,6 +174,7 @@ export class ReportsChildComponent implements OnInit {
   }
 
   onEditReport(report: ReportsChildRecord): void {
+    if (!report.capabilities.canEditDraft) return;
     this.reportInView = null;
     this.editingReport = report;
     this.showCreateForm = false;
@@ -230,8 +213,8 @@ export class ReportsChildComponent implements OnInit {
   }
 
   onDeleteReport(report: ReportWithPermissions): void {
-    if (!report.canManage) return;
-    if (!confirm('Tem certeza de que deseja excluir este relatório?')) return;
+    if (!report.capabilities.canArchive) return;
+    if (!confirm('Arquivar este relatório? O histórico de revisões será preservado.')) return;
 
     this.reportsChildService
       .deleteReport(report.id)
@@ -240,6 +223,30 @@ export class ReportsChildComponent implements OnInit {
         next: () => {
           if (this.selectedReport?.id === report.id) this.selectedReport = null;
           this.onCloseReport();
+        },
+      });
+  }
+
+  onSubmitWorkflow(report: ReportWithPermissions): void {
+    if (!report.capabilities.canSubmit) return;
+    if (!confirm('Enviar este rascunho? Após o envio, o conteúdo não poderá ser editado.')) return;
+
+    this.reportsChildService
+      .submitReport(report.id)
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe({ next: (updated) => (this.reportInView = updated) });
+  }
+
+  onCreateRevision(report: ReportWithPermissions): void {
+    if (!report.capabilities.canCreateRevision) return;
+
+    this.reportsChildService
+      .createRevision(report.id)
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.reportInView = updated;
+          this.onEditReport(updated);
         },
       });
   }
@@ -275,11 +282,11 @@ export class ReportsChildComponent implements OnInit {
   }
 
   countShared(reports: ReportWithPermissions[]): number {
-    return reports.filter((report) => !report.canManage).length;
+    return reports.filter((report) => !this.hasManagementCapability(report)).length;
   }
 
   countManageable(reports: ReportWithPermissions[]): number {
-    return reports.filter((report) => report.canManage).length;
+    return reports.filter((report) => this.hasManagementCapability(report)).length;
   }
 
   private loadReports(page: number): void {
@@ -299,18 +306,7 @@ export class ReportsChildComponent implements OnInit {
       .trim();
   }
 
-  private canManageReport(
-    user: UserRecord | null,
-    child: ChildRecord | null,
-    report: ReportsChildRecord,
-  ): boolean {
-    const userId = user?.id ?? null;
-    const role = user?.role ?? null;
-    if (!userId) return false;
-    if (role === 'admin') return true;
-    const canAuthor = role === 'enterprise' || role === 'professional' || role === 'therapist';
-    const isResponsible =
-      child?.responsibleId === userId || child?.secondaryResponsibleId === userId;
-    return canAuthor && !isResponsible && report.userId === userId;
+  private hasManagementCapability(report: ReportsChildRecord): boolean {
+    return report.capabilities.canEditDraft || report.capabilities.canSubmit || report.capabilities.canCreateRevision || report.capabilities.canArchive;
   }
 }

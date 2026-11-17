@@ -1,4 +1,5 @@
 export type UserRole = 'admin' | 'therapist' | 'common' | 'enterprise' | 'professional';
+export type PublicRegistrationRole = Exclude<UserRole, 'admin'>;
 
 export interface UserRecord {
   id: string;

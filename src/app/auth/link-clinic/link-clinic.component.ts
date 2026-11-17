@@ -16,7 +16,6 @@ export class LinkClinicComponent {
 
   readonly form = this.fb.group({
     name: ['', [Validators.required]],
-    cnpj: [''],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -37,7 +36,6 @@ export class LinkClinicComponent {
 
     const name = this.form.value.name?.trim() ?? '';
     const email = this.form.value.email?.trim() ?? '';
-    const cnpj = this.form.value.cnpj?.trim() ?? '';
     const password = this.form.value.password ?? '';
     const confirmPassword = this.form.value.confirmPassword ?? '';
 
@@ -48,7 +46,6 @@ export class LinkClinicComponent {
         password,
         confirmPassword,
         role: 'enterprise',
-        cnpj: cnpj || undefined,
       })
       .pipe(switchMap(() => this.authService.loadCurrentUser()))
       .subscribe({

@@ -51,7 +51,12 @@ export class AuthInterceptor implements HttpInterceptor {
         if (!isApiRequest) return throwError(() => err);
         if (isAuthEndpoint) return throwError(() => err);
 
-        if (err instanceof HttpErrorResponse && err.status === 401) {
+        const errorCode =
+          err instanceof HttpErrorResponse
+            ? (err.error as { error?: { code?: string } } | null)?.error?.code
+            : undefined;
+
+        if (err instanceof HttpErrorResponse && err.status === 401 && errorCode === 'ACCESS_TOKEN_EXPIRED') {
           return this.refreshOnce().pipe(
             switchMap((newToken) => {
               const retryReq = authReq.clone({

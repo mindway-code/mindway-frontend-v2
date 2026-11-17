@@ -7,9 +7,16 @@ import {
   Output,
 } from '@angular/core';
 import type { PaginationMeta } from '../../../../api/interfaces/api-response.interface';
-import type { ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
+import {
+  reportStatusLabel,
+  type ReportsChildRecord,
+} from '../../../../api/interfaces/reports-child.interface';
 
-export type ReportsChildListItem = ReportsChildRecord & { canManage?: boolean };
+export type ReportsChildListItem = ReportsChildRecord;
+
+export function hasReportManagementCapability(report: ReportsChildRecord): boolean {
+  return report.capabilities.canEditDraft || report.capabilities.canSubmit || report.capabilities.canCreateRevision || report.capabilities.canArchive;
+}
 
 @Component({
   selector: 'app-reports-child-list',
@@ -19,6 +26,8 @@ export type ReportsChildListItem = ReportsChildRecord & { canManage?: boolean };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsChildListComponent {
+  readonly hasManagementCapability = hasReportManagementCapability;
+  readonly statusLabel = reportStatusLabel;
   openMenuId: string | null = null;
   menuPosition: 'above' | 'below' = 'below';
   menuMaxHeight = 0;
@@ -32,11 +41,13 @@ export class ReportsChildListComponent {
   @Output() open = new EventEmitter<ReportsChildListItem>();
   @Output() edit = new EventEmitter<ReportsChildRecord>();
   @Output() delete = new EventEmitter<ReportsChildListItem>();
+  @Output() submitDraft = new EventEmitter<ReportsChildListItem>();
+  @Output() createRevision = new EventEmitter<ReportsChildListItem>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() clearFilters = new EventEmitter<void>();
 
   reportAuthor(report: ReportsChildRecord): string {
-    return report.user?.name || report.user?.email || 'Autor não identificado';
+    return report.author.name || report.author.email || 'Autor não identificado';
   }
 
   authorInitial(report: ReportsChildRecord): string {

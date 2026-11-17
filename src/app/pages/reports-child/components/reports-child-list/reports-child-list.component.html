@@ -47,27 +47,30 @@
       <button
         class="reports-table__title"
         type="button"
-        [attr.title]="report.title"
+        [attr.title]="report.revision.title"
         (click)="open.emit(report)"
       >
-        {{ report.title }}
+        {{ report.revision.title }}
       </button>
       <div class="reports-table__meta">
-        <time [attr.datetime]="report.createdAt"
+        <time [attr.datetime]="report.revision.createdAt"
           ><i class="bi bi-calendar3" aria-hidden="true"></i
-          >{{ report.createdAt | date: 'dd MMM yyyy' : '' : 'pt-BR' }}</time
+          >{{ report.revision.createdAt | date: 'dd MMM yyyy' : '' : 'pt-BR' }}</time
         >
         <span class="reports-table__meta-divider" aria-hidden="true"></span>
         <span
           class="reports-table__access"
-          [class.reports-table__access--manageable]="report.canManage"
+          [class.reports-table__access--manageable]="hasManagementCapability(report)"
         >
           <i
             class="bi"
-            [ngClass]="report.canManage ? 'bi-pencil-square' : 'bi-share'"
+            [ngClass]="hasManagementCapability(report) ? 'bi-pencil-square' : 'bi-share'"
             aria-hidden="true"
           ></i>
-          <span>{{ report.canManage ? 'Editável' : 'Compartilhado' }}</span>
+          <span>{{ hasManagementCapability(report) ? 'Gerenciável' : 'Compartilhado' }}</span>
+        </span>
+        <span class="reports-table__status" [attr.data-status]="report.lifecycle.status">
+          {{ statusLabel(report) }} · revisão {{ report.revision.revisionNumber }}
         </span>
       </div>
     </div>
@@ -76,7 +79,7 @@
         class="reports-table__view"
         type="button"
         (click)="open.emit(report)"
-        [attr.aria-label]="'Visualizar relatório ' + report.title"
+        [attr.aria-label]="'Visualizar relatório ' + report.revision.title"
       >
         <i class="bi bi-eye" aria-hidden="true"></i><span>Visualizar</span>
       </button>
@@ -84,7 +87,7 @@
         <button
           class="reports-table__more-trigger"
           type="button"
-          [attr.aria-label]="'Mais opções do relatório ' + report.title"
+          [attr.aria-label]="'Mais opções do relatório ' + report.revision.title"
           [attr.aria-expanded]="openMenuId === report.id"
           (click)="toggleMobileMenu(report.id, $event)"
         >
@@ -115,19 +118,33 @@
             >{{ selectedReportId === report.id ? 'Remover seleção' : 'Selecionar para imprimir' }}
           </button>
           <button
-            *ngIf="report.canManage"
+            *ngIf="report.capabilities.canEditDraft"
             type="button"
             (click)="openMenuId = null; edit.emit(report)"
           >
             <i class="bi bi-pencil" aria-hidden="true"></i> Editar relatório
           </button>
           <button
-            *ngIf="report.canManage"
+            *ngIf="report.capabilities.canSubmit"
+            type="button"
+            (click)="openMenuId = null; submitDraft.emit(report)"
+          >
+            <i class="bi bi-send-check" aria-hidden="true"></i> Enviar para validação
+          </button>
+          <button
+            *ngIf="report.capabilities.canCreateRevision"
+            type="button"
+            (click)="openMenuId = null; createRevision.emit(report)"
+          >
+            <i class="bi bi-file-earmark-plus" aria-hidden="true"></i> Criar nova revisão
+          </button>
+          <button
+            *ngIf="report.capabilities.canArchive"
             class="reports-table__delete"
             type="button"
             (click)="openMenuId = null; delete.emit(report)"
           >
-            <i class="bi bi-trash3" aria-hidden="true"></i> Excluir relatório
+            <i class="bi bi-archive" aria-hidden="true"></i> Arquivar relatório
           </button>
         </div>
       </div>

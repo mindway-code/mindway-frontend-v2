@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import type { ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
+import { reportStatusLabel, type ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
 
-type ReportWithPermissions = ReportsChildRecord & { canManage?: boolean };
+type ReportWithPermissions = ReportsChildRecord;
 
 @Component({
   selector: 'app-report-details-dialog',
@@ -17,9 +17,15 @@ export class ReportDetailsDialogComponent {
   @Output() close = new EventEmitter<void>();
   @Output() edit = new EventEmitter<ReportsChildRecord>();
   @Output() delete = new EventEmitter<ReportWithPermissions>();
+  @Output() submitDraft = new EventEmitter<ReportWithPermissions>();
+  @Output() createRevision = new EventEmitter<ReportWithPermissions>();
 
   get author(): string {
-    return this.report.user?.name || this.report.user?.email || 'Autor não identificado';
+    return this.report.author.name || this.report.author.email || 'Autor não identificado';
+  }
+
+  get status(): string {
+    return reportStatusLabel(this.report);
   }
 
   print(): void {

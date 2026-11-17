@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { PaginationMeta } from '../../../../api/interfaces/api-response.interface';
 import type { ReportsChildRecord } from '../../../../api/interfaces/reports-child.interface';
 
-type SummaryReport = ReportsChildRecord & { canManage?: boolean };
+type SummaryReport = ReportsChildRecord;
 
 @Component({
   selector: 'app-reports-child-summary',
@@ -20,11 +20,15 @@ export class ReportsChildSummaryComponent {
   }
 
   get sharedOnPage(): number {
-    return this.reports.filter((report) => !report.canManage).length;
+    return this.reports.filter(
+      (report) => !report.capabilities.canEditDraft && !report.capabilities.canArchive,
+    ).length;
   }
 
   get manageableOnPage(): number {
-    return this.reports.filter((report) => report.canManage).length;
+    return this.reports.filter(
+      (report) => report.capabilities.canEditDraft || report.capabilities.canArchive,
+    ).length;
   }
 
   get latestDate(): string | null {

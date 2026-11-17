@@ -33,10 +33,10 @@ export class ReportsChildFormComponent implements OnChanges {
     if (changes['report'] || changes['mode']) {
       const r = this.report;
       this.form.reset({
-        title: r?.title ?? '',
-        behavior: r?.behavior ?? '',
-        difficulty: r?.difficulty ?? '',
-        recommendation: r?.recommendation ?? '',
+        title: r?.revision.title ?? '',
+        behavior: r?.revision.behavior ?? '',
+        difficulty: r?.revision.difficulty ?? '',
+        recommendation: r?.revision.recommendation ?? '',
       });
     }
   }

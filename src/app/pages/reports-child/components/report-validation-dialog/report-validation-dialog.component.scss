@@ -1,0 +1,237 @@
+.validation-dialog__backdrop {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--padding-lg);
+  background: rgba(21, 37, 42, 0.58);
+}
+
+.validation-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 42rem);
+  max-height: min(92vh, 50rem);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-dark);
+}
+
+.validation-dialog__header,
+.validation-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  padding: var(--padding-lg);
+}
+
+.validation-dialog__header {
+  border-bottom: 1px solid var(--border-light);
+
+  p,
+  h2,
+  small {
+    display: block;
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-green);
+    font-weight: var(--fw-lg);
+  }
+
+  h2 {
+    margin-top: 0.2rem;
+    font-weight: var(--fw-lg);
+  }
+
+  small {
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+  }
+
+  > button {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 2.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--bg-light);
+    color: var(--text-muted);
+  }
+}
+
+.validation-dialog__body {
+  display: grid;
+  gap: var(--gap-lg);
+  overflow: auto;
+  padding: var(--padding-lg);
+}
+
+.validation-dialog__preview {
+  padding: var(--padding-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-light);
+
+  span {
+    color: var(--text-green);
+    font-size: var(--font-size-sm);
+  }
+
+  h3,
+  h4,
+  p {
+    margin: 0;
+  }
+
+  h3 {
+    margin-top: 0.15rem;
+    font-size: var(--font-size-lg);
+    font-weight: var(--fw-lg);
+  }
+
+  section {
+    margin-top: var(--gap-md);
+    padding-top: var(--gap-md);
+    border-top: 1px solid var(--border-light);
+  }
+
+  h4 {
+    color: var(--text-green);
+    font-weight: var(--fw-lg);
+  }
+
+  p {
+    margin-top: var(--gap-sm);
+    line-height: 1.55;
+    white-space: pre-line;
+  }
+}
+
+.validation-dialog form {
+  display: grid;
+  gap: var(--gap-sm);
+
+  label {
+    font-weight: var(--fw-lg);
+  }
+
+  > p:not(.validation-dialog__error) {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  input {
+    width: min(100%, 14rem);
+    min-height: 3rem;
+    padding: 0 var(--padding-md);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    background: var(--bg-white);
+    color: var(--text-dark);
+    font-size: var(--font-size-lg) !important;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.35em;
+  }
+}
+
+.validation-dialog__notice,
+.validation-dialog__error {
+  margin: 0;
+}
+
+.validation-dialog__notice {
+  color: var(--text-muted);
+}
+
+.validation-dialog__error {
+  color: #a33636;
+}
+
+.validation-dialog__setup {
+  display: flex;
+  gap: var(--gap-md);
+  padding: var(--padding-lg);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: var(--bg-blue);
+
+  > i {
+    color: var(--text-blue-dark);
+    font-size: var(--font-size-xlg) !important;
+  }
+
+  h3,
+  p {
+    margin: 0;
+  }
+
+  p {
+    margin-top: var(--gap-sm);
+    color: var(--text-muted);
+  }
+
+  a {
+    display: inline-block;
+    margin-top: var(--gap-md);
+    color: var(--text-green);
+    text-decoration: underline;
+  }
+}
+
+.validation-dialog__footer {
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-light);
+}
+
+.validation-dialog__spinner {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: var(--bg-white);
+  border-radius: 50%;
+  animation: validation-dialog-spin 0.7s linear infinite;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@keyframes validation-dialog-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .validation-dialog__spinner { animation: none; }
+}
+
+@media (max-width: 600px) {
+  .validation-dialog__backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .validation-dialog {
+    max-height: 94dvh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .validation-dialog__footer {
+    padding-bottom: calc(var(--padding-lg) + env(safe-area-inset-bottom));
+  }
+
+  .validation-dialog__footer button {
+    flex: 1;
+  }
+}

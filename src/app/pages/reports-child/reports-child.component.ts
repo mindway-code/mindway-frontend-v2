@@ -251,6 +251,11 @@ export class ReportsChildComponent implements OnInit {
       });
   }
 
+  onReportValidated(report: ReportWithPermissions): void {
+    this.reportInView = report;
+    if (this.selectedReport?.id === report.id) this.selectedReport = report;
+  }
+
   onPageChange(page: number): void {
     this.selectedReport = null;
     this.loadReports(page);

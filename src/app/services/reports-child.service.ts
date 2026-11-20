@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, finalize, map, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -11,6 +11,7 @@ import type {
   CreateReportsChildDTO,
   ReportsChildRecord,
   UpdateReportsChildDTO,
+  ValidateReportDTO,
 } from '../api/interfaces/reports-child.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -119,6 +120,26 @@ export class ReportsChildService {
     return this.runTransition(
       this.http.post<SuccessResponse<ReportsChildRecord>>(`${this.baseUrl}/${reportId}/revisions`, {}),
       'Não foi possível criar uma nova revisão.',
+    );
+  }
+
+  validateReport(
+    reportId: string,
+    payload: ValidateReportDTO,
+    proof: string,
+    idempotencyKey: string,
+  ): Observable<ReportsChildRecord> {
+    const headers = new HttpHeaders({
+      'X-MFA-Proof': proof,
+      'Idempotency-Key': idempotencyKey,
+    });
+    return this.runTransition(
+      this.http.post<SuccessResponse<ReportsChildRecord>>(
+        `${this.baseUrl}/${reportId}/validations`,
+        payload,
+        { headers },
+      ),
+      'Não foi possível validar o relatório.',
     );
   }
 

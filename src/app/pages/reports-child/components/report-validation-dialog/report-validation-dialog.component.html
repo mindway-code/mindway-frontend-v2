@@ -1,0 +1,103 @@
+<div class="validation-dialog__backdrop" (click)="dismiss()">
+  <section
+    #dialog
+    class="validation-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="validation-dialog-title"
+    aria-describedby="validation-dialog-description"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+    (keydown)="onKeydown($event)"
+  >
+    <header class="validation-dialog__header">
+      <div>
+        <p>Confirmação de identidade</p>
+        <h2 id="validation-dialog-title">Validar revisão {{ report.revision.revisionNumber }}</h2>
+        <small id="validation-dialog-description">
+          A validação congela e publica exatamente o conteúdo exibido abaixo.
+        </small>
+      </div>
+      <button type="button" [disabled]="submitting" (click)="dismiss()" aria-label="Fechar validação">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="validation-dialog__body">
+      <article class="validation-dialog__preview" aria-label="Prévia final do relatório">
+        <div>
+          <span>Revisão {{ report.revision.revisionNumber }}</span>
+          <h3>{{ report.revision.title }}</h3>
+        </div>
+        <section *ngIf="report.revision.behavior">
+          <h4>Comportamento e observações</h4>
+          <p>{{ report.revision.behavior }}</p>
+        </section>
+        <section *ngIf="report.revision.difficulty">
+          <h4>Dificuldades identificadas</h4>
+          <p>{{ report.revision.difficulty }}</p>
+        </section>
+        <section *ngIf="report.revision.recommendation">
+          <h4>Recomendações</h4>
+          <p>{{ report.revision.recommendation }}</p>
+        </section>
+      </article>
+
+      <p *ngIf="checkingMfa" class="validation-dialog__notice" role="status">
+        Verificando a proteção da sua conta…
+      </p>
+
+      <div *ngIf="!checkingMfa && !mfaEnabled" class="validation-dialog__setup">
+        <i class="bi bi-shield-exclamation" aria-hidden="true"></i>
+        <div>
+          <h3>Ative a verificação em duas etapas</h3>
+          <p>Ela é necessária para confirmar sua identidade antes de publicar esta revisão.</p>
+          <a
+            routerLink="/settings"
+            [queryParams]="{ section: 'security', returnUrl: settingsReturnUrl }"
+          >Ir para Configurações → Segurança</a>
+        </div>
+      </div>
+
+      <form *ngIf="!checkingMfa && mfaEnabled" (ngSubmit)="submit()" novalidate>
+        <label for="report-validation-code">Código de verificação</label>
+        <p>Digite o código atual de seis dígitos do seu aplicativo autenticador.</p>
+        <input
+          #codeInput
+          id="report-validation-code"
+          name="code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          [value]="code"
+          [disabled]="submitting"
+          [attr.aria-invalid]="error ? 'true' : null"
+          [attr.aria-describedby]="error ? 'report-validation-error' : null"
+          (input)="onCodeInput($event)"
+          (paste)="onPaste($event)"
+        />
+        <p *ngIf="error" id="report-validation-error" class="validation-dialog__error" role="alert">
+          {{ error }}
+        </p>
+      </form>
+    </div>
+
+    <footer class="validation-dialog__footer">
+      <button type="button" class="button-secondary" [disabled]="submitting" (click)="dismiss()">
+        Cancelar
+      </button>
+      <button
+        *ngIf="mfaEnabled"
+        type="button"
+        class="button-primary"
+        [disabled]="checkingMfa || submitting || code.length !== 6"
+        (click)="submit()"
+      >
+        <span *ngIf="submitting" class="validation-dialog__spinner" aria-hidden="true"></span>
+        {{ submitting ? 'Validando…' : 'Confirmar e validar' }}
+      </button>
+    </footer>
+  </section>
+</div>

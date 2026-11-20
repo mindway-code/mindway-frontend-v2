@@ -177,6 +177,7 @@
     (delete)="onDeleteReport($event)"
     (submitDraft)="onSubmitWorkflow($event)"
     (createRevision)="onCreateRevision($event)"
+    (validated)="onReportValidated($event)"
   ></app-report-details-dialog>
 
   <article class="reports-print-document" *ngIf="selectedReport">

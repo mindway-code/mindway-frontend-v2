@@ -22,6 +22,7 @@ export interface ReportRevisionView {
   id: string;
   revisionNumber: number;
   status: ReportRevisionStatus;
+  contentHash: string;
   title: string;
   behavior: string | null;
   difficulty: string | null;
@@ -31,6 +32,15 @@ export interface ReportRevisionView {
   rejectionReason: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ReportValidationSummary {
+  id: string;
+  type: 'AUTHOR_ATTESTATION';
+  method: 'TOTP' | 'RECOVERY_CODE';
+  validatedAt: string;
+  validator: { id: string; name: string | null };
+  revisionNumber: number;
 }
 
 export interface ReportsChildRecord {
@@ -45,7 +55,7 @@ export interface ReportsChildRecord {
     hasUnpublishedChanges: boolean;
   };
   revision: ReportRevisionView;
-  validation: null;
+  validation: ReportValidationSummary | null;
   capabilities: ReportCapabilities;
   createdAt: string;
   updatedAt: string;
@@ -64,6 +74,12 @@ export interface UpdateReportsChildDTO {
   behavior?: string | null;
   difficulty?: string | null;
   recommendation?: string | null;
+}
+
+export interface ValidateReportDTO {
+  revisionId: string;
+  expectedContentHash: string;
+  type: 'AUTHOR_ATTESTATION';
 }
 
 export function reportStatusLabel(report: ReportsChildRecord): string {

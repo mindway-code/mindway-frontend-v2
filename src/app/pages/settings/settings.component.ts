@@ -1,11 +1,15 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { switchMap, take } from 'rxjs';
+import { finalize, switchMap, take } from 'rxjs';
+import { toDataURL } from 'qrcode';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { ChildService } from '../../services/child.service';
+import { MfaService } from '../../services/mfa.service';
+import type { MfaStatus, StartTotpEnrollmentResponse } from '../../api/interfaces/mfa.interface';
 import type { UserRecord, UserRole } from '../../api/interfaces/user.interface';
 import type { ChildRecord } from '../../api/interfaces/child.interface';
 import {
@@ -22,6 +26,7 @@ type NotificationPreferences = Record<
   boolean
 >;
 type ConnectionTab = 'professionals' | 'school' | 'other' | 'pending';
+type MfaProtectedAction = 'regenerate' | 'disable' | null;
 interface ConnectionInvite {
   id: string;
   childId: string;
@@ -53,6 +58,17 @@ const DEFAULT_NOTIFICATIONS: NotificationPreferences = {
   inApp: true,
 };
 
+export function safeInternalReturnUrl(value: string | null, origin: string): string | null {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) return null;
+  try {
+    const parsed = new URL(value, origin);
+    if (parsed.origin !== origin) return null;
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return null;
+  }
+}
+
 @Component({
   selector: 'app-settings',
   standalone: false,
@@ -80,6 +96,16 @@ export class SettingsComponent implements OnInit {
   phoneNumber = '';
   private accountUser: UserRecord | null = null;
   passwordMessage = '';
+  mfaStatus: MfaStatus | null = null;
+  mfaLoading = false;
+  mfaBusy = false;
+  mfaError = '';
+  mfaMessage = '';
+  mfaEnrollment: StartTotpEnrollmentResponse | null = null;
+  mfaQrCodeDataUrl = '';
+  recoveryCodes: string[] = [];
+  mfaProtectedAction: MfaProtectedAction = null;
+  returnUrl: string | null = null;
   notificationMessage = '';
   preferences: NotificationPreferences = { ...DEFAULT_NOTIFICATIONS };
   whatsappNumber = '';
@@ -156,6 +182,20 @@ export class SettingsComponent implements OnInit {
     newPassword: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', Validators.required],
   });
+  readonly mfaEnrollmentForm = this.fb.group({
+    currentPassword: ['', Validators.required],
+  });
+  readonly mfaConfirmationForm = this.fb.group({
+    code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+  });
+  readonly mfaRegenerationForm = this.fb.group({
+    currentPassword: ['', Validators.required],
+    code: ['', [Validators.required, Validators.minLength(6)]],
+  });
+  readonly mfaDisableForm = this.fb.group({
+    currentPassword: ['', Validators.required],
+    code: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
   constructor(
     private readonly fb: FormBuilder,
@@ -164,12 +204,15 @@ export class SettingsComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly childService: ChildService,
+    private readonly mfaService: MfaService,
   ) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const section = params.get('section') as SettingsSection | null;
       this.activeSection = section && section in this.sectionTitles ? section : null;
+      this.returnUrl = this.safeReturnUrl(params.get('returnUrl'));
+      if (this.activeSection === 'security') this.loadMfaStatus();
     });
     this.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
       if (user) {
@@ -296,6 +339,202 @@ export class SettingsComponent implements OnInit {
         error: () =>
           (this.passwordMessage = 'A senha atual não confere ou ocorreu um erro. Tente novamente.'),
       });
+  }
+
+  loadMfaStatus(): void {
+    if (this.mfaLoading) return;
+    this.mfaLoading = true;
+    this.mfaError = '';
+    this.mfaService
+      .getStatus()
+      .pipe(
+        take(1),
+        finalize(() => (this.mfaLoading = false)),
+      )
+      .subscribe({
+        next: (status) => (this.mfaStatus = status),
+        error: (error: unknown) => (this.mfaError = this.mfaErrorMessage(error)),
+      });
+  }
+
+  startMfaEnrollment(): void {
+    if (this.mfaEnrollmentForm.invalid || this.mfaBusy) {
+      this.mfaEnrollmentForm.markAllAsTouched();
+      return;
+    }
+    this.mfaBusy = true;
+    this.resetMfaFeedback();
+    this.mfaService
+      .startTotpEnrollment({
+        currentPassword: this.mfaEnrollmentForm.getRawValue().currentPassword ?? '',
+      })
+      .pipe(
+        take(1),
+        finalize(() => (this.mfaBusy = false)),
+      )
+      .subscribe({
+        next: (enrollment) => {
+          this.mfaEnrollment = enrollment;
+          this.mfaEnrollmentForm.reset();
+          void this.renderMfaQrCode(enrollment.otpauthUri);
+        },
+        error: (error: unknown) => (this.mfaError = this.mfaErrorMessage(error)),
+      });
+  }
+
+  confirmMfaEnrollment(): void {
+    if (!this.mfaEnrollment || this.mfaConfirmationForm.invalid || this.mfaBusy) {
+      this.mfaConfirmationForm.markAllAsTouched();
+      return;
+    }
+    this.mfaBusy = true;
+    this.resetMfaFeedback();
+    const enrollmentId = this.mfaEnrollment.enrollmentId;
+    this.mfaService
+      .confirmTotpEnrollment(enrollmentId, {
+        code: this.mfaConfirmationForm.getRawValue().code ?? '',
+      })
+      .pipe(
+        take(1),
+        finalize(() => (this.mfaBusy = false)),
+      )
+      .subscribe({
+        next: ({ recoveryCodes }) => {
+          this.recoveryCodes = recoveryCodes;
+          this.mfaEnrollment = null;
+          this.mfaQrCodeDataUrl = '';
+          this.mfaConfirmationForm.reset();
+          this.mfaStatus = {
+            enabled: true,
+            enabledAt: new Date().toISOString(),
+            recoveryCodesRemaining: recoveryCodes.length,
+          };
+          this.mfaMessage = 'Verifica\u00e7\u00e3o em duas etapas ativada.';
+        },
+        error: (error: unknown) => (this.mfaError = this.mfaErrorMessage(error)),
+      });
+  }
+
+  cancelMfaEnrollment(): void {
+    this.mfaEnrollment = null;
+    this.mfaQrCodeDataUrl = '';
+    this.mfaConfirmationForm.reset();
+    this.resetMfaFeedback();
+  }
+
+  openMfaProtectedAction(action: Exclude<MfaProtectedAction, null>): void {
+    this.mfaProtectedAction = action;
+    this.resetMfaFeedback();
+    this.mfaRegenerationForm.reset();
+    this.mfaDisableForm.reset();
+  }
+
+  closeMfaProtectedAction(): void {
+    this.mfaProtectedAction = null;
+    this.mfaRegenerationForm.reset();
+    this.mfaDisableForm.reset();
+    this.resetMfaFeedback();
+  }
+
+  regenerateRecoveryCodes(): void {
+    if (this.mfaRegenerationForm.invalid || this.mfaBusy) {
+      this.mfaRegenerationForm.markAllAsTouched();
+      return;
+    }
+    this.mfaBusy = true;
+    this.resetMfaFeedback();
+    const value = this.mfaRegenerationForm.getRawValue();
+    this.mfaService
+      .regenerateRecoveryCodes({
+        currentPassword: value.currentPassword ?? '',
+        code: value.code?.trim() ?? '',
+      })
+      .pipe(
+        take(1),
+        finalize(() => (this.mfaBusy = false)),
+      )
+      .subscribe({
+        next: ({ recoveryCodes }) => {
+          this.recoveryCodes = recoveryCodes;
+          this.mfaProtectedAction = null;
+          this.mfaRegenerationForm.reset();
+          if (this.mfaStatus) {
+            this.mfaStatus = { ...this.mfaStatus, recoveryCodesRemaining: recoveryCodes.length };
+          }
+          this.mfaMessage = 'Novos c\u00f3digos criados. Os anteriores n\u00e3o funcionam mais.';
+        },
+        error: (error: unknown) => (this.mfaError = this.mfaErrorMessage(error)),
+      });
+  }
+
+  disableMfa(): void {
+    if (this.mfaDisableForm.invalid || this.mfaBusy) {
+      this.mfaDisableForm.markAllAsTouched();
+      return;
+    }
+    this.mfaBusy = true;
+    this.resetMfaFeedback();
+    const value = this.mfaDisableForm.getRawValue();
+    this.mfaService
+      .disableTotp({
+        currentPassword: value.currentPassword ?? '',
+        code: value.code?.trim() ?? '',
+      })
+      .pipe(
+        take(1),
+        finalize(() => (this.mfaBusy = false)),
+      )
+      .subscribe({
+        next: () => {
+          this.mfaStatus = { enabled: false, enabledAt: null, recoveryCodesRemaining: 0 };
+          this.mfaProtectedAction = null;
+          this.mfaDisableForm.reset();
+          this.recoveryCodes = [];
+          this.mfaMessage = 'Verifica\u00e7\u00e3o em duas etapas desativada.';
+        },
+        error: (error: unknown) => (this.mfaError = this.mfaErrorMessage(error)),
+      });
+  }
+
+  async copyRecoveryCodes(): Promise<void> {
+    if (!this.recoveryCodes.length) return;
+    try {
+      await navigator.clipboard.writeText(this.recoveryCodes.join('\n'));
+      this.mfaMessage = 'C\u00f3digos de recupera\u00e7\u00e3o copiados.';
+    } catch {
+      this.mfaError =
+        'N\u00e3o foi poss\u00edvel copiar. Selecione os c\u00f3digos e copie manualmente.';
+    }
+  }
+
+  downloadRecoveryCodes(): void {
+    if (!this.recoveryCodes.length) return;
+    const content = [
+      'MindWay - c\u00f3digos de recupera\u00e7\u00e3o',
+      'Cada c\u00f3digo funciona apenas uma vez. Guarde-os em local seguro.',
+      '',
+      ...this.recoveryCodes,
+    ].join('\n');
+    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'mindway-codigos-recuperacao.txt';
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  finishRecoveryCodes(): void {
+    this.recoveryCodes = [];
+    this.mfaMessage = '';
+    this.returnAfterMfa();
+  }
+
+  returnAfterMfa(): void {
+    if (this.returnUrl) {
+      void this.router.navigateByUrl(this.returnUrl);
+      return;
+    }
+    this.backToSettings();
   }
 
   togglePreference(key: keyof NotificationPreferences): void {
@@ -588,5 +827,54 @@ export class SettingsComponent implements OnInit {
       this.connectionMessage =
         'O convite foi criado, mas não foi possível salvá-lo neste navegador.';
     }
+  }
+
+  private async renderMfaQrCode(otpauthUri: string): Promise<void> {
+    try {
+      this.mfaQrCodeDataUrl = await toDataURL(otpauthUri, {
+        errorCorrectionLevel: 'M',
+        margin: 1,
+        width: 240,
+        color: { dark: '#193654', light: '#ffffff' },
+      });
+    } catch {
+      this.mfaQrCodeDataUrl = '';
+      this.mfaError =
+        'N\u00e3o foi poss\u00edvel desenhar o QR Code. Use a chave manual exibida abaixo.';
+    }
+  }
+
+  private safeReturnUrl(value: string | null): string | null {
+    return safeInternalReturnUrl(value, window.location.origin);
+  }
+
+  private resetMfaFeedback(): void {
+    this.mfaError = '';
+    this.mfaMessage = '';
+  }
+
+  private mfaErrorMessage(error: unknown): string {
+    const code =
+      error instanceof HttpErrorResponse
+        ? (error.error as { error?: { code?: string } } | null)?.error?.code
+        : undefined;
+    const messages: Record<string, string> = {
+      PASSWORD_REAUTHENTICATION_UNSUPPORTED:
+        'Contas conectadas pelo Google ainda n\u00e3o podem confirmar a senha neste fluxo.',
+      MFA_ALREADY_CONFIGURED: 'A verifica\u00e7\u00e3o em duas etapas j\u00e1 est\u00e1 ativa.',
+      MFA_NOT_CONFIGURED: 'A verifica\u00e7\u00e3o em duas etapas n\u00e3o est\u00e1 ativa.',
+      MFA_REAUTHENTICATION_REQUIRED: 'A senha atual n\u00e3o confere.',
+      MFA_ENROLLMENT_EXPIRED: 'Esta configura\u00e7\u00e3o expirou. Inicie novamente.',
+      MFA_CODE_INVALID: 'O c\u00f3digo informado \u00e9 inv\u00e1lido. Confira e tente novamente.',
+      MFA_CODE_REUSED: 'Esse c\u00f3digo j\u00e1 foi usado. Aguarde o pr\u00f3ximo c\u00f3digo.',
+      MFA_RECOVERY_CODE_INVALID:
+        'O c\u00f3digo de recupera\u00e7\u00e3o \u00e9 inv\u00e1lido ou j\u00e1 foi usado.',
+      MFA_RATE_LIMITED: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+      MFA_SECURITY_STORE_UNAVAILABLE:
+        'A prote\u00e7\u00e3o de seguran\u00e7a est\u00e1 temporariamente indispon\u00edvel. Tente mais tarde.',
+    };
+    return code && messages[code]
+      ? messages[code]
+      : 'N\u00e3o foi poss\u00edvel concluir esta opera\u00e7\u00e3o de seguran\u00e7a.';
   }
 }

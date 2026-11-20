@@ -1,21 +1,52 @@
-import { reportStatusLabel, type ReportsChildRecord, type ReportRevisionStatus } from './reports-child.interface';
+import {
+  reportStatusLabel,
+  type ReportsChildRecord,
+  type ReportRevisionStatus,
+} from './reports-child.interface';
 
-function report(status: ReportRevisionStatus, overrides: Partial<ReportsChildRecord['lifecycle']> = {}): ReportsChildRecord {
+function report(
+  status: ReportRevisionStatus,
+  overrides: Partial<ReportsChildRecord['lifecycle']> = {},
+): ReportsChildRecord {
   return {
-    id: 'report-1', childId: 'child-1', userRole: 'professional',
+    id: 'report-1',
+    childId: 'child-1',
+    userRole: 'professional',
     author: { id: 'author-1', name: 'Author', email: 'author@example.com' },
-    lifecycle: { status, currentRevisionNumber: 1, publishedRevisionNumber: null, hasUnpublishedChanges: status === 'DRAFT', ...overrides },
+    lifecycle: {
+      status,
+      currentRevisionNumber: 1,
+      publishedRevisionNumber: null,
+      hasUnpublishedChanges: status === 'DRAFT',
+      ...overrides,
+    },
     revision: {
-      id: 'revision-1', revisionNumber: 1, status, title: 'Report', behavior: null,
-      difficulty: null, recommendation: null, submittedAt: null, rejectedAt: null,
-      rejectionReason: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z',
+      id: 'revision-1',
+      revisionNumber: 1,
+      status,
+      contentHash: 'a'.repeat(64),
+      title: 'Report',
+      behavior: null,
+      difficulty: null,
+      recommendation: null,
+      submittedAt: null,
+      rejectedAt: null,
+      rejectionReason: null,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
     },
     validation: null,
     capabilities: {
-      canView: true, canEditDraft: false, canSubmit: false, canValidate: false,
-      canCreateRevision: false, canArchive: false, canRevokeValidation: false,
+      canView: true,
+      canEditDraft: false,
+      canSubmit: false,
+      canValidate: false,
+      canCreateRevision: false,
+      canArchive: false,
+      canRevokeValidation: false,
     },
-    createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
   };
 }
 
@@ -28,6 +59,14 @@ describe('reportStatusLabel', () => {
   });
 
   it('prioritizes pending changes when a publication still exists', () => {
-    expect(reportStatusLabel(report('DRAFT', { publishedRevisionNumber: 1, currentRevisionNumber: 2, hasUnpublishedChanges: true }))).toBe('Alterações pendentes');
+    expect(
+      reportStatusLabel(
+        report('DRAFT', {
+          publishedRevisionNumber: 1,
+          currentRevisionNumber: 2,
+          hasUnpublishedChanges: true,
+        }),
+      ),
+    ).toBe('Alterações pendentes');
   });
 });

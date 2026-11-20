@@ -4,6 +4,8 @@
     role="dialog"
     aria-modal="true"
     aria-labelledby="report-dialog-title"
+    [attr.aria-hidden]="validationOpen ? 'true' : null"
+    [attr.inert]="validationOpen ? '' : null"
     (click)="$event.stopPropagation()"
   >
     <header class="report-dialog__header">
@@ -21,6 +23,36 @@
       </button>
     </header>
 
+    <section
+      *ngIf="report.validation as validation"
+      class="report-dialog__validation"
+      aria-label="Validação do relatório"
+    >
+      <i class="bi bi-shield-check" aria-hidden="true"></i>
+      <div>
+        <h3>Identidade confirmada com verificação em duas etapas</h3>
+        <p>
+          Revisão {{ validation.revisionNumber }} validada por
+          {{ validation.validator.name || 'autor identificado' }} em
+          {{ validation.validatedAt | date: 'dd/MM/yyyy, HH:mm' }}.
+        </p>
+      </div>
+    </section>
+
+    <p
+      *ngIf="
+        report.validation &&
+        report.lifecycle.hasUnpublishedChanges &&
+        report.validation.revisionNumber !== report.revision.revisionNumber
+      "
+      class="report-dialog__pending-warning"
+      role="status"
+    >
+      <i class="bi bi-info-circle" aria-hidden="true"></i>
+      A revisão {{ report.validation.revisionNumber }} continua publicada. Esta revisão mais recente
+      ainda não foi validada.
+    </p>
+
     <article class="report-dialog__document">
       <section *ngIf="report.revision.behavior">
         <h3>Comportamento e observações</h3>
@@ -36,7 +68,11 @@
       </section>
       <div
         class="report-dialog__empty"
-        *ngIf="!report.revision.behavior && !report.revision.difficulty && !report.revision.recommendation"
+        *ngIf="
+          !report.revision.behavior &&
+          !report.revision.difficulty &&
+          !report.revision.recommendation
+        "
       >
         <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
         <p>Este relatório não possui detalhes adicionais.</p>
@@ -64,6 +100,14 @@
         Criar nova revisão
       </button>
       <button
+        *ngIf="report.capabilities.canValidate"
+        class="button-primary"
+        type="button"
+        (click)="openValidation($event)"
+      >
+        <i class="bi bi-shield-check" aria-hidden="true"></i>Validar relatório
+      </button>
+      <button
         *ngIf="report.capabilities.canSubmit"
         class="button-primary"
         type="button"
@@ -82,3 +126,11 @@
     </footer>
   </section>
 </div>
+
+<app-report-validation-dialog
+  *ngIf="validationOpen"
+  [report]="report"
+  [returnFocus]="validationReturnFocus"
+  (close)="closeValidation()"
+  (validated)="onValidated($event)"
+></app-report-validation-dialog>

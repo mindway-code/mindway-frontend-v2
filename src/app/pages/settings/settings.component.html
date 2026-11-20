@@ -215,54 +215,350 @@
       </section>
 
       <section class="settings-panel" *ngIf="activeSection === 'security'">
-        <form
-          [formGroup]="passwordForm"
-          (ngSubmit)="changePassword()"
-          class="settings-form settings-form--password"
-        >
-          <label
-            >Senha atual<input
+        <section class="settings-mfa" aria-labelledby="settings-mfa-title">
+          <div class="settings-mfa__heading">
+            <div>
+              <h2 id="settings-mfa-title">Verifica&ccedil;&atilde;o em duas etapas</h2>
+              <p>
+                Use um aplicativo autenticador para proteger valida&ccedil;&otilde;es e outras
+                a&ccedil;&otilde;es sens&iacute;veis.
+              </p>
+            </div>
+            <span
+              *ngIf="mfaStatus && !mfaLoading"
+              class="settings-mfa__status"
+              [class.is-enabled]="mfaStatus.enabled"
+              >{{ mfaStatus.enabled ? 'Ativa' : 'Inativa' }}</span
+            >
+          </div>
+
+          <p *ngIf="mfaLoading" class="settings-mfa__loading" role="status">
+            Verificando a prote&ccedil;&atilde;o da conta&hellip;
+          </p>
+          <p *ngIf="mfaError" class="settings-mfa__error" role="alert">{{ mfaError }}</p>
+          <p *ngIf="mfaMessage" class="settings-mfa__success" role="status">
+            {{ mfaMessage }}
+          </p>
+
+          <form
+            *ngIf="mfaStatus && !mfaStatus.enabled && !mfaEnrollment && !recoveryCodes.length"
+            [formGroup]="mfaEnrollmentForm"
+            (ngSubmit)="startMfaEnrollment()"
+            class="settings-mfa__form"
+          >
+            <div class="settings-mfa__intro">
+              <i class="bi bi-phone" aria-hidden="true"></i>
+              <div>
+                <strong>Conecte seu aplicativo autenticador</strong>
+                <p>
+                  Confirme sua senha para gerar uma configura&ccedil;&atilde;o v&aacute;lida por dez
+                  minutos.
+                </p>
+              </div>
+            </div>
+            <label for="mfa-enrollment-password">Senha atual</label>
+            <input
+              id="mfa-enrollment-password"
               formControlName="currentPassword"
               type="password"
               autocomplete="current-password"
-          /></label>
-          <label
-            >Nova senha<input
-              formControlName="newPassword"
-              type="password"
-              autocomplete="new-password"
-            /><small>Use pelo menos 8 caracteres.</small></label
-          >
-          <label
-            >Confirmar nova senha<input
-              formControlName="confirmPassword"
-              type="password"
-              autocomplete="new-password"
-          /></label>
-          <p class="settings-message" *ngIf="passwordMessage" role="status">
-            {{ passwordMessage }}
-          </p>
-          <footer class="settings-form-footer">
-            <button type="button" class="settings-outline-button" (click)="backToSettings()">
-              <i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para
-              configura&ccedil;&otilde;es</button
-            ><button
-              class="settings-primary-button"
-              type="submit"
-              [disabled]="(saving$ | async) ?? false"
-            >
-              {{ (saving$ | async) ? 'Salvando...' : 'Salvar nova senha' }}
+              [attr.aria-invalid]="
+                mfaEnrollmentForm.controls.currentPassword.touched &&
+                mfaEnrollmentForm.controls.currentPassword.invalid
+              "
+            />
+            <button class="settings-primary-button" type="submit" [disabled]="mfaBusy">
+              {{
+                mfaBusy ? 'Preparando&hellip;' : 'Ativar verifica&ccedil;&atilde;o em duas etapas'
+              }}
             </button>
-          </footer>
-        </form>
-        <div class="settings-info">
-          <i class="bi bi-shield-check" aria-hidden="true"></i>
-          <p>A troca de senha exige a confirma&ccedil;&atilde;o da senha atual.</p>
-        </div>
-        <p class="settings-note">
-          A visualiza&ccedil;&atilde;o e o encerramento de outras sess&otilde;es ainda n&atilde;o
-          est&atilde;o dispon&iacute;veis.
-        </p>
+          </form>
+
+          <div *ngIf="mfaEnrollment" class="settings-mfa__enrollment">
+            <div class="settings-mfa__steps" aria-label="Etapas de configura&ccedil;&atilde;o">
+              <span class="is-complete">1</span><span class="is-active">2</span><span>3</span>
+            </div>
+            <div class="settings-mfa__qr-layout">
+              <div class="settings-mfa__qr">
+                <img
+                  *ngIf="mfaQrCodeDataUrl"
+                  [src]="mfaQrCodeDataUrl"
+                  alt="QR Code para configurar o aplicativo autenticador"
+                />
+                <span *ngIf="!mfaQrCodeDataUrl" aria-hidden="true">
+                  <i class="bi bi-qr-code"></i>
+                </span>
+              </div>
+              <div class="settings-mfa__instructions">
+                <h3>Leia o QR Code</h3>
+                <ol>
+                  <li>Abra o Google Authenticator ou outro aplicativo compat&iacute;vel.</li>
+                  <li>Adicione uma conta e leia o QR Code.</li>
+                  <li>Digite abaixo o c&oacute;digo de seis d&iacute;gitos exibido.</li>
+                </ol>
+                <p>Se n&atilde;o puder ler o QR Code, use esta chave manual:</p>
+                <code data-testid="mfa-manual-secret">{{ mfaEnrollment.manualSecret }}</code>
+                <small>
+                  A configura&ccedil;&atilde;o expira em at&eacute;
+                  {{ mfaEnrollment.expiresInSeconds }} segundos.
+                </small>
+              </div>
+            </div>
+            <form
+              [formGroup]="mfaConfirmationForm"
+              (ngSubmit)="confirmMfaEnrollment()"
+              class="settings-mfa__form settings-mfa__confirm"
+            >
+              <label for="mfa-confirmation-code">C&oacute;digo de verifica&ccedil;&atilde;o</label>
+              <input
+                id="mfa-confirmation-code"
+                formControlName="code"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                placeholder="000000"
+                [attr.aria-invalid]="
+                  mfaConfirmationForm.controls.code.touched &&
+                  mfaConfirmationForm.controls.code.invalid
+                "
+              />
+              <div class="settings-mfa__actions">
+                <button
+                  type="button"
+                  class="settings-outline-button"
+                  (click)="cancelMfaEnrollment()"
+                >
+                  Cancelar
+                </button>
+                <button class="settings-primary-button" type="submit" [disabled]="mfaBusy">
+                  {{ mfaBusy ? 'Confirmando&hellip;' : 'Confirmar e ativar' }}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <section
+            *ngIf="recoveryCodes.length"
+            class="settings-mfa__recovery"
+            aria-labelledby="mfa-recovery-title"
+          >
+            <div class="settings-mfa__recovery-heading">
+              <i class="bi bi-key" aria-hidden="true"></i>
+              <div>
+                <h3 id="mfa-recovery-title">
+                  Salve seus c&oacute;digos de recupera&ccedil;&atilde;o
+                </h3>
+                <p>
+                  Eles aparecem somente agora. Cada c&oacute;digo funciona uma vez quando voc&ecirc;
+                  estiver sem o aplicativo autenticador.
+                </p>
+              </div>
+            </div>
+            <ul class="settings-mfa__codes" data-testid="mfa-recovery-codes">
+              <li *ngFor="let code of recoveryCodes">
+                <code>{{ code }}</code>
+              </li>
+            </ul>
+            <div class="settings-mfa__actions settings-mfa__actions--wrap">
+              <button type="button" class="settings-outline-button" (click)="copyRecoveryCodes()">
+                <i class="bi bi-copy" aria-hidden="true"></i> Copiar c&oacute;digos
+              </button>
+              <button
+                type="button"
+                class="settings-outline-button"
+                (click)="downloadRecoveryCodes()"
+              >
+                <i class="bi bi-download" aria-hidden="true"></i> Baixar arquivo
+              </button>
+              <button type="button" class="settings-primary-button" (click)="finishRecoveryCodes()">
+                {{
+                  returnUrl
+                    ? 'J&aacute; salvei, voltar ao relat&oacute;rio'
+                    : 'J&aacute; salvei os c&oacute;digos'
+                }}
+              </button>
+            </div>
+          </section>
+
+          <div
+            *ngIf="mfaStatus?.enabled && !recoveryCodes.length && !mfaProtectedAction"
+            class="settings-mfa__enabled"
+          >
+            <div class="settings-mfa__summary">
+              <i class="bi bi-shield-check" aria-hidden="true"></i>
+              <div>
+                <strong>Sua conta est&aacute; protegida</strong>
+                <p *ngIf="mfaStatus?.enabledAt as enabledAt">
+                  Ativada em {{ enabledAt | date: 'dd/MM/yyyy, HH:mm' }}.
+                </p>
+                <p>
+                  {{ mfaStatus?.recoveryCodesRemaining }} c&oacute;digos de
+                  recupera&ccedil;&atilde;o dispon&iacute;veis.
+                </p>
+              </div>
+            </div>
+            <button
+              *ngIf="returnUrl"
+              type="button"
+              class="settings-primary-button settings-mfa__return"
+              (click)="returnAfterMfa()"
+            >
+              Voltar ao relat&oacute;rio
+            </button>
+            <div class="settings-mfa__management">
+              <button
+                type="button"
+                class="settings-outline-button"
+                (click)="openMfaProtectedAction('regenerate')"
+              >
+                Gerar novos c&oacute;digos
+              </button>
+              <button
+                type="button"
+                class="settings-danger-button"
+                (click)="openMfaProtectedAction('disable')"
+              >
+                Desativar verifica&ccedil;&atilde;o
+              </button>
+            </div>
+          </div>
+
+          <form
+            *ngIf="mfaProtectedAction === 'regenerate'"
+            [formGroup]="mfaRegenerationForm"
+            (ngSubmit)="regenerateRecoveryCodes()"
+            class="settings-mfa__form settings-mfa__protected"
+          >
+            <h3>Gerar novos c&oacute;digos de recupera&ccedil;&atilde;o</h3>
+            <p>Os c&oacute;digos atuais deixar&atilde;o de funcionar imediatamente.</p>
+            <label for="mfa-regenerate-password">Senha atual</label>
+            <input
+              id="mfa-regenerate-password"
+              formControlName="currentPassword"
+              type="password"
+              autocomplete="current-password"
+            />
+            <label for="mfa-regenerate-code"
+              >C&oacute;digo do aplicativo ou de recupera&ccedil;&atilde;o</label
+            >
+            <input
+              id="mfa-regenerate-code"
+              formControlName="code"
+              type="text"
+              autocomplete="one-time-code"
+            />
+            <div class="settings-mfa__actions">
+              <button
+                type="button"
+                class="settings-outline-button"
+                (click)="closeMfaProtectedAction()"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="settings-primary-button" [disabled]="mfaBusy">
+                Gerar novos c&oacute;digos
+              </button>
+            </div>
+          </form>
+
+          <form
+            *ngIf="mfaProtectedAction === 'disable'"
+            [formGroup]="mfaDisableForm"
+            (ngSubmit)="disableMfa()"
+            class="settings-mfa__form settings-mfa__protected is-danger"
+          >
+            <h3>Desativar verifica&ccedil;&atilde;o em duas etapas</h3>
+            <p>
+              Valida&ccedil;&otilde;es protegidas ficar&atilde;o indispon&iacute;veis at&eacute; uma
+              nova ativa&ccedil;&atilde;o.
+            </p>
+            <label for="mfa-disable-password">Senha atual</label>
+            <input
+              id="mfa-disable-password"
+              formControlName="currentPassword"
+              type="password"
+              autocomplete="current-password"
+            />
+            <label for="mfa-disable-code"
+              >C&oacute;digo do aplicativo ou de recupera&ccedil;&atilde;o</label
+            >
+            <input
+              id="mfa-disable-code"
+              formControlName="code"
+              type="text"
+              autocomplete="one-time-code"
+            />
+            <div class="settings-mfa__actions">
+              <button
+                type="button"
+                class="settings-outline-button"
+                (click)="closeMfaProtectedAction()"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="settings-danger-button" [disabled]="mfaBusy">
+                Desativar prote&ccedil;&atilde;o
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="settings-password" aria-labelledby="settings-password-title">
+          <div>
+            <h2 id="settings-password-title">Senha</h2>
+            <p class="settings-panel__intro">Atualize a senha usada para entrar na sua conta.</p>
+          </div>
+          <form
+            [formGroup]="passwordForm"
+            (ngSubmit)="changePassword()"
+            class="settings-form settings-form--password"
+          >
+            <label
+              >Senha atual<input
+                formControlName="currentPassword"
+                type="password"
+                autocomplete="current-password"
+            /></label>
+            <label
+              >Nova senha<input
+                formControlName="newPassword"
+                type="password"
+                autocomplete="new-password"
+              /><small>Use pelo menos 8 caracteres.</small></label
+            >
+            <label
+              >Confirmar nova senha<input
+                formControlName="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+            /></label>
+            <p class="settings-message" *ngIf="passwordMessage" role="status">
+              {{ passwordMessage }}
+            </p>
+            <footer class="settings-form-footer">
+              <button type="button" class="settings-outline-button" (click)="backToSettings()">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar para
+                configura&ccedil;&otilde;es</button
+              ><button
+                class="settings-primary-button"
+                type="submit"
+                [disabled]="(saving$ | async) ?? false"
+              >
+                {{ (saving$ | async) ? 'Salvando...' : 'Salvar nova senha' }}
+              </button>
+            </footer>
+          </form>
+          <div class="settings-info">
+            <i class="bi bi-shield-check" aria-hidden="true"></i>
+            <p>A troca de senha exige a confirma&ccedil;&atilde;o da senha atual.</p>
+          </div>
+          <p class="settings-note">
+            A visualiza&ccedil;&atilde;o e o encerramento de outras sess&otilde;es ainda n&atilde;o
+            est&atilde;o dispon&iacute;veis.
+          </p>
+        </section>
       </section>
 
       <section class="settings-panel" *ngIf="activeSection === 'notifications'">

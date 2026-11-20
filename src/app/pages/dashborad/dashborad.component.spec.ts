@@ -34,7 +34,9 @@ describe('DashboradComponent', () => {
         { provide: ChildService, useValue: childServiceMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    })
+      .overrideComponent(DashboradComponent, { set: { template: '' } })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DashboradComponent);
     component = fixture.componentInstance;
